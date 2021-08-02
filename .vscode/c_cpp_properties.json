@@ -1,0 +1,29 @@
+{
+	"configurations": [
+		{
+			"name": "Linux",
+			"includePath": [
+				"${workspaceFolder}/**",
+				"${HOME}/Apps/Qt/5.12.11/gcc_64/include/**"
+			],
+			"defines": [],
+			"compilerPath": "/usr/bin/gcc",
+			"cStandard": "gnu11",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "${default}"
+		},
+		{
+			"name": "Win32",
+			"includePath": [
+				"${workspaceFolder}/**",
+				"${LocalAppData}/Qt/5.12.11/mingw73_64/include/**"
+			],
+			"defines": [],
+			"compilerPath": "${LocalAppData}/Qt/Tools/mingw730_64/bin/gcc.exe",
+			"cStandard": "gnu11",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "windows-gcc-x64"
+		}
+	],
+	"version": 4
+}
