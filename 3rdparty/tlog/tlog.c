@@ -37,18 +37,26 @@ ti64 tlog_getTimeUs()
 	return us;
 }
 
-ti tlog_getTimeStr(const ti64 ms, tc *timeStr)
+ti tlog_getTimeStr(const ti64 us, ti useUTC, tc *timeStr)
 {
 	ti len = 0;
-	time_t rawtime = ms / 1000;
+	time_t rawtime = us / (1000 * 1000);
 	struct tm now;
-	localtime_r(&rawtime, &now);
+	if (useUTC != 0)
+	{
+		gmtime_r(&rawtime, &now);
+	}
+	else
+	{
+		localtime_r(&rawtime, &now);
+	}
 
 	len = snprintf((char *)timeStr, 64,
-				   "%04d%02d%02d.%02d%02d%02d.%03lld",
+				   "%04d%02d%02d.%02d%02d%02d.%06lld(%+03ld%02ld)",
 				   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
 				   now.tm_hour, now.tm_min, now.tm_sec,
-				   ms % 1000);
+				   us % (1000 * 1000),
+				   now.tm_gmtoff / 3600, now.tm_gmtoff % 3600);
 
 	// puts((const char *)timeStr);
 	return len;
@@ -114,7 +122,7 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 		return 0;
 	}
 
-	const tc tlog_level_str[][4] = {"D/", "I/", "W/", "E/"};
+	const tc tlog_level_str[][2] = {"D", "I", "W", "E"};
 
 	tc tlog_buf[TLOG_BUF_SIZE] = {0};
 
@@ -124,18 +132,18 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 	ti len = 0;
 
 	tc timeStr[64] = {0};
-	ti64 ms = tlog_getTimeMs();
-	tlog_getTimeStr(ms, timeStr);
+	ti64 us = tlog_getTimeUs();
+	tlog_getTimeStr(us, TLOG_USE_UTC, timeStr);
 
 #if 0
 	if (seq_now % 10000 == 0)
 	{
-		static ti64 ms_last = 0;
-		ti64 delta = ms - ms_last;
-		ms_last = ms;
-		if ((ms_last != 0) && (delta != 0))
+		static ti64 us_last = 0;
+		ti64 delta = us - us_last;
+		us_last = us;
+		if ((us_last != 0) && (delta != 0))
 		{
-			tf qps = 10000 / (delta / 1000.0);
+			tf qps = (tf)10000 * 1000 * 1000 / delta;
 			char cmd[256] = {0};
 			sprintf(cmd, "echo \"---------- tlog[%s %lld] qps = %.01f ----------\" >> /tmp/qps.txt", timeStr, seq, qps);
 			ti ret __attribute__((unused)) = system(cmd);
@@ -145,9 +153,9 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 
 	tc *filename = (tc *)strrchr((char *)file, '/') + 1;
 
-	// [20000101.000000.000 0][D/main][main.c:12 main]start...
+	// const char s[] = "[20000101.080000.000000(+0800) 0][I/main][main.cpp:0][int main(int, char**)]";
 	len = sprintf((char *)tlog_buf,
-				  "[%s %lld][%s%s][%s:%d %s]",
+				  "[%s %lld][%s/%s][%s:%d][%s]",
 				  (char *)timeStr, seq_now,
 				  (char *)tlog_level_str[level], (char *)tag,
 				  (char *)filename, line, (char *)func);

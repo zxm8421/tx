@@ -25,6 +25,7 @@
  * @brief 配置项
  * 
  */
+#define TLOG_USE_UTC 0
 #define TLOG_BUF_SIZE 4096
 #define TLOG_CONSOLE_LEVEL TLOG_ALL
 #define TLOG_FILE_LEVEL TLOG_ALL
@@ -71,7 +72,7 @@
  * @param ... 
  * @return 
  */
-#define tlog(level, format, ...) tlog_print((const tc *)TLOG_TAG, (ti)TLOG_LVL, (ti)level, (const tc *)__FILE__, (ti)__LINE__, (const tc *)__func__, (const tc *)format, ##__VA_ARGS__)
+#define tlog(level, format, ...) tlog_print((const tc *)TLOG_TAG, (ti)TLOG_LVL, (ti)level, (const tc *)__FILE__, (ti)__LINE__, (const tc *)__PRETTY_FUNCTION__, (const tc *)format, ##__VA_ARGS__)
 
 /**
  * @brief hex打印函数
@@ -82,7 +83,7 @@
  * @param len 
  * @return 
  */
-#define tlog_hexdump(level, info, ptr, len) tlog_print_hexdump((const tc *)TLOG_TAG, (ti)TLOG_LVL, (ti)level, (const tc *)__FILE__, (ti)__LINE__, (const tc *)__func__, (const tc *)info, ptr, (ti)len)
+#define tlog_hexdump(level, info, ptr, len) tlog_print_hexdump((const tc *)TLOG_TAG, (ti)TLOG_LVL, (ti)level, (const tc *)__FILE__, (ti)__LINE__, (const tc *)__PRETTY_FUNCTION__, (const tc *)info, ptr, (ti)len)
 
 #ifdef __cplusplus
 extern "C"
@@ -106,11 +107,12 @@ extern "C"
 	/**
 	 * @brief 将时间戳转换为时间日期字符串
 	 * 
-	 * @param ms 
-	 * @param timeStr tc[20], eg: "20000101.000000.000"
+	 * @param us 
+	 * @param use_utc 是否使用UTC时间
+	 * @param timeStr tc[30], eg: "20000101.000000.000000(+0000)"
 	 * @return 转化的字符串长度
 	 */
-	ti tlog_getTimeStr(const ti64 ms, tc *timeStr);
+	ti tlog_getTimeStr(const ti64 us, ti use_utc, tc *timeStr);
 
 	/**
 	 * @brief 尝试手动滚动日志文件
