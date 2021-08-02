@@ -109,7 +109,7 @@ extern "C"
 	 * 
 	 * @param us 
 	 * @param use_utc 是否使用UTC时间
-	 * @param timeStr tc[30], eg: "20000101.000000.000000(+0000)"
+	 * @param timeStr eg: "20000101.080000.000000 +0800" "20000101.000000.000000"
 	 * @return 转化的字符串长度
 	 */
 	ti tlog_getTimeStr(const ti64 us, ti use_utc, tc *timeStr);

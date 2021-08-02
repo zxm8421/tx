@@ -37,26 +37,32 @@ ti64 tlog_getTimeUs()
 	return us;
 }
 
-ti tlog_getTimeStr(const ti64 us, ti useUTC, tc *timeStr)
+ti tlog_getTimeStr(const ti64 us, ti use_utc, tc *timeStr)
 {
 	ti len = 0;
 	time_t rawtime = us / (1000 * 1000);
 	struct tm now;
-	if (useUTC != 0)
+	if (use_utc != 0)
 	{
 		gmtime_r(&rawtime, &now);
+		len = snprintf((char *)timeStr, 64,
+					   "%04d%02d%02d.%02d%02d%02d.%06lld",
+					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
+					   now.tm_hour, now.tm_min, now.tm_sec,
+					   us % (1000 * 1000));
 	}
 	else
 	{
 		localtime_r(&rawtime, &now);
+		len = snprintf((char *)timeStr, 64,
+					   "%04d%02d%02d.%02d%02d%02d.%06lld %+03ld%02ld",
+					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
+					   now.tm_hour, now.tm_min, now.tm_sec,
+					   us % (1000 * 1000),
+					   now.tm_gmtoff / 3600, now.tm_gmtoff % 3600);
 	}
 
-	len = snprintf((char *)timeStr, 64,
-				   "%04d%02d%02d.%02d%02d%02d.%06lld(%+03ld%02ld)",
-				   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-				   now.tm_hour, now.tm_min, now.tm_sec,
-				   us % (1000 * 1000),
-				   now.tm_gmtoff / 3600, now.tm_gmtoff % 3600);
+	// const char s[] = "20000101.080000.000000 +0800";
 
 	// puts((const char *)timeStr);
 	return len;
