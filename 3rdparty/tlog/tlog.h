@@ -5,6 +5,10 @@
  */
 #pragma once
 
+#if (TLOG != 1)
+#define TLOG 1
+#endif
+
 /**
  * @brief 使用方法
 

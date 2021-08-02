@@ -4,6 +4,7 @@
  * @file ttype.h
  */
 #pragma once
+
 #ifdef __cplusplus
 extern "C"
 {
