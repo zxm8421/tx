@@ -29,6 +29,10 @@ HEADERS += \
 	app/ui/mainwindow.h \
 	app/version/version.h
 
+DISTFILES += \
+	LICENSE.md \
+	README.md
+
 # CONFIG += precompile_header
 # PRECOMPILED_HEADER = app/stable.h
 
