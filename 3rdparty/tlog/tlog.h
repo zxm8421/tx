@@ -140,7 +140,7 @@ extern "C"
 	ti tlog_set_file_level(ti level);
 
 	/**
- 	* @brief 请勿直接使用
+ 	* @brief 请勿直接使用，请使用tlog
  	* 
  	* @param tag 
  	* @param tag_level 
@@ -155,7 +155,7 @@ extern "C"
 	ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file, const ti line, const tc *func, const tc *format, ...);
 
 	/**
-	 * @brief 请勿直接使用
+	 * @brief 请勿直接使用，请使用tlog_hexdump
 	 * 
 	 * @param tag 
 	 * @param tag_level 
