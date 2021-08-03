@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdatomic.h>
 #include <stdarg.h>
 #include <time.h>
 #include <sys/time.h>
@@ -14,6 +15,7 @@
 
 static ti tlog_console_level = TLOG_CONSOLE_LEVEL;
 static ti tlog_file_level = TLOG_FILE_LEVEL;
+static int tlog_fd = -1;
 
 ti64 tlog_getTimeMs()
 {
@@ -85,6 +87,7 @@ ti tlog_try_rotate(ti64 limit)
 
 		if ((size > TLOG_FILE_SIZE) || (size > limit))
 		{
+
 			for (ti i = (TLOG_FILE_NUM - 2); i >= 0; i--)
 			{
 				tc filename_old[256] = {0};
@@ -97,8 +100,11 @@ ti tlog_try_rotate(ti64 limit)
 						TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i + 1);
 				rename((char *)filename_old, (char *)filename_new);
 			}
-			pthread_mutex_unlock(&tlog_rotate_mutex);
+			int fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND | O_CLOEXEC, 0644);
+			dup2(fd, tlog_fd);
+			close(fd);
 		}
+		pthread_mutex_unlock(&tlog_rotate_mutex);
 	}
 
 	return 0;
@@ -129,12 +135,10 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 	}
 
 	const tc tlog_level_str[][2] = {"D", "I", "W", "E"};
-
 	tc tlog_buf[TLOG_BUF_SIZE] = {0};
 
-	static ti64 seq = -1;
-	static __thread ti64 seq_now = -1;
-	seq_now = ++seq;
+	static volatile _Atomic ti64 seq = 0;
+	ti64 seq_now = atomic_fetch_add_explicit(&seq, 1, memory_order_relaxed);
 	ti len = 0;
 
 	tc timeStr[64] = {0};
@@ -142,17 +146,21 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 	tlog_getTimeStr(us, TLOG_USE_UTC, timeStr);
 
 #if 0
-	if (seq_now % 10000 == 0)
 	{
-		static ti64 us_last = 0;
-		ti64 delta = us - us_last;
-		us_last = us;
-		if ((us_last != 0) && (delta != 0))
+		ti64 seq_check = 20000;
+		if (seq_now % seq_check == 0)
 		{
-			tf qps = (tf)10000 * 1000 * 1000 / delta;
-			char cmd[256] = {0};
-			sprintf(cmd, "echo \"---------- tlog[%s %lld] qps = %.01f ----------\" >> /tmp/qps.txt", timeStr, seq, qps);
-			ti ret __attribute__((unused)) = system(cmd);
+			static ti64 us_last = 0;
+			ti64 delta = us - us_last;
+			us_last = us;
+			if ((us_last > 0) && (delta > 0))
+			{
+				tf qps = (tf)seq_check * 1000 * 1000 / delta;
+
+				char cmd[256] = {0};
+				sprintf(cmd, "echo \"---------- tlog[%s %lld] qps = %.01f ----------\" >> /tmp/qps.txt", timeStr, seq_now, qps);
+				ti ret __attribute__((unused)) = system(cmd);
+			}
 		}
 	}
 #endif
@@ -181,18 +189,16 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 
 	if ((level >= tlog_file_level) && (level >= tag_level))
 	{
-		if (seq_now == 0)
+		if (tlog_fd < 0)
 		{
 			ti ret __attribute__((unused)) = system("mkdir -m 755 -p " TLOG_FILE_DIR);
+			tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND | O_CLOEXEC, 0644);
 		}
 
-		int fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND | O_CLOEXEC, 0644);
-		if (fd >= 0)
+		if (tlog_fd >= 0)
 		{
-			ti ret __attribute__((unused)) = write(fd, tlog_buf, len);
-			ti64 size = lseek(fd, 0, SEEK_CUR);
-			close(fd);
-
+			ti64 ret __attribute__((unused)) = write(tlog_fd, tlog_buf, len);
+			ti64 size = lseek(tlog_fd, 0, SEEK_CUR);
 			if (size >= TLOG_FILE_SIZE)
 			{
 				tlog_try_rotate(TLOG_FILE_SIZE);
