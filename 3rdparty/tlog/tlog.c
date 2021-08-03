@@ -87,7 +87,6 @@ ti tlog_try_rotate(ti64 limit)
 
 		if ((size > TLOG_FILE_SIZE) || (size > limit))
 		{
-
 			for (ti i = (TLOG_FILE_NUM - 2); i >= 0; i--)
 			{
 				tc filename_old[256] = {0};
