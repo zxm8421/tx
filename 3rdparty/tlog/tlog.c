@@ -141,22 +141,23 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 	ti64 us = tlog_getTimeUs();
 	tlog_getTimeStr(us, TLOG_USE_UTC, timeStr);
 
-#ifndef NDEBUG
+#if 0
 	{
-		ti64 seq_check = 20000;
-		if (seq_now % seq_check == 0)
+		static ti64 seq_last = 0;
+		static ti64 us_last = 0;
+		if ((us - us_last) >= (1000 * 1000))
 		{
-			static ti64 us_last = 0;
-			ti64 delta = us - us_last;
+			ti64 us_delta = us - us_last;
 			us_last = us;
-			if ((us_last > 0) && (delta > 0))
-			{
-				tf qps = (tf)seq_check * 1000 * 1000 / delta;
 
-				char cmd[256] = {0};
-				sprintf(cmd, "echo \"---------- tlog[%s %lld] qps = %.01f ----------\" >> /tmp/qps.txt", timeStr, seq_now, qps);
-				ti ret __attribute__((unused)) = system(cmd);
-			}
+			ti64 seq_delta = seq_now - seq_last;
+			seq_last = seq_now;
+
+			tf qps = (tf)seq_delta * 1000 * 1000 / us_delta;
+
+			char cmd[256] = {0};
+			sprintf(cmd, "echo \"---------- tlog[%s %lld] qps = %.01f ----------\" >> /tmp/qps.txt", timeStr, seq_now, qps);
+			ti ret __attribute__((unused)) = system(cmd);
 		}
 	}
 #endif
