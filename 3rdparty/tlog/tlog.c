@@ -64,9 +64,6 @@ ti tlog_getTimeStr(const ti64 us, ti use_utc, tc *timeStr)
 					   now.tm_gmtoff / 3600, now.tm_gmtoff % 3600);
 	}
 
-	// const char s[] = "20000101.080000.000000 +0800";
-
-	// puts((const char *)timeStr);
 	return len;
 }
 
@@ -144,7 +141,7 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 	ti64 us = tlog_getTimeUs();
 	tlog_getTimeStr(us, TLOG_USE_UTC, timeStr);
 
-#if 0
+#ifndef NDEBUG
 	{
 		ti64 seq_check = 20000;
 		if (seq_now % seq_check == 0)
@@ -166,7 +163,6 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 
 	tc *filename = (tc *)strrchr((char *)file, '/') + 1;
 
-	// const char s[] = "[20000101.080000.000000(+0800) 0][I/main][main.cpp:0][int main(int, char**)]";
 	len = sprintf((char *)tlog_buf,
 				  "[%s %lld][%s/%s][%s:%d][%s]",
 				  (char *)timeStr, seq_now,

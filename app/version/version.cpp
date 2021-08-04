@@ -17,8 +17,14 @@ ti showVer()
 		 "buildTime %s",
 		 buildVer_Major, buildVer_Minor, buildVer_Patch, buildSHA1,
 		 QDateTime::fromSecsSinceEpoch(buildTime).toString("yyyyMMdd.HHmmss t").toLocal8Bit().data());
+#ifdef NDEBUG
+	tlog(TLOG_I, "Release");
+#else
+	tlog(TLOG_I, "Debug");
+#endif
 
 	tlog(TLOG_I, "========================================");
 	tlog(TLOG_I, "========================================");
+
 	return 0;
 }
