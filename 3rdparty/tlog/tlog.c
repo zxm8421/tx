@@ -153,10 +153,10 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 			ti64 seq_delta = seq_now - seq_last;
 			seq_last = seq_now;
 
-			tf qps = (tf)seq_delta * 1000 * 1000 / us_delta;
+			ti64 qps = seq_delta * 1000 * 1000 / us_delta;
 
 			char cmd[256] = {0};
-			sprintf(cmd, "echo \"---------- tlog[%s %lld] qps = %.01f ----------\" >> /tmp/qps.txt", timeStr, seq_now, qps);
+			sprintf(cmd, "echo \"---------- tlog[%s %lld] qps = %lld ----------\" >> /tmp/qps.txt", timeStr, seq_now, qps);
 			ti ret __attribute__((unused)) = system(cmd);
 		}
 	}
