@@ -1,24 +1,42 @@
 {
 	"configurations": [
 		{
-			"name": "Linux",
+			"name": "linux",
 			"includePath": [
 				"${workspaceFolder}/**",
 				"${HOME}/Apps/Qt/5.12.11/gcc_64/include/**"
 			],
-			"defines": [],
+			"defines": [
+				"NDEBUG"
+			],
 			"compilerPath": "/usr/bin/gcc",
 			"cStandard": "gnu17",
 			"cppStandard": "gnu++17",
 			"intelliSenseMode": "${default}"
 		},
 		{
-			"name": "Win32",
+			"name": "mingw32",
+			"includePath": [
+				"${workspaceFolder}/**",
+				"${LocalAppData}/Qt/5.12.11/mingw73_32/include/**"
+			],
+			"defines": [
+				"NDEBUG"
+			],
+			"compilerPath": "${LocalAppData}/Qt/Tools/mingw730_32/bin/gcc.exe",
+			"cStandard": "gnu17",
+			"cppStandard": "gnu++17",
+			"intelliSenseMode": "windows-gcc-x86"
+		},
+		{
+			"name": "mingw64",
 			"includePath": [
 				"${workspaceFolder}/**",
 				"${LocalAppData}/Qt/5.12.11/mingw73_64/include/**"
 			],
-			"defines": [],
+			"defines": [
+				"NDEBUG"
+			],
 			"compilerPath": "${LocalAppData}/Qt/Tools/mingw730_64/bin/gcc.exe",
 			"cStandard": "gnu17",
 			"cppStandard": "gnu++17",

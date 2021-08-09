@@ -8,13 +8,25 @@ CONFIG += c++17
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG(release, debug | release) {
-	DEFINES += NDEBUG
+contains(QMAKE_HOST.os, Linux) {
+buildTime = $$system("date +%s")
+} else: contains(QMAKE_HOST.os, Windows) {
+buildTime = $$system("PowerShell (Get-Date -UFormat %s).Split('.')[0]")
+} else {
+buildTime = 0
 }
 
+buildSHA1 = $$system("git rev-parse --short=7 HEAD")
+
+# message("buildTime = $$buildTime")
+# message("buildSHA1 = $$buildSHA1")
+
 DEFINES += \
-	buildTime=$$system("date +%s")LL \
-	buildSHA1=\\\"$$system("git rev-parse --short=7 HEAD")\\\"
+	buildTime=$$buildTime \
+	buildSHA1=\\\"$$buildSHA1\\\"
+
+# CONFIG += precompile_header
+# PRECOMPILED_HEADER = app/stable.h
 
 INCLUDEPATH += \
 	app \
@@ -37,8 +49,14 @@ DISTFILES += \
 	LICENSE.md \
 	README.md
 
-# CONFIG += precompile_header
-# PRECOMPILED_HEADER = app/stable.h
+CONFIG(release, debug | release) {
+DEFINES += NDEBUG
+} else {
+QT += testlib
+
+SOURCES += \
+	app/version/version_test.cpp
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

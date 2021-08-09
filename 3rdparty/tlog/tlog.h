@@ -31,7 +31,7 @@
 #define TLOG_FILE_LEVEL TLOG_ALL
 #define TLOG_FILE_NUM 10
 #define TLOG_FILE_SIZE (10 * 1024 * 1024)
-#define TLOG_FILE_DIR "./log"
+#define TLOG_FILE_DIR "log"
 #define TLOG_FILE_PREFIX "tx"
 
 /**
@@ -138,6 +138,14 @@ extern "C"
 	 * @return 
 	 */
 	ti tlog_set_file_level(ti level);
+
+	/**
+	 * @brief 跨平台system函数
+	 * 
+	 * @param cmd 
+	 * @return 
+	 */
+	ti tlog_system(const tc *cmd);
 
 	/**
  	* @brief 请勿直接使用，请使用tlog

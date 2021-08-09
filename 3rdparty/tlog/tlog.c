@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdatomic.h>
 #include <stdarg.h>
+#define _POSIX_THREAD_SAFE_FUNCTIONS
 #include <time.h>
 #include <sys/time.h>
 #include <sys/stat.h>
@@ -12,6 +13,10 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <pthread.h>
+
+#if defined(__MINGW64__) || defined(__MINGW32__)
+#include <windows.h>
+#endif
 
 static ti tlog_console_level = TLOG_CONSOLE_LEVEL;
 static ti tlog_file_level = TLOG_FILE_LEVEL;
@@ -23,7 +28,7 @@ ti64 tlog_getTimeMs()
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 
-	ms = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	ms = (ti64)tv.tv_sec * 1000 + (ti64)tv.tv_usec / 1000;
 
 	return ms;
 }
@@ -34,7 +39,7 @@ ti64 tlog_getTimeUs()
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 
-	us = tv.tv_sec * 1000 * 1000 + tv.tv_usec;
+	us = (ti64)tv.tv_sec * 1000 * 1000 + (ti64)tv.tv_usec;
 
 	return us;
 }
@@ -44,24 +49,43 @@ ti tlog_getTimeStr(const ti64 us, ti use_utc, tc *timeStr)
 	ti len = 0;
 	time_t rawtime = us / (1000 * 1000);
 	struct tm now;
+
 	if (use_utc != 0)
 	{
 		gmtime_r(&rawtime, &now);
+#if defined(__MINGW64__) || defined(__MINGW32__)
+
+		len = snprintf((char *)timeStr, 64,
+					   "%04d%02d%02d.%02d%02d%02d.%06I64d",
+					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
+					   now.tm_hour, now.tm_min, now.tm_sec,
+					   us % (1000 * 1000));
+#else
 		len = snprintf((char *)timeStr, 64,
 					   "%04d%02d%02d.%02d%02d%02d.%06lld",
 					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
 					   now.tm_hour, now.tm_min, now.tm_sec,
 					   us % (1000 * 1000));
+#endif
 	}
 	else
 	{
 		localtime_r(&rawtime, &now);
+#if defined(__MINGW64__) || defined(__MINGW32__)
+		len = snprintf((char *)timeStr, 64,
+					   "%04d%02d%02d.%02d%02d%02d.%06I64d %+03ld%02ld",
+					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
+					   now.tm_hour, now.tm_min, now.tm_sec,
+					   us % (1000 * 1000),
+					   (-timezone) / 3600, (-timezone) % 3600);
+#else
 		len = snprintf((char *)timeStr, 64,
 					   "%04d%02d%02d.%02d%02d%02d.%06lld %+03ld%02ld",
 					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
 					   now.tm_hour, now.tm_min, now.tm_sec,
 					   us % (1000 * 1000),
-					   now.tm_gmtoff / 3600, now.tm_gmtoff % 3600);
+					   (-timezone) / 3600, (-timezone) % 3600);
+#endif
 	}
 
 	return len;
@@ -96,7 +120,7 @@ ti tlog_try_rotate(ti64 limit)
 						TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i + 1);
 				rename((char *)filename_old, (char *)filename_new);
 			}
-			int fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND | O_CLOEXEC, 0644);
+			int fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 			dup2(fd, tlog_fd);
 			close(fd);
 		}
@@ -118,6 +142,21 @@ ti tlog_set_file_level(ti level)
 	return tlog_file_level;
 }
 
+ti tlog_system(const tc *cmd)
+{
+	ti ret = 0;
+#if defined(__MINGW64__) || defined(__MINGW32__)
+	wchar_t wcmd[2048] = L"";
+	MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, (char *)cmd, -1, wcmd, tx_array_size(wcmd));
+	ret = _wsystem(wcmd);
+#else
+	ret = system((char *)cmd);
+#endif
+
+	return ret;
+}
+
+static const tc tlog_level_str[][2] = {"D", "I", "W", "E"};
 ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file, const ti line, const tc *func, const tc *format, ...)
 {
 	if (level < tag_level)
@@ -130,7 +169,6 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 		return 0;
 	}
 
-	const tc tlog_level_str[][2] = {"D", "I", "W", "E"};
 	tc tlog_buf[TLOG_BUF_SIZE] = {0};
 
 	static volatile _Atomic ti64 seq = 0;
@@ -155,20 +193,46 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 
 			ti64 qps = seq_delta * 1000 * 1000 / us_delta;
 
-			char cmd[256] = {0};
-			sprintf(cmd, "echo \"---------- tlog[%s %lld] qps = %lld ----------\" >> /tmp/qps.txt", timeStr, seq_now, qps);
-			ti ret __attribute__((unused)) = system(cmd);
+			tc cmd[256] = {0};
+#if defined(__MINGW64__) || defined(__MINGW32__)
+			sprintf((char *)cmd, "echo \"---------- tlog[%s %I64d] qps = %I64d ----------\" >> qps.txt", timeStr, seq_now, qps);
+			ti ret __attribute__((unused)) = tlog_system(cmd);
+#else
+			sprintf((char *)cmd, "echo \"---------- tlog[%s %lld] qps = %lld ----------\" >> qps.txt", timeStr, seq_now, qps);
+			ti ret __attribute__((unused)) = system((char *)cmd);
+#endif
 		}
 	}
 #endif
 
-	tc *filename = (tc *)strrchr((char *)file, '/') + 1;
+#if defined(__MINGW64__) || defined(__MINGW32__)
+	tc *filename = (tc *)strrchr((char *)file, '\\');
+#else
+	tc *filename = (tc *)strrchr((char *)file, '/');
+#endif
 
+	if (filename != tnull)
+	{
+		filename = filename + 1;
+	}
+	else
+	{
+		filename = (tc *)file;
+	}
+
+#if defined(__MINGW64__) || defined(__MINGW32__)
+	len = sprintf((char *)tlog_buf,
+				  "[%s %I64d][%s/%s][%s:%d][%s]",
+				  (char *)timeStr, seq_now,
+				  (char *)tlog_level_str[level], (char *)tag,
+				  (char *)filename, line, (char *)func);
+#else
 	len = sprintf((char *)tlog_buf,
 				  "[%s %lld][%s/%s][%s:%d][%s]",
 				  (char *)timeStr, seq_now,
 				  (char *)tlog_level_str[level], (char *)tag,
 				  (char *)filename, line, (char *)func);
+#endif
 
 	va_list args;
 	va_start(args, format);
@@ -187,8 +251,12 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 	{
 		if (tlog_fd < 0)
 		{
+#if defined(__MINGW64__) || defined(__MINGW32__)
+			ti ret __attribute__((unused)) = tlog_system((tc *)"mkdir " TLOG_FILE_DIR);
+#else
 			ti ret __attribute__((unused)) = system("mkdir -m 755 -p " TLOG_FILE_DIR);
-			tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND | O_CLOEXEC, 0644);
+#endif
+			tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 		}
 
 		if (tlog_fd >= 0)
@@ -205,7 +273,7 @@ ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file,
 	return len;
 }
 
-tc tlog_hex2tc[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+static const tc tlog_hex2tc[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 ti tlog_print_hexdump(const tc *tag, const ti tag_level, const ti level, const tc *file, const ti line, const tc *func, const tc *info, const void *ptr, ti len)
 {
 	if (len > 512)

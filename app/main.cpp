@@ -12,6 +12,11 @@
 #include <pthread.h>
 #include <unistd.h>
 
+#if defined(__MINGW64__) || defined(__MINGW32__)
+#include <locale.h>
+#include <windows.h>
+#endif
+
 void *task(void *arg)
 {
 	ti i = *((int *)arg);
@@ -25,8 +30,31 @@ void *task(void *arg)
 	return NULL;
 }
 
-int main(int argc, char *argv[])
+#ifndef NDEBUG
+int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 {
+#if defined(__MINGW64__) || defined(__MINGW32__)
+	tlog_system((tc *)"chcp 65001");
+	setlocale(LC_ALL, ".65001");
+
+	tlog_system((tc *)"echo Chinese中文");
+#endif
+	tlog(TLOG_I, "start test 开始测试...");
+	showVer();
+
+	return 0;
+}
+#else
+int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
+{
+#if defined(__MINGW64__) || defined(__MINGW32__)
+	// ::ShowWindow(::GetConsoleWindow(), SW_NORMAL);
+	tlog_system((tc *)"chcp 65001");
+	setlocale(LC_ALL, ".65001");
+	// ::FreeConsole();
+
+	tlog_system((tc *)"echo Chinese中文");
+#endif
 	tlog(TLOG_I, "start ...");
 	showVer();
 
@@ -35,9 +63,9 @@ int main(int argc, char *argv[])
 		tlog(TLOG_D, "argv[%d] = %s", i, argv[i]);
 	}
 
-#if 0
+#if 1
 	tlog(TLOG_D, "main pid = %d, tid = %lu", getpid(), pthread_self());
-	for (ti i = 0; i < (2 * sysconf(_SC_NPROCESSORS_ONLN)); i++)
+	for (ti i = 0; i < 64; i++)
 	{
 		pthread_t tid = 0;
 		pthread_create(&tid, NULL, task, &i);
@@ -50,3 +78,4 @@ int main(int argc, char *argv[])
 	w.show();
 	return a.exec();
 }
+#endif

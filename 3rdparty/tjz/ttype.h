@@ -5,22 +5,31 @@
  */
 #pragma once
 
+#include <wchar.h>
+
 #define tp_size __SIZEOF_POINTER__
 
 // 整数
 typedef unsigned char tu8;
 typedef signed char ti8;
 typedef unsigned short tu16;
-typedef signed short ti16;
+typedef short ti16;
 typedef unsigned int tu32;
-typedef signed int ti32;
+typedef int ti32;
 typedef unsigned long long tu64;
-typedef signed long long ti64;
+typedef long long ti64;
+#ifdef __SIZEOF_INT128__
+typedef __uint128_t tu128;
+typedef __int128_t ti128;
+#endif
 typedef ti32 ti;
+typedef unsigned long tu;
+typedef long ts;
 
 // 浮点数
 typedef float tf32;
 typedef double tf64;
+typedef long double tf128;
 typedef tf64 tf;
 
 //字节
@@ -37,24 +46,18 @@ typedef tb32 tc32;
 typedef tb64 tc64;
 typedef tc8 tc;
 
+typedef wchar_t twc;
+
 //错误
-typedef ti32 terr;
+typedef ti32 te;
 
 // 布尔
 #include <stdbool.h>
-typedef bool tbool;
-#define ttrue true
-#define tfalse false
-
-// 指针
-#if (tp_size == 8)
-typedef tu64 tsize;
-#else
-typedef tu32 tsize;
-#endif
 
 #ifdef __cplusplus
 #define tnull nullptr
 #else
 #define tnull ((void *)0)
 #endif
+
+#define tx_array_size(a) (sizeof(a) / sizeof(a[0]))
