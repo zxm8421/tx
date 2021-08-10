@@ -63,7 +63,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 		tlog(TLOG_D, "argv[%d] = %s", i, argv[i]);
 	}
 
-#if 1
+#if 0
 	tlog(TLOG_D, "main pid = %d, tid = %lu", getpid(), pthread_self());
 	for (ti i = 0; i < 64; i++)
 	{
