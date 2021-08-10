@@ -35,8 +35,8 @@ DEFINES += \
 	buildTime=$${buildTime}	\
 	buildSHA1=\\\"$${buildSHA1}\\\"
 
-# CONFIG += precompile_header
-# PRECOMPILED_HEADER = app/stable.h
+CONFIG += precompile_header
+PRECOMPILED_HEADER = app/stable.h
 
 INCLUDEPATH +=	\
 	app	\
