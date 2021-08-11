@@ -13,30 +13,23 @@ buildVer_Minor = 1
 buildVer_Patch = 0
 VERSION = $${buildVer_Major}.$${buildVer_Minor}.$${buildVer_Patch}
 
-# message(VERSION = $${VERSION})
-
-contains(QMAKE_HOST.os, Linux) {
-buildTime = $$system("date +%s")
-} else: contains(QMAKE_HOST.os, Windows) {
-buildTime = $$system("PowerShell (Get-Date -UFormat %s).Split('.')[0]")
+contains(QMAKE_HOST.os, Windows) {
+buildTime = "$(shell PowerShell (Get-Date -UFormat %s).Split('.')[0])"
+buildSalt = "$(shell PowerShell Get-Date -Format %ffffff)"
 } else {
-buildTime = 0
+buildTime = "$(shell date +%s)"
+buildSalt = "$(shell echo \$\$((\$\$(date +%N)/1000)))"
 }
 
-buildSHA1 = $$system("git rev-parse --short=7 HEAD")
-
-# message(buildTime = $${buildTime})
-# message(buildSHA1 = $${buildSHA1})
+buildSHA1 = "$(shell git --git-dir $${PWD}/.git rev-parse --short=7 HEAD)"
 
 DEFINES += \
 	buildVer_Major=$${buildVer_Major}	\
 	buildVer_Minor=$${buildVer_Minor}	\
 	buildVer_Patch=$${buildVer_Patch}	\
 	buildTime=$${buildTime}	\
+	buildSalt=$${buildSalt}	\
 	buildSHA1=\\\"$${buildSHA1}\\\"
-
-CONFIG += precompile_header
-PRECOMPILED_HEADER = app/stable.h
 
 INCLUDEPATH +=	\
 	app	\
@@ -60,13 +53,31 @@ DISTFILES +=	\
 	README.md
 
 CONFIG(release, debug | release) {
+message(release)
 DEFINES += NDEBUG
 } else {
+message(debug)
+}
+
+# 单元测试
+# DEFINES += NTEST
+!contains(DEFINES, NTEST) {
+message(进行单元测试)
 QT += testlib
 
 SOURCES +=	\
-	app/version/version_test.cpp
+
+HEADERS += \
+	
 }
+
+contains(QMAKE_HOST.os, Windows) {
+buildVer.commands = "DEL /F $${OUT_PWD}/version.o"
+} else {
+buildVer.commands = "rm -f $${OUT_PWD}/version.o"
+}
+QMAKE_EXTRA_TARGETS += buildVer
+PRE_TARGETDEPS += buildVer
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

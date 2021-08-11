@@ -40,6 +40,7 @@
  * INFO		正常信息
  * WARNING	可处理的问题，比如丢包，畸形包等
  * ERROR	正常情况下不应该出现的，需要立刻修复甚至停止运行
+ * TEST		单元测试使用，永远显示
  * 
  * ALL	允许全部日志
  * OFF	关闭全部日志
@@ -48,9 +49,10 @@
 #define TLOG_I 1
 #define TLOG_W 2
 #define TLOG_E 3
+#define TLOG_T 4
 
 #define TLOG_ALL 0
-#define TLOG_OFF 10
+#define TLOG_OFF 16
 
 #ifndef TLOG_TAG
 #define TLOG_TAG "none"

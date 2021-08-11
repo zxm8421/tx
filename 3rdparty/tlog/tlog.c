@@ -156,7 +156,7 @@ ti tlog_system(const tc *cmd)
 	return ret;
 }
 
-static const tc tlog_level_str[][2] = {"D", "I", "W", "E"};
+static const tc tlog_level_str[][2] = {"D", "I", "W", "E", "T"};
 ti tlog_print(const tc *tag, const ti tag_level, const ti level, const tc *file, const ti line, const tc *func, const tc *format, ...)
 {
 	if (level < tag_level)

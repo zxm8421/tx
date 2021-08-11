@@ -3,6 +3,6 @@
  * 
  * @file stable.h
  */
-// #pragma once
+#pragma once
 
 #include <tjz/ttype.h>
