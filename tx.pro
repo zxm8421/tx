@@ -14,7 +14,7 @@ buildVer_Patch = 0
 VERSION = $${buildVer_Major}.$${buildVer_Minor}.$${buildVer_Patch}
 
 contains(QMAKE_HOST.os, Windows) {
-buildTime = "$(shell PowerShell (Get-Date -UFormat %s).Split('.')[0])"
+buildTime = "$(shell PowerShell (Get-Date -UFormat %s).Split(\\\'.\\\')[0])"
 buildSalt = "$(shell PowerShell Get-Date -Format %ffffff)"
 } else {
 buildTime = "$(shell date +%s)"
@@ -53,10 +53,7 @@ DISTFILES +=	\
 	README.md
 
 CONFIG(release, debug | release) {
-message(release)
 DEFINES += NDEBUG
-} else {
-message(debug)
 }
 
 # 单元测试
@@ -72,9 +69,10 @@ HEADERS += \
 }
 
 contains(QMAKE_HOST.os, Windows) {
-buildVer.commands = "DEL /F $${OUT_PWD}/version.o"
+buildVer.commands = "PowerShell if (Test-Path $${OUT_PWD}/release/version.o) { (ls $${OUT_PWD}/release/version.o).LastWriteTimeUtc = (New-Object datetime 2000, 1, 1) };	\
+								if (Test-Path $${OUT_PWD}/debug/version.o) { (ls $${OUT_PWD}/debug/version.o).LastWriteTimeUtc = (New-Object datetime 2000, 1, 1) }"
 } else {
-buildVer.commands = "rm -f $${OUT_PWD}/version.o"
+buildVer.commands = "touch -t 200001010000.00 version.o"
 }
 QMAKE_EXTRA_TARGETS += buildVer
 PRE_TARGETDEPS += buildVer
