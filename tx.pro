@@ -74,7 +74,7 @@ HEADERS += \
 contains(QMAKE_HOST.os, Windows) {
 buildVer.commands = "DEL /F $${OUT_PWD}/version.o"
 } else {
-buildVer.commands = "rm -f $${OUT_PWD}/version.o"
+buildVer.commands = "if [ -e $${OUT_PWD}/version.o ]; then rm -f $${OUT_PWD}/version.o; fi"
 }
 QMAKE_EXTRA_TARGETS += buildVer
 PRE_TARGETDEPS += buildVer
