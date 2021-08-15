@@ -15,6 +15,10 @@
 #ifndef buildSalt
 #define buildSalt 0 // 0~999999
 #endif
+#ifndef buildBranch
+#pragma message("编译器未生成buildBranch")
+#define buildBranch "none"
+#endif
 #ifndef buildSHA1
 #pragma message("编译器未生成buildSHA1")
 #define buildSHA1 "0000000"

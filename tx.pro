@@ -21,6 +21,7 @@ buildTime = "$(shell date +%s)"
 buildSalt = "$(shell echo \$\$((\$\$(date +%N)/1000)))"
 }
 
+buildBranch = "$(shell git --git-dir $${PWD}/.git rev-parse --abbrev-ref HEAD)"
 buildSHA1 = "$(shell git --git-dir $${PWD}/.git rev-parse --short=7 HEAD)"
 
 DEFINES += \
@@ -29,6 +30,7 @@ DEFINES += \
 	buildVer_Patch=$${buildVer_Patch}	\
 	buildTime=$${buildTime}	\
 	buildSalt=$${buildSalt}	\
+	buildBranch=\\\"$${buildBranch}\\\"	\
 	buildSHA1=\\\"$${buildSHA1}\\\"
 
 INCLUDEPATH +=	\
