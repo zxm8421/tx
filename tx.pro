@@ -57,14 +57,18 @@ DEFINES += NDEBUG
 }
 
 # 单元测试
-# DEFINES += NTEST
+DEFINES += NTEST
 !contains(DEFINES, NTEST) {
 message(进行单元测试)
 QT += testlib
 
 SOURCES +=	\
+	3rdparty/ttest/ttest.c	\
+	app/main_test.cpp	\
+	app/version/version_test.cpp
 
 HEADERS += \
+	3rdparty/ttest/ttest.h
 	
 }
 

@@ -60,4 +60,11 @@ typedef ti32 te;
 #define tnull ((void *)0)
 #endif
 
+#define tstatic static
+#ifdef __cplusplus
+#define textern extern "C"
+#else
+#define textern extern
+#endif
+
 #define tx_array_size(a) (sizeof(a) / sizeof(a[0]))
