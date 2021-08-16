@@ -105,17 +105,31 @@ extern "C"
 	 * 日志文件会自动滚动，只有在希望提前滚动日志文件的时候手动调用本函数
 	 * 
 	 * @param limit B, 限制单个日志文件大小
+	 */
+	void tlog_try_rotate(ti64 limit);
+
+	/**
+	 * @brief 运行本线程滚动日志文件
+	 * 
+	 */
+	void tlog_enable_local_rotate();
+
+	/**
+	 * @brief 禁止本线程滚动日志文件
+	 * 
+	 */
+	void tlog_disable_local_rotate();
+
+	/**
+	 * @brief 跨平台，得到文件的basename
+	 * 
+	 * @param path 
 	 * @return 
 	 */
-	ti tlog_try_rotate(ti64 limit);
-
-	ti tlog_enable_local_rotate();
-	ti tlog_disable_local_rotate();
-
 	tc *tlog_basename(const tc *path);
 
 	/**
-	 * @brief 跨平台system函数
+	 * @brief 跨平台, system
 	 * 
 	 * @param cmd 
 	 * @return 

@@ -44,53 +44,6 @@ ti64 tlog_getTimeUs()
 	return us;
 }
 
-ti tlog_getTimeStr(const ti64 us, ti use_utc, tc *timeStr)
-{
-	ti len = 0;
-	time_t rawtime = us / (1000 * 1000);
-	struct tm now;
-
-	if (use_utc != 0)
-	{
-		gmtime_r(&rawtime, &now);
-#if defined(__MINGW64__) || defined(__MINGW32__)
-
-		len = snprintf((char *)timeStr, 64,
-					   "%04d%02d%02d.%02d%02d%02d.%06I64d",
-					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-					   now.tm_hour, now.tm_min, now.tm_sec,
-					   us % (1000 * 1000));
-#else
-		len = snprintf((char *)timeStr, 64,
-					   "%04d%02d%02d.%02d%02d%02d.%06lld",
-					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-					   now.tm_hour, now.tm_min, now.tm_sec,
-					   us % (1000 * 1000));
-#endif
-	}
-	else
-	{
-		localtime_r(&rawtime, &now);
-#if defined(__MINGW64__) || defined(__MINGW32__)
-		len = snprintf((char *)timeStr, 64,
-					   "%04d%02d%02d.%02d%02d%02d.%06I64d %+03ld%02ld",
-					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-					   now.tm_hour, now.tm_min, now.tm_sec,
-					   us % (1000 * 1000),
-					   (-timezone) / 3600, (-timezone) % 3600);
-#else
-		len = snprintf((char *)timeStr, 64,
-					   "%04d%02d%02d.%02d%02d%02d.%06lld %+03ld%02ld",
-					   now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-					   now.tm_hour, now.tm_min, now.tm_sec,
-					   us % (1000 * 1000),
-					   (-timezone) / 3600, (-timezone) % 3600);
-#endif
-	}
-
-	return len;
-}
-
 tc *tlog_basename(const tc *path)
 {
 	if (path == tnull)
@@ -107,13 +60,23 @@ tc *tlog_basename(const tc *path)
 	return p;
 }
 
-ti tlog_try_rotate(ti64 limit)
+void tlog_enable_local_rotate()
+{
+	tlog_local_rotate = true;
+}
+
+void tlog_disable_local_rotate()
+{
+	tlog_local_rotate = false;
+}
+
+void tlog_try_rotate(ti64 limit)
 {
 	static pthread_mutex_t tlog_rotate_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 	if (limit < 0)
 	{
-		return 0;
+		return;
 	}
 
 	if (pthread_mutex_trylock(&tlog_rotate_mutex) == 0)
@@ -142,8 +105,6 @@ ti tlog_try_rotate(ti64 limit)
 		}
 		pthread_mutex_unlock(&tlog_rotate_mutex);
 	}
-
-	return 0;
 }
 
 ti tlog_system(const tc *cmd)
@@ -151,10 +112,10 @@ ti tlog_system(const tc *cmd)
 	ti ret = 0;
 #if defined(__MINGW64__) || defined(__MINGW32__)
 	wchar_t wcmd[2048] = L"";
-	MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, (char *)cmd, -1, wcmd, tx_array_size(wcmd));
+	MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, cmd, -1, wcmd, tx_array_size(wcmd));
 	ret = _wsystem(wcmd);
 #else
-	ret = system((char *)cmd);
+	ret = system(cmd);
 #endif
 
 	return ret;
