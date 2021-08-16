@@ -25,6 +25,7 @@ buildBranch = "$(shell git --git-dir $${PWD}/.git rev-parse --abbrev-ref HEAD)"
 buildSHA1 = "$(shell git --git-dir $${PWD}/.git rev-parse --short=7 HEAD)"
 
 DEFINES += \
+	buildTarget=\\\"$${TARGET}\\\"	\
 	buildVer_Major=$${buildVer_Major}	\
 	buildVer_Minor=$${buildVer_Minor}	\
 	buildVer_Patch=$${buildVer_Patch}	\

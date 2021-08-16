@@ -24,6 +24,11 @@
 #define buildSHA1 "0000000"
 #endif
 
+#ifndef buildTarget
+#pragma message("编译器未生成buildTarget")
+#define buildTarget "app"
+#endif
+
 #ifndef buildVer_Major
 #define buildVer_Major 0
 #endif

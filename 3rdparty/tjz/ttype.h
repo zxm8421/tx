@@ -22,7 +22,7 @@ typedef long long ti64;
 typedef __uint128_t tu128;
 typedef __int128_t ti128;
 #endif
-typedef ti32 ti;
+typedef int ti;
 typedef unsigned long tu;
 typedef long ts;
 
@@ -30,7 +30,7 @@ typedef long ts;
 typedef float tf32;
 typedef double tf64;
 typedef long double tf128;
-typedef tf64 tf;
+typedef double tf;
 
 //字节
 typedef tu8 tb8;
@@ -44,12 +44,12 @@ typedef tb8 tc8;
 typedef tb16 tc16;
 typedef tb32 tc32;
 typedef tb64 tc64;
-typedef tc8 tc;
 
+typedef char tc;
 typedef wchar_t twc;
 
 //错误
-typedef ti32 te;
+typedef ti te;
 
 // 布尔
 #include <stdbool.h>

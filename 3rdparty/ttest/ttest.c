@@ -8,6 +8,8 @@
 ttest_import(main_test);
 ti ttest_main(int argc, char *argv[])
 {
+	tlog(TLOG_T, "开始单元测试");
+
 	struct ttest_Ret ret;
 	struct ttest_Ret *ttest_ret = &ret;
 	ttest_run(main_test, 0);
