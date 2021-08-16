@@ -22,7 +22,15 @@
  */
 #define TLOG_USE_UTC 0
 #define TLOG_BUF_SIZE 4096
+#ifdef NTEST
+#ifdef NDEBUG
+#define TLOG_GLOBAL_FILTER TLOG_I
+#else
 #define TLOG_GLOBAL_FILTER TLOG_ALL
+#endif
+#else
+#define TLOG_GLOBAL_FILTER TLOG_T
+#endif
 
 #define TLOG_ECHO_QPS 1
 #define TLOG_CONSOLE_ENABLE 1

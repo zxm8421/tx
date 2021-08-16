@@ -8,11 +8,10 @@
 
 ttest_static(showVer_test)
 {
-	ttest_check_ti_gt(showVer(), 0);
+	ttest_check_gt(showVer(), 0);
 }
 
 ttest_export(version_test)
 {
-	showVer();
 	ttest_run(showVer_test, 10);
 }
