@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 
-#define TLOG_TAG "mainwindow"
-#define TLOG_LVL TLOG_D
+#define TLOG_LOCAL_FILTER TLOG_I
 #include <tlog/tlog.h>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)

@@ -1,8 +1,7 @@
 #include "version.h"
 #include "stable.h"
 
-#define TLOG_TAG "version_test"
-#define TLOG_LVL TLOG_I
+#define TLOG_LOCAL_FILTER TLOG_I
 #include <tlog/tlog.h>
 #include <ttest/ttest.h>
 
