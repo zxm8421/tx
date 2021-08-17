@@ -13,7 +13,7 @@
 #define buildTime 0LL
 #endif
 #ifndef buildSalt
-#define buildSalt 0 // 0~999999
+#define buildSalt "000000"
 #endif
 #ifndef buildBranch
 #pragma message("编译器未生成buildBranch")

@@ -15,10 +15,10 @@ VERSION = $${buildVer_Major}.$${buildVer_Minor}.$${buildVer_Patch}
 
 contains(QMAKE_HOST.os, Windows) {
 buildTime = "$(shell PowerShell (Get-Date (Get-Date).ToUniversalTime() -UFormat %s).Split(\\\'.\\\')[0])"
-buildSalt = "$(shell PowerShell (Get-Date -Format %ffffff)%1000000)"
+buildSalt = "$(shell PowerShell Get-Date -Format %ffffff"
 } else {
 buildTime = "$(shell date +%s)"
-buildSalt = "$(shell echo \$\$((\$\$(date +%N)/1000)))"
+buildSalt = "$(shell date +%6N)"
 }
 
 buildBranch = "$(shell git --git-dir $${PWD}/.git rev-parse --abbrev-ref HEAD)"
@@ -30,7 +30,7 @@ DEFINES += \
 	buildVer_Minor=$${buildVer_Minor}	\
 	buildVer_Patch=$${buildVer_Patch}	\
 	buildTime=$${buildTime}	\
-	buildSalt=$${buildSalt}	\
+	buildSalt=\\\"$${buildSalt}\\\"	\
 	buildBranch=\\\"$${buildBranch}\\\"	\
 	buildSHA1=\\\"$${buildSHA1}\\\"
 

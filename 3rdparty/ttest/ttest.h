@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <string.h>
 #include <stdarg.h>
 #include <tjz/ttype.h>
 
@@ -36,8 +37,8 @@ struct ttest_Ret
 #define ttest_check_in_range(v, a, b) ttest_check(((v) >= (a)) && ((v) <= (b)))
 #define ttest_check_not_in_range(v, a, b) ttest_check(((v) < (a)) || ((v) > (b)))
 
-#define ttest_check_str_eq(s1, s2)
-#define ttest_check_str_ne(s1, s2)
+#define ttest_check_str_eq(s1, s2) ttest_check(strcmp(s1, s2))
+#define ttest_check_str_ne(s1, s2) ttest_check(!strcmp(s1, s2))
 
 #define ttest_static(ttest_test) tstatic void ttest_test(struct ttest_Ret *ret)
 #define ttest_export(ttest_test) textern void ttest_test(struct ttest_Ret *ret)
