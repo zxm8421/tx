@@ -91,13 +91,13 @@ void tlog_try_rotate(ti64 limit)
 			{
 				tc filename_old[256] = {0};
 				tc filename_new[256] = {0};
-				sprintf((char *)filename_old,
-						"%s.%d.log",
-						TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i);
-				sprintf((char *)filename_new,
-						"%s.%d.log",
-						TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i + 1);
-				rename((char *)filename_old, (char *)filename_new);
+				snprintf(filename_old, sizeof(filename_old),
+						 "%s.%d.log",
+						 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i);
+				snprintf(filename_new, sizeof(filename_new),
+						 "%s.%d.log",
+						 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i + 1);
+				rename(filename_old, filename_new);
 			}
 			int fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 			dup2(fd, tlog_fd);
