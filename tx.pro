@@ -15,7 +15,7 @@ VERSION = $${buildVer_Major}.$${buildVer_Minor}.$${buildVer_Patch}
 
 contains(QMAKE_HOST.os, Windows) {
 buildTime = "$(shell PowerShell (Get-Date (Get-Date).ToUniversalTime() -UFormat %s).Split(\\\'.\\\')[0])"
-buildSalt = "$(shell PowerShell Get-Date -Format %ffffff"
+buildSalt = "$(shell PowerShell Get-Date -Format %ffffff)"
 } else {
 buildTime = "$(shell date +%s)"
 buildSalt = "$(shell date +%6N)"
