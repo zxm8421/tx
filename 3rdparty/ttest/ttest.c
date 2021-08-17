@@ -15,11 +15,16 @@ int ttest_main(int argc __attribute__((unused)), char *argv[] __attribute__((unu
 	struct ttest_Ret _ret;
 	struct ttest_Ret *ret = &_ret;
 	memset(ret, 0, sizeof(struct ttest_Ret));
-	return ttest_run(main_test, 0);
+	ttest_run(main_test, 0);
+
+	tlog(TLOG_T, "结束自动化测试");
+
+	return ret->failed;
 }
 
 ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), bool run, ti timeout)
 {
+	ret->check_passed = 0;
 	ret->check_failed = 0;
 
 	struct ttest_Ret _subret;
@@ -73,16 +78,17 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 	return subret->failed;
 }
 
-ti ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ttest_ret, bool v)
+ti ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v)
 {
 	if (v)
 	{
+		ret->check_passed += 1;
 		// tlog_rawprint(file, line, func, filter, TLOG_T, "check passed");
 		return 0;
 	}
 	else
 	{
-		ttest_ret->check_failed += 1;
+		ret->check_failed += 1;
 		tlog_rawprint(file, line, func, filter, TLOG_T, "check failed");
 
 		return 1;

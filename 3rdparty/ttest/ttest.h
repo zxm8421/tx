@@ -15,9 +15,11 @@ struct ttest_Ret
 	ti failed;
 	ti skipped;
 
+	ti check_passed;
 	ti check_failed;
 };
 
+#define ttest_check_exit return
 #define ttest_check_nothing(v) ttest_check(true)
 #define ttest_check_true(v) ttest_check(v)
 #define ttest_check_false(v) ttest_check(!v)
