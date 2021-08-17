@@ -43,7 +43,7 @@ struct ttest_Ret
 #define ttest_export(ttest_test) textern void ttest_test(struct ttest_Ret *ret)
 #define ttest_import(ttest_test) textern void ttest_test(struct ttest_Ret *ret)
 
-#define ttest_run(test, timeout) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, true, timeout)
+#define ttest_run(test, ms) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, true, ms)
 #define ttest_skip(test) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, false, 0)
 
 #ifdef __cplusplus
@@ -52,7 +52,7 @@ extern "C"
 #endif
 	int ttest_main(int argc, char *argv[]);
 
-	ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), bool run, ti64 timeout);
+	ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), bool run, ti timeout);
 
 	ti ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v);
 

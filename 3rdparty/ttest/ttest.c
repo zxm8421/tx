@@ -18,7 +18,7 @@ int ttest_main(int argc __attribute__((unused)), char *argv[] __attribute__((unu
 	return ttest_run(main_test, 0);
 }
 
-ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), bool run, ti64 timeout)
+ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), bool run, ti timeout)
 {
 	ret->check_failed = 0;
 
@@ -28,14 +28,15 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 
 	tc buf[32] = {0};
 
+	ti ms = 0;
 	if (run)
 	{
-		ti64 start = tlog_getTimeUs();
+		ti64 start = tlog_getTimeMs();
 		ttest_test(subret);
-		ti64 end = tlog_getTimeUs();
-		ti64 us = end - start;
+		ti64 end = tlog_getTimeMs();
+		ms = end - start;
 
-		if ((subret->check_failed > 0) || (subret->failed > 0) || ((timeout > 0) && (us > timeout)))
+		if ((subret->check_failed > 0) || (subret->failed > 0) || ((timeout > 0) && (ms > timeout)))
 		{
 			subret->failed += 1;
 			snprintf(buf, sizeof(buf), "test failed");
@@ -61,10 +62,11 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 
 	tlog_rawprint(file, line, func, filter, TLOG_T,
 				  "%s\n"
-				  "             sum  passed  failed skipped\n"
+				  "%8d ms  sum  passed  failed skipped\n"
 				  "this      %6d  %6d  %6d  %6d\n"
 				  "all       %6d  %6d  %6d  %6d",
 				  buf,
+				  ms,
 				  subret->sum, subret->passed, subret->failed, subret->skipped,
 				  ret->sum, ret->passed, ret->failed, ret->skipped);
 
