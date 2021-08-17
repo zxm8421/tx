@@ -10,8 +10,7 @@
 
 #include <QApplication>
 
-#define TLOG_TAG "main"
-#define TLOG_LVL TLOG_D
+#define TLOG_LOCAL_FILTER TLOG_D
 #include <tlog/tlog.h>
 #ifndef NTEST
 #include <ttest/ttest.h>
@@ -22,17 +21,17 @@
 
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 {
-#ifndef NTEST
-	return ttest_main(argc, argv);
-#endif
-
 #if defined(__MINGW64__) || defined(__MINGW32__)
 	// ::ShowWindow(::GetConsoleWindow(), SW_NORMAL);
-	tlog_system((tc *)"chcp 65001");
+	tlog_system("chcp 65001");
 	setlocale(LC_ALL, ".65001");
 	// ::FreeConsole();
 
-	tlog_system((tc *)"echo Chinese中文");
+	tlog_system("echo Chinese中文");
+#endif
+
+#ifndef NTEST
+	return ttest_main(argc, argv);
 #endif
 
 	tlog(TLOG_I, "start ...");

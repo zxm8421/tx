@@ -10,7 +10,7 @@
 ttest_import(main_test);
 int ttest_main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 {
-	tlog(TLOG_T, "开始单元测试");
+	tlog(TLOG_T, "开始自动化测试");
 
 	struct ttest_Ret _ret;
 	struct ttest_Ret *ret = &_ret;
@@ -26,7 +26,7 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 	struct ttest_Ret *subret = &_subret;
 	memset(subret, 0, sizeof(struct ttest_Ret));
 
-	tc buf[16] = {0};
+	tc buf[32] = {0};
 
 	if (run)
 	{
@@ -38,32 +38,35 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 		if ((subret->check_failed > 0) || (subret->failed > 0) || ((timeout > 0) && (us > timeout)))
 		{
 			subret->failed += 1;
-			snprintf(buf, sizeof(buf), "run failed");
+			snprintf(buf, sizeof(buf), "test failed");
 		}
 		else
 		{
 			subret->passed += 1;
-			snprintf(buf, sizeof(buf), "run passed");
+			snprintf(buf, sizeof(buf), "test passed");
 		}
 	}
 	else
 	{
 		subret->skipped += 1;
-		snprintf(buf, sizeof(buf), "run skipped");
+		snprintf(buf, sizeof(buf), "test skipped");
 	}
 
-	subret->total += 1;
+	subret->sum += 1;
 
 	ret->passed += subret->passed;
 	ret->failed += subret->failed;
 	ret->skipped += subret->skipped;
-	ret->total += subret->total;
+	ret->sum += subret->sum;
 
 	tlog_rawprint(file, line, func, filter, TLOG_T,
-				  "%s, tolal passed failed skipped = %d %d %d %d; %d %d %d %d;",
+				  "%s\n"
+				  "             sum  passed  failed skipped\n"
+				  "this      %6d  %6d  %6d  %6d\n"
+				  "all       %6d  %6d  %6d  %6d",
 				  buf,
-				  subret->total, subret->passed, subret->failed, subret->skipped,
-				  ret->total, ret->passed, ret->failed, ret->skipped);
+				  subret->sum, subret->passed, subret->failed, subret->skipped,
+				  ret->sum, ret->passed, ret->failed, ret->skipped);
 
 	return subret->failed;
 }

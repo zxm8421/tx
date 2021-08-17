@@ -10,7 +10,7 @@
 
 struct ttest_Ret
 {
-	ti total;
+	ti sum;
 	ti passed;
 	ti failed;
 	ti skipped;

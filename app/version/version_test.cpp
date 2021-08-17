@@ -9,6 +9,7 @@
 ttest_static(showVer_test)
 {
 	ttest_check_gt(showVer(), 0);
+	ttest_check_eq(showVer(), 0);
 }
 
 ttest_export(version_test)
