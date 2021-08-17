@@ -32,7 +32,7 @@
 #define TLOG_GLOBAL_FILTER TLOG_T
 #endif
 
-#define TLOG_ECHO_QPS 1
+#define TLOG_ECHO_QPS 0
 #define TLOG_CONSOLE_ENABLE 1
 #define TLOG_FILE_ENABLE 1
 #define TLOG_FILE_NUM 10

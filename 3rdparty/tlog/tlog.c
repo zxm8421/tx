@@ -203,7 +203,7 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 				ti qps = seq_delta * 1000 * 1000 / us_delta;
 
 				tc cmd[256] = {0};
-				snprintf(cmd, sizeof(cmd), "echo \"%sqps = %d\" >> qps.txt", buf + len, qps);
+				snprintf(cmd, sizeof(cmd), "echo %sqps = %d >> qps.txt", buf, qps);
 #if defined(__MINGW64__) || defined(__MINGW32__)
 				ti ret __attribute__((unused)) = tlog_system(cmd);
 #else
