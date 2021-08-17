@@ -129,6 +129,14 @@ extern "C"
 	void tlog_disable_local_rotate();
 
 	/**
+	 * @brief 设置全局日志过滤级别
+	 * 
+	 * @param filter 
+	 * @return 
+	 */
+	ti tlog_set_global_filter(ti filter);
+
+	/**
 	 * @brief 跨平台，得到文件的basename
 	 * 
 	 * @param path 

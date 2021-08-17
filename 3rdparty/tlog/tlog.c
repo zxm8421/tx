@@ -44,6 +44,12 @@ ti64 tlog_getTimeUs()
 	return us;
 }
 
+ti tlog_set_global_filter(ti filter)
+{
+	tlog_filter = filter;
+	return tlog_filter;
+}
+
 tc *tlog_basename(const tc *path)
 {
 	if (path == tnull)
