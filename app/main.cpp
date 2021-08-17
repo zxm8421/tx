@@ -10,7 +10,7 @@
 
 #include <QApplication>
 
-#define TLOG_LOCAL_FILTER TLOG_D
+#define TLOG_LOCAL_FILTER TLOG_I
 #include <tlog/tlog.h>
 #ifndef NTEST
 #include <ttest/ttest.h>

@@ -2,7 +2,7 @@
 #include "stable.h"
 
 #define TLOG_TAG "version_test"
-#define TLOG_LVL TLOG_D
+#define TLOG_LVL TLOG_I
 #include <tlog/tlog.h>
 #include <ttest/ttest.h>
 
