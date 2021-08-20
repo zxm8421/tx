@@ -10,7 +10,7 @@
 
 在每个c/cpp文件开头
 
-#define TLOG_LOCAL_FILTER TLOG_I
+#define TLOG_LOCAL_FILTER TLOG_ALL
 #include <tlog/tlog.h>
 
  * 
