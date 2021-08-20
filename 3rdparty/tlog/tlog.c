@@ -20,7 +20,7 @@
 #include <windows.h>
 #endif
 
-#define TLOG_THREAD_IDLE_MS 1
+#define TLOG_THREAD_IDLE_MS 10
 #define TLOG_BURST_SIZE 1024
 #define TLOG_BUF_SIZE 4096
 

@@ -28,7 +28,7 @@ void *task(void *arg)
 	{
 		cnt++;
 		tlog(TLOG_D, "task arg = %d, tid = %lu, cnt = %d", i, pthread_self(), cnt);
-		usleep(1);
+		usleep(1000);
 	}
 
 	return NULL;
