@@ -20,6 +20,7 @@
 #include <windows.h>
 #endif
 
+#define TLOG_THREAD_IDLE_MS 1
 #define TLOG_BURST_SIZE 1024
 #define TLOG_BUF_SIZE 4096
 
@@ -261,7 +262,7 @@ void *tlog_thread(void *arg __attribute__((unused)))
 
 		if (seq_size <= 0)
 		{
-			usleep(1000);
+			usleep(TLOG_THREAD_IDLE_MS * 1000);
 		}
 		else if (seq_size < TLOG_BURST_SIZE)
 		{
