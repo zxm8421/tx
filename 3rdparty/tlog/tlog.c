@@ -1,6 +1,9 @@
 #define TLOG_LOCAL_FILTER TLOG_D
 #include "tlog.h"
 
+#if defined(__MINGW64__) || defined(__MINGW32__)
+#define __USE_MINGW_ANSI_STDIO 1
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -108,48 +111,30 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 	// "[20000101.000000.000 0]"
 	{
 		time_t rawtime = us / (1000 * 1000);
+		ti rawtime_us = us % (1000 * 1000);
 		struct tm now;
 		if (TLOG_USE_UTC)
 		{
 			gmtime_r(&rawtime, &now);
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
 			len += snprintf(buf + len, 64,
-							"[%04d%02d%02d.%02d%02d%02d.%06I64d %I64d]",
+							"[%04d%02d%02d.%02d%02d%02d.%06d %lld]",
 							now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
 							now.tm_hour, now.tm_min, now.tm_sec,
-							us % (1000 * 1000),
+							rawtime_us,
 							seq_now);
-#else
-			len += snprintf(buf + len, 64,
-							"[%04d%02d%02d.%02d%02d%02d.%06lld %lld]",
-							now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-							now.tm_hour, now.tm_min, now.tm_sec,
-							us % (1000 * 1000),
-							seq_now);
-#endif
 		}
 		else
 		{
 			localtime_r(&rawtime, &now);
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
 			len += snprintf(buf + len, 64,
-							"[%04d%02d%02d.%02d%02d%02d.%06I64d%+03ld%02ld %I64d]",
+							"[%04d%02d%02d.%02d%02d%02d.%06d%+03ld%02ld %lld]",
 							now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
 							now.tm_hour, now.tm_min, now.tm_sec,
-							us % (1000 * 1000),
+							rawtime_us,
 							(-timezone) / 3600, (-timezone) % 3600,
 							seq_now);
-#else
-			len += snprintf(buf + len, 64,
-							"[%04d%02d%02d.%02d%02d%02d.%06lld%+03ld%02ld %lld]",
-							now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-							now.tm_hour, now.tm_min, now.tm_sec,
-							us % (1000 * 1000),
-							(-timezone) / 3600, (-timezone) % 3600,
-							seq_now);
-#endif
 		}
 	}
 
