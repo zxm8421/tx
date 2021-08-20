@@ -245,7 +245,7 @@ void *tlog_thread(void *arg __attribute__((unused)))
 		stat(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
 		ts size = statbuf.st_size;
 
-		if (size > TLOG_FILE_SIZE)
+		if (size >= TLOG_FILE_SIZE)
 		{
 			for (ti i = (TLOG_FILE_NUM - 2); i >= 0; i--)
 			{
@@ -294,19 +294,39 @@ void *tlog_thread(void *arg __attribute__((unused)))
 ti tlog_init()
 {
 #if defined(__MINGW64__) || defined(__MINGW32__)
+	tlog_tid = -1;
 	ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
+
+	struct stat statbuf;
+	stat(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
+	ts size = statbuf.st_size;
+
+	if (size >= TLOG_FILE_SIZE)
+	{
+		for (ti i = (TLOG_FILE_NUM - 2); i >= 0; i--)
+		{
+			tc filename_old[256] = {0};
+			tc filename_new[256] = {0};
+			snprintf(filename_old, sizeof(filename_old),
+					 "%s.%d.log",
+					 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i);
+			snprintf(filename_new, sizeof(filename_new),
+					 "%s.%d.log",
+					 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i + 1);
+			rename(filename_old, filename_new);
+		}
+	}
+	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 #else
 	ti ret __attribute__((unused)) = system("mkdir -m 755 -p " TLOG_FILE_DIR);
-#endif
 	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
-#else
 	pthread_create(&tlog_tid, NULL, tlog_thread, tnull);
 	pthread_setname_np(tlog_tid, "tlog");
 
 	tlog(TLOG_D, "当前 pid = %d, tid = %lu", getpid(), pthread_self());
 	tlog(TLOG_D, "创建tlog线程 tid = %lu", tlog_tid);
 #endif
+
 	return 0;
 }
