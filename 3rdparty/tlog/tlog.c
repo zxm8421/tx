@@ -13,8 +13,6 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
-#define __USE_GNU
-#include <pthread.h>
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #include <windows.h>
@@ -23,7 +21,10 @@
 static ti tlog_filter = TLOG_GLOBAL_FILTER;
 static volatile _Atomic ti64 tlog_seq = 0;
 static ti tlog_fd = -1;
+#if defined(__MINGW64__) || defined(__MINGW32__)
+#else
 static pthread_t tlog_tid = -1;
+#endif
 
 ti64 tlog_getTimeMs()
 {
@@ -294,7 +295,6 @@ void *tlog_thread(void *arg __attribute__((unused)))
 ti tlog_init()
 {
 #if defined(__MINGW64__) || defined(__MINGW32__)
-	tlog_tid = -1;
 	ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
 
 	struct stat statbuf;
