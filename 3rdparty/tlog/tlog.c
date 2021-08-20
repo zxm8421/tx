@@ -23,6 +23,8 @@ static volatile _Atomic ti64 tlog_seq = 0;
 static ti tlog_fd = -1;
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #else
+#define __USE_GNU
+#include <pthread.h>
 static pthread_t tlog_tid = -1;
 #endif
 
