@@ -300,11 +300,13 @@ ti tlog_init()
 #endif
 	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 
+#if defined(__MINGW64__) || defined(__MINGW32__)
+#else
 	pthread_create(&tlog_tid, NULL, tlog_thread, tnull);
 	pthread_setname_np(tlog_tid, "tlog");
 
 	tlog(TLOG_D, "当前 pid = %d, tid = %lu", getpid(), pthread_self());
 	tlog(TLOG_D, "创建tlog线程 tid = %lu", tlog_tid);
-
+#endif
 	return 0;
 }
