@@ -243,7 +243,7 @@ void *tlog_thread(void *arg __attribute__((unused)))
 
 		struct stat statbuf;
 		stat(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
-		ti64 size = statbuf.st_size;
+		ts size = statbuf.st_size;
 
 		if (size > TLOG_FILE_SIZE)
 		{
