@@ -10,7 +10,7 @@
 
 #include <QApplication>
 
-#define TLOG_LOCAL_FILTER TLOG_I
+#define TLOG_LOCAL_FILTER TLOG_D
 #include <tlog/tlog.h>
 #ifndef NTEST
 #include <ttest/ttest.h>
@@ -19,8 +19,24 @@
 #include "version/version.h"
 #include "ui/mainwindow.h"
 
+void *task(void *arg)
+{
+	ti i = *((int *)arg);
+	ti cnt = 0;
+
+	while (true)
+	{
+		cnt++;
+		tlog(TLOG_D, "task arg = %d, tid = %lu, cnt = %d", i, pthread_self(), cnt);
+		usleep(1);
+	}
+
+	return NULL;
+}
+
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 {
+	tlog_init();
 #if defined(__MINGW64__) || defined(__MINGW32__)
 	// ::ShowWindow(::GetConsoleWindow(), SW_NORMAL);
 	tlog_system("chcp 65001");
@@ -41,6 +57,16 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 	{
 		tlog(TLOG_D, "argv[%d] = %s", i, argv[i]);
 	}
+
+#if 1
+	tlog(TLOG_D, "main pid = %d, tid = %lu", getpid(), pthread_self());
+	for (ti i = 0; i < 4; i++)
+	{
+		pthread_t tid = 0;
+		pthread_create(&tid, NULL, task, &i);
+		tlog(TLOG_D, "create tid = %lu", tid);
+	}
+#endif
 
 	QApplication a(argc, argv);
 	MainWindow w;

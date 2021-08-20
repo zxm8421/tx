@@ -1,3 +1,4 @@
+#define TLOG_LOCAL_FILTER TLOG_D
 #include "tlog.h"
 
 #include <stdio.h>
@@ -12,15 +13,31 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#define __USE_GNU
 #include <pthread.h>
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #include <windows.h>
 #endif
 
+#define TLOG_BURST_SIZE 1024
+#define TLOG_BUF_SIZE 4096
+
 static ti tlog_filter = TLOG_GLOBAL_FILTER;
 static ti tlog_fd = -1;
-static __thread bool tlog_local_rotate = true;
+
+static struct
+{
+	volatile _Atomic ti64 seq_r;
+	volatile _Atomic ti64 seq_w;
+
+	struct
+	{
+		ti64 seq;
+		ti32 len;
+		tc s[TLOG_BUF_SIZE];
+	} buf[TLOG_BURST_SIZE];
+} tlog;
 
 ti64 tlog_getTimeMs()
 {
@@ -66,53 +83,6 @@ tc *tlog_basename(const tc *path)
 	return p;
 }
 
-void tlog_enable_local_rotate()
-{
-	tlog_local_rotate = true;
-}
-
-void tlog_disable_local_rotate()
-{
-	tlog_local_rotate = false;
-}
-
-void tlog_try_rotate(ti64 limit)
-{
-	static pthread_mutex_t tlog_rotate_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-	if (limit < 0)
-	{
-		return;
-	}
-
-	if (pthread_mutex_trylock(&tlog_rotate_mutex) == 0)
-	{
-		struct stat statbuf;
-		stat(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
-		ti64 size = statbuf.st_size;
-
-		if ((size > TLOG_FILE_SIZE) || (size > limit))
-		{
-			for (ti i = (TLOG_FILE_NUM - 2); i >= 0; i--)
-			{
-				tc filename_old[256] = {0};
-				tc filename_new[256] = {0};
-				snprintf(filename_old, sizeof(filename_old),
-						 "%s.%d.log",
-						 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i);
-				snprintf(filename_new, sizeof(filename_new),
-						 "%s.%d.log",
-						 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i + 1);
-				rename(filename_old, filename_new);
-			}
-			int fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
-			dup2(fd, tlog_fd);
-			close(fd);
-		}
-		pthread_mutex_unlock(&tlog_rotate_mutex);
-	}
-}
-
 ti tlog_system(const tc *cmd)
 {
 	ti ret = 0;
@@ -139,11 +109,15 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 		return 0;
 	}
 
-	static volatile _Atomic ti64 seq = 0;
-	ti64 seq_now = atomic_fetch_add_explicit(&seq, 1, memory_order_relaxed);
+	if ((tlog.seq_w - tlog.seq_r) > TLOG_BURST_SIZE)
+	{
+		return -1;
+	}
+
+	ti64 seq_now = atomic_fetch_add_explicit(&tlog.seq_w, 1, memory_order_relaxed);
 
 	ti len = 0;
-	tc buf[TLOG_BUF_SIZE] = {0};
+	tc *buf = tlog.buf[seq_now % TLOG_BURST_SIZE].s;
 
 	ti64 us = tlog_getTimeUs();
 
@@ -193,78 +167,32 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 							seq_now);
 #endif
 		}
-
-#if TLOG_ECHO_QPS
-		{
-			static ti64 seq_last = 0;
-			static ti64 us_last = 0;
-			if ((us - us_last) >= (1000 * 1000))
-			{
-				ti64 us_delta = us - us_last;
-				us_last = us;
-
-				ti64 seq_delta = seq_now - seq_last;
-				seq_last = seq_now;
-
-				ti qps = seq_delta * 1000 * 1000 / us_delta;
-
-				tc cmd[256] = {0};
-				snprintf(cmd, sizeof(cmd), "echo %sqps = %d >> qps.txt", buf, qps);
-#if defined(__MINGW64__) || defined(__MINGW32__)
-				ti ret __attribute__((unused)) = tlog_system(cmd);
-#else
-				ti ret __attribute__((unused)) = system(cmd);
-#endif
-			}
-		}
-#endif
-
-		// "[D/main.cpp:32 main]"
-		{
-			const tc level_table[] = {'D', 'I', 'W', 'E', 'T'};
-			len += snprintf(buf + len, 256,
-							"[%c/%s:%d %s]",
-							level_table[level],
-							tlog_basename(file), line,
-							func);
-		}
-
-		// 用户输入
-		{
-			va_list ap;
-			va_start(ap, format);
-			len += vsnprintf(buf + len, sizeof(buf) - len, format, ap);
-			va_end(ap);
-
-			len += snprintf(buf + len, 2, "\n");
-		}
-
-		if (TLOG_CONSOLE_ENABLE)
-		{
-			ti ret __attribute__((unused)) = write(STDOUT_FILENO, buf, len);
-		}
-
-		if (TLOG_FILE_ENABLE)
-		{
-			if (tlog_fd < 0)
-			{
-#if defined(__MINGW64__) || defined(__MINGW32__)
-				ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
-#else
-				ti ret __attribute__((unused)) = system("mkdir -m 755 -p " TLOG_FILE_DIR);
-#endif
-				tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
-			}
-
-			ti64 ret __attribute__((unused)) = write(tlog_fd, buf, len);
-			if (tlog_local_rotate && (lseek(tlog_fd, 0, SEEK_CUR) >= TLOG_FILE_SIZE))
-			{
-				tlog_try_rotate(TLOG_FILE_SIZE);
-			}
-		}
-
-		return len;
 	}
+
+	// "[D/main.cpp:32 main]"
+	{
+		const tc level_table[] = {'D', 'I', 'W', 'E', 'T'};
+		len += snprintf(buf + len, 256,
+						"[%c/%s:%d %s]",
+						level_table[level],
+						tlog_basename(file), line,
+						func);
+	}
+
+	// 用户输入
+	{
+		va_list ap;
+		va_start(ap, format);
+		len += vsnprintf(buf + len, sizeof(buf) - len, format, ap);
+		va_end(ap);
+
+		len += snprintf(buf + len, 2, "\n");
+	}
+
+	tlog.buf[seq_now % TLOG_BURST_SIZE].len = len;
+	tlog.buf[seq_now % TLOG_BURST_SIZE].seq = seq_now;
+
+	return len;
 }
 
 ti tlog_rawhexdump(const tc *file, const ti line, const tc *func, const ti filter, const ti level, const tc *info, const void *ptr, const ti len)
@@ -316,4 +244,108 @@ ti tlog_rawhexdump(const tc *file, const ti line, const tc *func, const ti filte
 	cur += snprintf(buf + cur, 2, "\n");
 
 	return tlog_rawprint(file, line, func, filter, level, "%s", buf);
+}
+
+void *tlog_thread(void *arg __attribute__((unused)))
+{
+#if defined(__MINGW64__) || defined(__MINGW32__)
+	ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
+#else
+	ti ret __attribute__((unused)) = system("mkdir -m 755 -p " TLOG_FILE_DIR);
+#endif
+	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+
+	while (true)
+	{
+		ti64 seq_size = tlog.seq_w - tlog.seq_r;
+
+		if (seq_size <= 0)
+		{
+			usleep(1000);
+		}
+		else if (seq_size < TLOG_BURST_SIZE)
+		{
+			ti64 seq_now = atomic_load_explicit(&tlog.seq_r, memory_order_relaxed);
+
+			if (seq_now == tlog.buf[seq_now % TLOG_BURST_SIZE].seq)
+			{
+				atomic_fetch_add_explicit(&tlog.seq_r, 1, memory_order_relaxed);
+				tc *buf = tlog.buf[seq_now % TLOG_BURST_SIZE].s;
+				ti len = tlog.buf[seq_now % TLOG_BURST_SIZE].len;
+
+				if (TLOG_CONSOLE_ENABLE)
+				{
+					ti ret __attribute__((unused)) = write(STDOUT_FILENO, buf, len);
+				}
+
+				if (TLOG_FILE_ENABLE)
+				{
+					ti64 ret __attribute__((unused)) = write(tlog_fd, buf, len);
+					if (lseek(tlog_fd, 0, SEEK_CUR) >= TLOG_FILE_SIZE)
+					{
+						close(tlog_fd);
+						for (ti i = (TLOG_FILE_NUM - 2); i >= 0; i--)
+						{
+							tc filename_old[256] = {0};
+							tc filename_new[256] = {0};
+							snprintf(filename_old, sizeof(filename_old),
+									 "%s.%d.log",
+									 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i);
+							snprintf(filename_new, sizeof(filename_new),
+									 "%s.%d.log",
+									 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i + 1);
+							rename(filename_old, filename_new);
+						}
+						tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+					}
+				}
+
+				if (TLOG_ECHO_QPS)
+				{
+					static ti64 cnt = 0;
+					static ti64 us_last = 0;
+					static ti64 lost_last = 0;
+					cnt++;
+					if ((cnt % 20000) == 0)
+					{
+						ti64 us = tlog_getTimeUs();
+						ti64 us_delta = us - us_last;
+						us_last = us;
+
+						ti qps = 20000 * 1e6 / us_delta;
+
+						ti64 lost = seq_now - cnt + 1;
+						ti lost_rate = (lost - lost_last) * 1e6 / us_delta;
+						lost_last = lost;
+
+						tc cmd[256] = {0};
+						snprintf(cmd, sizeof(cmd), "echo lost = %d, qps = %d >> qps.txt", lost_rate, qps);
+						tlog_system(cmd);
+					}
+				}
+			}
+		}
+		else if (seq_size < 2 * TLOG_BURST_SIZE)
+		{
+			atomic_fetch_add_explicit(&tlog.seq_r, 16, memory_order_relaxed);
+		}
+		else
+		{
+			atomic_fetch_add_explicit(&tlog.seq_r, TLOG_BURST_SIZE, memory_order_relaxed);
+		}
+	}
+
+	return NULL;
+}
+
+ti tlog_init()
+{
+	pthread_t tid = -1;
+	pthread_create(&tid, NULL, tlog_thread, tnull);
+	pthread_setname_np(tid, "tlog");
+
+	tlog(TLOG_D, "当前 pid = %d, tid = %lu", getpid(), pthread_self());
+	tlog(TLOG_D, "创建tlog线程 tid = %lu", tid);
+
+	return 0;
 }

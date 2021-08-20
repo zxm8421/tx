@@ -60,7 +60,7 @@ DEFINES += NDEBUG
 }
 
 # 单元测试
-# DEFINES += NTEST
+DEFINES += NTEST
 !contains(DEFINES, NTEST) {
 message(进行单元测试)
 QT += testlib

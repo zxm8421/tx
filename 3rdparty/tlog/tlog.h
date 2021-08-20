@@ -21,13 +21,8 @@
  * 
  */
 #define TLOG_USE_UTC 0
-#define TLOG_BUF_SIZE 4096
 #ifdef NTEST
-#ifdef NDEBUG
-#define TLOG_GLOBAL_FILTER TLOG_I
-#else
 #define TLOG_GLOBAL_FILTER TLOG_ALL
-#endif
 #else
 #define TLOG_GLOBAL_FILTER TLOG_T
 #endif
@@ -109,24 +104,11 @@ extern "C"
 	ti64 tlog_getTimeUs();
 
 	/**
-	 * @brief 尝试手动滚动日志文件
-	 * 日志文件会自动滚动，只有在希望提前滚动日志文件的时候手动调用本函数
+	 * @brief tlog 初始化
 	 * 
-	 * @param limit B, 限制单个日志文件大小
+	 * @return 
 	 */
-	void tlog_try_rotate(ti64 limit);
-
-	/**
-	 * @brief 运行本线程滚动日志文件
-	 * 
-	 */
-	void tlog_enable_local_rotate();
-
-	/**
-	 * @brief 禁止本线程滚动日志文件
-	 * 
-	 */
-	void tlog_disable_local_rotate();
+	ti tlog_init();
 
 	/**
 	 * @brief 设置全局日志过滤级别
