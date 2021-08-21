@@ -64,7 +64,7 @@
 /**
  * @brief 日志打印函数, 语法同printf
  * 日志会同时打印到console和file
- * 会在末尾添加'\n'
+ * 会在末尾添加'\\n'
  * 
  * @param level 
  * @param format 

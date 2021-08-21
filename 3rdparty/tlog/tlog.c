@@ -37,6 +37,7 @@ static pthread_t tlog_tid = -1;
 /**
  * @brief tlog自用, 打印函数
  * 用于tlog没起来的场合，以及tlog调试自己
+ * 会在末尾添加'\\n'
  * 
  * @param format 
  * @param ... 
