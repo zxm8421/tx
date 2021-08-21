@@ -8,9 +8,14 @@
 #include <tlog/tlog.h>
 
 ttest_import(main_test);
-int ttest_main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
+int ttest_main(int argc, char *argv[])
 {
 	tlog(TLOG_T, "开始自动化测试");
+
+	for (ti i = 0; i < argc; i++)
+	{
+		tlog(TLOG_T, "argv[%d] = %s", i, argv[i]);
+	}
 
 	struct ttest_Ret _ret;
 	struct ttest_Ret *ret = &_ret;
@@ -24,6 +29,9 @@ int ttest_main(int argc __attribute__((unused)), char *argv[] __attribute__((unu
 
 ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), bool run, ti timeout)
 {
+	tlog_rawprint(file, line, func, filter, TLOG_T,
+				  "start test");
+
 	ret->check_passed = 0;
 	ret->check_failed = 0;
 

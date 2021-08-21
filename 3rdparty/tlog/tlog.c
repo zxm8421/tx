@@ -204,6 +204,7 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 	}
 
 #ifndef NTEST
+	if (level >= TLOG_T)
 	{
 		ti64 ret __attribute__((unused)) = write(tlog_test_fd, buf, len);
 	}
@@ -297,27 +298,6 @@ void *tlog_thread(void *arg __attribute__((unused)))
 			int fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 			dup2(fd, tlog_fd);
 			close(fd);
-		}
-
-		if (TLOG_ECHO_QPS)
-		{
-			static ti64 seq_last = 0;
-			static ti64 us_last = 0;
-
-			ti64 seq_now = tlog_seq;
-			ti64 us_now = tlog_getTimeUs();
-			ti64 us_delta = us_now - us_last;
-			if (us_delta > 2000000)
-			{
-				us_last = us_now;
-
-				ti64 seq_delta = seq_now - seq_last;
-				seq_last = seq_now;
-
-				ti qps = seq_delta * 1e6 / us_delta;
-
-				tlog_debug("qps = %d", qps);
-			}
 		}
 	}
 

@@ -21,7 +21,8 @@ struct ttest_Ret
 };
 
 #define ttest_check_exit return
-#define ttest_check_nothing(v) ttest_check(true)
+#define ttest_check_pass(v) ttest_check(true)
+#define ttest_check_fail(v) ttest_check(false)
 #define ttest_check_true(v) ttest_check(v)
 #define ttest_check_false(v) ttest_check(!v)
 

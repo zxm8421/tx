@@ -67,4 +67,4 @@ typedef ti te;
 #define textern extern
 #endif
 
-#define tx_array_size(a) (sizeof(a) / sizeof(a[0]))
+#define tx_array_size(a) ((ts)(sizeof(a) / sizeof(a[0])))

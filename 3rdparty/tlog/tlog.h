@@ -22,7 +22,6 @@
  */
 #define TLOG_USE_UTC 0
 #define TLOG_BUF_SIZE 4096
-#define TLOG_ECHO_QPS 0
 #define TLOG_CONSOLE_ENABLE 1
 #define TLOG_FILE_ENABLE 1
 #define TLOG_FILE_NUM 10
@@ -77,7 +76,7 @@
  * @param len 
  * @return 
  */
-#define tlog_hexdump(level, info, ptr, len) tlog_rawhexdump(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, level, info, ptr, len);
+#define tlog_hexdump(level, info, ptr, len) tlog_rawhexdump(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, level, info, ptr, len)
 
 #ifdef __cplusplus
 extern "C"
