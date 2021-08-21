@@ -67,6 +67,7 @@ QT += testlib
 
 SOURCES +=	\
 	3rdparty/ttest/ttest.c	\
+	3rdparty/tjz/ttype_test.c	\
 	3rdparty/tlog/tlog_test.c	\
 	app/main_test.cpp	\
 	app/version/version_test.cpp

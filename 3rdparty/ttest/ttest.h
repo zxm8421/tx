@@ -21,8 +21,8 @@ struct ttest_Ret
 };
 
 #define ttest_check_exit return
-#define ttest_check_pass(v) ttest_check(true)
-#define ttest_check_fail(v) ttest_check(false)
+#define ttest_check_pass() ttest_check(true)
+#define ttest_check_fail() ttest_check(false)
 #define ttest_check_true(v) ttest_check(v)
 #define ttest_check_false(v) ttest_check(!v)
 
@@ -48,6 +48,10 @@ struct ttest_Ret
 #define ttest_run(test, ms) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, #test, true, ms)
 #define ttest_skip(test) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, #test, false, 0)
 
+/**
+ * @brief 请勿直接使用，请使用ttest_check_xxx
+ * 
+ */
 #define ttest_check(v) ttest_rawcheck(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, v)
 
 #ifdef __cplusplus

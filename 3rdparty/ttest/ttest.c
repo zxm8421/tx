@@ -30,7 +30,7 @@ int ttest_main(int argc, char *argv[])
 ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), const tc *ttest_test_name, bool run, ti timeout)
 {
 	tlog_rawprint(file, line, func, filter, TLOG_T,
-				  "start test %s",
+				  "测试开始 %s",
 				  ttest_test_name);
 
 	ret->check_passed = 0;
@@ -53,18 +53,18 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 		if ((subret->check_failed > 0) || (subret->failed > 0) || ((timeout > 0) && (ms > timeout)))
 		{
 			subret->failed += 1;
-			snprintf(buf, sizeof(buf), "test failed");
+			snprintf(buf, sizeof(buf), "测试失败");
 		}
 		else
 		{
 			subret->passed += 1;
-			snprintf(buf, sizeof(buf), "test passed");
+			snprintf(buf, sizeof(buf), "测试通过");
 		}
 	}
 	else
 	{
 		subret->skipped += 1;
-		snprintf(buf, sizeof(buf), "test skipped");
+		snprintf(buf, sizeof(buf), "测试跳过");
 	}
 
 	subret->sum += 1;
@@ -92,13 +92,13 @@ ti ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter
 	if (v)
 	{
 		ret->check_passed += 1;
-		// tlog_rawprint(file, line, func, filter, TLOG_T, "check passed");
+		// tlog_rawprint(file, line, func, filter, TLOG_T, "核对通过");
 		return 0;
 	}
 	else
 	{
 		ret->check_failed += 1;
-		tlog_rawprint(file, line, func, filter, TLOG_T, "check failed");
+		tlog_rawprint(file, line, func, filter, TLOG_T, "核对失败");
 
 		return 1;
 	}
