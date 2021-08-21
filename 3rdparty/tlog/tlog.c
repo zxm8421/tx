@@ -236,7 +236,7 @@ void *tlog_thread(void *arg __attribute__((unused)))
 
 	while (true)
 	{
-		usleep(1000 * 100);
+		usleep(1000 * 200);
 
 		struct stat statbuf;
 		stat(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
@@ -246,8 +246,8 @@ void *tlog_thread(void *arg __attribute__((unused)))
 		{
 			for (ti i = (TLOG_FILE_NUM - 2); i >= 0; i--)
 			{
-				tc filename_old[256] = {0};
-				tc filename_new[256] = {0};
+				tc filename_old[FILENAME_MAX] = {0};
+				tc filename_new[FILENAME_MAX] = {0};
 				snprintf(filename_old, sizeof(filename_old),
 						 "%s.%d.log",
 						 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i);
@@ -301,8 +301,8 @@ ti tlog_init()
 	{
 		for (ti i = (TLOG_FILE_NUM - 2); i >= 0; i--)
 		{
-			tc filename_old[256] = {0};
-			tc filename_new[256] = {0};
+			tc filename_old[FILENAME_MAX] = {0};
+			tc filename_new[FILENAME_MAX] = {0};
 			snprintf(filename_old, sizeof(filename_old),
 					 "%s.%d.log",
 					 TLOG_FILE_DIR "/" TLOG_FILE_PREFIX, i);
