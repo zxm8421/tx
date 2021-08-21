@@ -61,7 +61,7 @@ ti tlog_debug(const tc *format, ...)
 		va_end(ap);
 		buf[len++] = '\n';
 
-		write(fd, buf, len);
+		len = write(fd, buf, len);
 		close(fd);
 
 		return len;
