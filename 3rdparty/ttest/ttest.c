@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define TLOG_LOCAL_FILTER TLOG_I
+#define TLOG_LOCAL_FILTER TLOG_D
 #include <tlog/tlog.h>
 
 ttest_import(main_test);
