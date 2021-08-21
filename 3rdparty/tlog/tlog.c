@@ -27,6 +27,7 @@
 static ti tlog_filter = TLOG_ALL;
 static volatile _Atomic ti64 tlog_seq = 0;
 static ti tlog_fd = -1;
+static ti tlog_test_fd = -1;
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #else
 #define __USE_GNU
@@ -202,6 +203,12 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 		ti64 ret __attribute__((unused)) = write(tlog_fd, buf, len);
 	}
 
+#ifndef NTEST
+	{
+		ti64 ret __attribute__((unused)) = write(tlog_test_fd, buf, len);
+	}
+#endif
+
 	return len;
 }
 
@@ -325,8 +332,6 @@ ti tlog_init()
 	}
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
-	ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
-
 	struct stat statbuf;
 	stat(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
 	ts size = statbuf.st_size;
@@ -346,10 +351,14 @@ ti tlog_init()
 			rename(filename_old, filename_new);
 		}
 	}
+
+	ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
 	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+	tlog_test_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".test.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 #else
 	ti ret __attribute__((unused)) = system("mkdir -m 755 -p " TLOG_FILE_DIR);
 	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+	tlog_test_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".test.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 
 	pthread_create(&tlog_tid, NULL, tlog_thread, tnull);
 	pthread_setname_np(tlog_tid, "tlog");
