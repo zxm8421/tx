@@ -8,7 +8,6 @@
 
 ttest_static(tlog_test_tlog)
 {
-	ttest_check_gt(tlog(TLOG_D, NULL), 0);
 	ttest_check_gt(tlog(TLOG_D, ""), 0);
 	ttest_check_gt(tlog(TLOG_D, "This is a test log"), 0);
 	ttest_check_gt(tlog(TLOG_D, "这是一条测试消息"), 0);

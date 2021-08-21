@@ -12,6 +12,7 @@ int ttest_main(int argc, char *argv[])
 {
 	tlog(TLOG_T, "开始自动化测试");
 
+	tlog(TLOG_T, "argc = %d", argc);
 	for (ti i = 0; i < argc; i++)
 	{
 		tlog(TLOG_T, "argv[%d] = %s", i, argv[i]);
