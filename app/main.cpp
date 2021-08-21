@@ -85,12 +85,13 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 										 "E0E1E2E3E4E5E6E7E8E9EAEBECEDEEEF"
 										 "F0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFF";
 		ti64 start = tlog_getTimeUs();
-		for (ti i = 0; i < 10000; i++)
+		ti i = 0;
+		for (i = 0; i < 10000; i++)
 		{
 			tlog_hexdump(TLOG_D, "info", hexTable, sizeof(hexTable));
 		}
 		ti64 end = tlog_getTimeUs();
-		tlog(TLOG_D, "cost = %.06f s", (end - start) / 1e6);
+		tlog(TLOG_D, "cost = %lld us", (end - start) / i);
 	}
 
 	QApplication a(argc, argv);
