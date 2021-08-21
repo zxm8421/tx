@@ -20,11 +20,6 @@
  * @brief 配置项
  * 
  */
-#ifdef NTEST
-#define TLOG_GLOBAL_FILTER TLOG_ALL
-#else
-#define TLOG_GLOBAL_FILTER TLOG_T
-#endif
 #define TLOG_USE_UTC 0
 #define TLOG_BUF_SIZE 4096
 #define TLOG_ECHO_QPS 0

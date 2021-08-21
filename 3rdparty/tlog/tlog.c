@@ -24,7 +24,7 @@
 #include <windows.h>
 #endif
 
-static ti tlog_filter = TLOG_GLOBAL_FILTER;
+static ti tlog_filter = TLOG_ALL;
 static volatile _Atomic ti64 tlog_seq = 0;
 static ti tlog_fd = -1;
 #if defined(__MINGW64__) || defined(__MINGW32__)
@@ -319,6 +319,11 @@ void *tlog_thread(void *arg __attribute__((unused)))
 
 ti tlog_init()
 {
+	if (TLOG_FILE_ENABLE == 0)
+	{
+		return 0;
+	}
+
 #if defined(__MINGW64__) || defined(__MINGW32__)
 	ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
 
