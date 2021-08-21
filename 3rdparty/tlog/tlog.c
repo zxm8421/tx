@@ -3,7 +3,6 @@
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #define __USE_MINGW_ANSI_STDIO 1
-// #define _GNU_SOURCE
 #endif
 #include <stdio.h>
 #include <string.h>
@@ -46,6 +45,8 @@ static pthread_t tlog_tid = -1;
  */
 ti tlog_debug(const tc *format, ...)
 {
+	tc buf[TLOG_BUF_SIZE] = {0};
+	ti len = 0;
 	int fd = open("tlog_debug.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 
 	if (fd < 0)
@@ -56,10 +57,11 @@ ti tlog_debug(const tc *format, ...)
 	{
 		va_list ap;
 		va_start(ap, format);
-		ti len = vdprintf(fd, format, ap);
+		len += vsnprintf(buf, sizeof(buf), format, ap);
 		va_end(ap);
-		len += dprintf(fd, "\n");
+		buf[len++] = '\n';
 
+		write(fd, buf, len);
 		close(fd);
 
 		return len;

@@ -29,7 +29,12 @@ typedef long ts;
 // 浮点数
 typedef float tf32;
 typedef double tf64;
+#if __SIZEOF_LONG_DOUBLE__ == 16
 typedef long double tf128;
+#elif __SIZEOF_LONG_DOUBLE__ == 12
+typedef long double tf96;
+#else
+#endif
 typedef double tf;
 
 //字节

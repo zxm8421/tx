@@ -21,13 +21,17 @@ ttest_static(ttype_test_ctype)
 {
 	tlog(TLOG_T, "__SIZEOF_POINTER__ = %d", __SIZEOF_POINTER__);
 	tlog(TLOG_T, "sizeof(void *) = %lu", sizeof(void *));
+
 	tlog(TLOG_T, "sizeof(char) = %lu", sizeof(char));
 	tlog(TLOG_T, "sizeof(short) = %lu", sizeof(short));
+
 	tlog(TLOG_T, "sizeof(int) = %lu", sizeof(int));
 	tlog(TLOG_T, "sizeof(long) = %lu", sizeof(long));
 	tlog(TLOG_T, "sizeof(long long) = %lu", sizeof(long long));
+
 	tlog(TLOG_T, "sizeof(float) = %lu", sizeof(float));
 	tlog(TLOG_T, "sizeof(double) = %lu", sizeof(double));
+	tlog(TLOG_T, "sizeof(long double) = %lu", sizeof(long double));
 	ttest_check_pass();
 }
 
@@ -71,7 +75,12 @@ ttest_static(ttype_test_ttype)
 
 	ttest_check_eq(sizeof(tf32), 4);
 	ttest_check_eq(sizeof(tf64), 8);
+#if __SIZEOF_LONG_DOUBLE__ == 16
 	ttest_check_eq(sizeof(tf128), 16);
+#elif __SIZEOF_LONG_DOUBLE__ == 12
+	ttest_check_eq(sizeof(tf96), 12);
+#else
+#endif
 	ttest_check_true((sizeof(tf) == 4) || (sizeof(tf) == 8));
 
 	ttest_check_eq(sizeof(tb8), 1);
