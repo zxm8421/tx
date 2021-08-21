@@ -34,6 +34,36 @@ static ti tlog_fd = -1;
 static pthread_t tlog_tid = -1;
 #endif
 
+/**
+ * @brief tlog自用, 打印函数
+ * 用于tlog没起来的场合，以及tlog调试自己
+ * 
+ * @param format 
+ * @param ... 
+ * @return 
+ */
+ti tlog_debug(const tc *format, ...)
+{
+	int fd = open("tlog_debug.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+
+	if (fd < 0)
+	{
+		return -1;
+	}
+	else
+	{
+		va_list ap;
+		va_start(ap, format);
+		ti len = vdprintf(fd, format, ap);
+		va_end(ap);
+		len += dprintf(fd, "\n");
+
+		close(fd);
+
+		return len;
+	};
+}
+
 ti64 tlog_getTimeMs()
 {
 	ti64 ms = 0;
@@ -269,7 +299,7 @@ void *tlog_thread(void *arg __attribute__((unused)))
 			ti64 seq_now = tlog_seq;
 			ti64 us_now = tlog_getTimeUs();
 			ti64 us_delta = us_now - us_last;
-			if (us_delta > 1000000)
+			if (us_delta > 2000000)
 			{
 				us_last = us_now;
 
@@ -278,9 +308,7 @@ void *tlog_thread(void *arg __attribute__((unused)))
 
 				ti qps = seq_delta * 1e6 / us_delta;
 
-				tc cmd[256] = {0};
-				snprintf(cmd, sizeof(cmd), "echo qps = %d >> qps.txt", qps);
-				ti ret __attribute__((unused)) = system(cmd);
+				tlog_debug("qps = %d", qps);
 			}
 		}
 	}
