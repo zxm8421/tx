@@ -45,8 +45,8 @@ struct ttest_Ret
 #define ttest_export(ttest_test) textern void ttest_test(struct ttest_Ret *ret)
 #define ttest_import(ttest_test) textern void ttest_test(struct ttest_Ret *ret)
 
-#define ttest_run(test, ms) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, true, ms)
-#define ttest_skip(test) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, false, 0)
+#define ttest_run(test, ms) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, #test, true, ms)
+#define ttest_skip(test) ttest_run_test(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, test, #test, false, 0)
 
 #define ttest_check(v) ttest_rawcheck(__FILE__, __LINE__, __func__, TLOG_LOCAL_FILTER, ret, v)
 
@@ -72,11 +72,12 @@ extern "C"
 	 * @param filter 
 	 * @param ret 
 	 * @param ttest_test 
+	 * @param ttest_test_name 
 	 * @param run 
 	 * @param timeout 
 	 * @return 
 	 */
-	ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), bool run, ti timeout);
+	ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), const tc *ttest_test_name, bool run, ti timeout);
 
 	/**
 	 * @brief 请勿直接使用，请使用ttest_check_xxx

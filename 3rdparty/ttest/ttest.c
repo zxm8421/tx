@@ -27,10 +27,11 @@ int ttest_main(int argc, char *argv[])
 	return ret->failed;
 }
 
-ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), bool run, ti timeout)
+ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), const tc *ttest_test_name, bool run, ti timeout)
 {
 	tlog_rawprint(file, line, func, filter, TLOG_T,
-				  "start test");
+				  "start test %s",
+				  ttest_test_name);
 
 	ret->check_passed = 0;
 	ret->check_failed = 0;
@@ -39,7 +40,7 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 	struct ttest_Ret *subret = &_subret;
 	memset(subret, 0, sizeof(struct ttest_Ret));
 
-	tc buf[32] = {0};
+	tc buf[256] = {0};
 
 	ti ms = 0;
 	if (run)
@@ -74,11 +75,11 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 	ret->sum += subret->sum;
 
 	tlog_rawprint(file, line, func, filter, TLOG_T,
-				  "%s\n"
+				  "%s %s\n"
 				  "%8d ms  sum  passed  failed skipped\n"
 				  "this      %6d  %6d  %6d  %6d\n"
 				  "all       %6d  %6d  %6d  %6d",
-				  buf,
+				  buf, ttest_test_name,
 				  ms,
 				  subret->sum, subret->passed, subret->failed, subret->skipped,
 				  ret->sum, ret->passed, ret->failed, ret->skipped);
