@@ -203,14 +203,14 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 	if (TLOG_FILE_ENABLE)
 	{
 		ti64 ret __attribute__((unused)) = write(tlog_fd, buf, len);
-	}
 
 #ifndef NTEST
-	if (level >= TLOG_T)
-	{
-		ti64 ret __attribute__((unused)) = write(tlog_test_fd, buf, len);
-	}
+		if (level >= TLOG_T)
+		{
+			ti64 ret __attribute__((unused)) = write(tlog_test_fd, buf, len);
+		}
 #endif
+	}
 
 	return len;
 }
