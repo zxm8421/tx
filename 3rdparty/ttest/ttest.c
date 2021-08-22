@@ -51,7 +51,12 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 		ti64 end = tlog_getTimeMs();
 		ms = end - start;
 
-		if ((subret->check_failed > 0) || (subret->failed > 0) || ((timeout > 0) && (ms > timeout)))
+		if (((timeout > 0) && (ms > timeout)))
+		{
+			subret->failed += 1;
+			snprintf(buf, sizeof(buf), "测试超时");
+		}
+		else if ((subret->check_failed > 0) || (subret->failed > 0))
 		{
 			subret->failed += 1;
 			snprintf(buf, sizeof(buf), "测试失败");

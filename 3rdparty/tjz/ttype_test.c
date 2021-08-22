@@ -17,24 +17,6 @@ ttest_static(ttype_test_os)
 	ttest_check_pass();
 }
 
-ttest_static(ttype_test_ctype)
-{
-	tlog(TLOG_T, "__SIZEOF_POINTER__ = %d", __SIZEOF_POINTER__);
-	tlog(TLOG_T, "sizeof(void *) = %lu", sizeof(void *));
-
-	tlog(TLOG_T, "sizeof(char) = %lu", sizeof(char));
-	tlog(TLOG_T, "sizeof(short) = %lu", sizeof(short));
-
-	tlog(TLOG_T, "sizeof(int) = %lu", sizeof(int));
-	tlog(TLOG_T, "sizeof(long) = %lu", sizeof(long));
-	tlog(TLOG_T, "sizeof(long long) = %lu", sizeof(long long));
-
-	tlog(TLOG_T, "sizeof(float) = %lu", sizeof(float));
-	tlog(TLOG_T, "sizeof(double) = %lu", sizeof(double));
-	tlog(TLOG_T, "sizeof(long double) = %lu", sizeof(long double));
-	ttest_check_pass();
-}
-
 ttest_static(ttype_test_le_be)
 {
 	union
@@ -52,6 +34,24 @@ ttest_static(ttype_test_le_be)
 	{
 		tlog(TLOG_T, "大端 Big Endian");
 	}
+	ttest_check_pass();
+}
+
+ttest_static(ttype_test_ctype)
+{
+	tlog(TLOG_T, "__SIZEOF_POINTER__ = %d", __SIZEOF_POINTER__);
+	tlog(TLOG_T, "sizeof(void *) = %lu", sizeof(void *));
+
+	tlog(TLOG_T, "sizeof(char) = %lu", sizeof(char));
+	tlog(TLOG_T, "sizeof(short) = %lu", sizeof(short));
+
+	tlog(TLOG_T, "sizeof(int) = %lu", sizeof(int));
+	tlog(TLOG_T, "sizeof(long) = %lu", sizeof(long));
+	tlog(TLOG_T, "sizeof(long long) = %lu", sizeof(long long));
+
+	tlog(TLOG_T, "sizeof(float) = %lu", sizeof(float));
+	tlog(TLOG_T, "sizeof(double) = %lu", sizeof(double));
+	tlog(TLOG_T, "sizeof(long double) = %lu", sizeof(long double));
 	ttest_check_pass();
 }
 
@@ -113,8 +113,8 @@ ttest_static(ttype_test_tx_array_size)
 ttest_export(ttype_test)
 {
 	ttest_run(ttype_test_os, 10);
-	ttest_run(ttype_test_ctype, 10);
 	ttest_run(ttype_test_le_be, 10);
+	ttest_run(ttype_test_ctype, 10);
 	ttest_run(ttype_test_ttype, 10);
 	ttest_run(ttype_test_tx_array_size, 10);
 }
