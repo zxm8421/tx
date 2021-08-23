@@ -1,5 +1,4 @@
-#include "ttype.h"
-#include "stable.h"
+#include "ttype.inc.h"
 
 #define TLOG_LOCAL_FILTER TLOG_D
 #include <tlog/tlog.h>

@@ -1,5 +1,5 @@
 #define TLOG_LOCAL_FILTER TLOG_D
-#include "tlog.h"
+#include "tlog.inc.h"
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #define __USE_MINGW_ANSI_STDIO 1
@@ -34,15 +34,6 @@ static ti tlog_test_fd = -1;
 static pthread_t tlog_tid = -1;
 #endif
 
-/**
- * @brief tlog自用, 打印函数
- * 用于tlog没起来的场合，以及tlog调试自己
- * 会在末尾添加'\\n'
- * 
- * @param format 
- * @param ... 
- * @return 
- */
 ti tlog_debug(const tc *format, ...)
 {
 	tc buf[TLOG_BUF_SIZE] = {0};

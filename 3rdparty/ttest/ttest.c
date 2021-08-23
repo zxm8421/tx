@@ -1,5 +1,4 @@
-#include "ttest.h"
-#include "stable.h"
+#include "ttest.inc.h"
 
 #include <stdio.h>
 #include <string.h>

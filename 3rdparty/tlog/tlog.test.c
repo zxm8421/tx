@@ -1,5 +1,5 @@
 #define TLOG_LOCAL_FILTER TLOG_D
-#include "tlog.h"
+#include "tlog.inc.h"
 
 #include <pthread.h>
 #include <unistd.h>
