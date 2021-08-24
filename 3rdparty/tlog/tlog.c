@@ -263,7 +263,7 @@ ti tlog_rawhexdump(const tc *file, const ti line, const tc *func, const ti filte
 	return tlog_rawprint(file, line, func, filter, level, "%s", buf);
 }
 
-void *tlog_thread(void *arg __attribute__((unused)))
+void *tlog_thread_run(void *arg __attribute__((unused)))
 {
 
 	while (true)
@@ -333,7 +333,7 @@ ti tlog_init()
 	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 	tlog_test_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".test.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 
-	pthread_create(&tlog_tid, NULL, tlog_thread, tnull);
+	pthread_create(&tlog_tid, NULL, tlog_thread_run, tnull);
 	pthread_setname_np(tlog_tid, "tlog");
 
 	tlog(TLOG_D, "当前 pid = %d, tid = %lu", getpid(), pthread_self());

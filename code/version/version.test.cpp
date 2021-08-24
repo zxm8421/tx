@@ -12,5 +12,5 @@ ttest_static(version_test_showVer)
 
 ttest_export(version_test)
 {
-	ttest_run(version_test_showVer, 10);
+	ttest_run(version_test_showVer, 200);
 }
