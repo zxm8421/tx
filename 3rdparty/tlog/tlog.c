@@ -217,17 +217,24 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 
 	if (TLOG_CONSOLE_ENABLE)
 	{
+#ifndef NTEST
+		if (level >= TLOG_T)
+		{
+			ti ret __attribute__((unused)) = write(STDOUT_FILENO, buf, len);
+		}
+#else
 		ti ret __attribute__((unused)) = write(STDOUT_FILENO, buf, len);
+#endif
 	}
 
 	if (TLOG_FILE_ENABLE)
 	{
-		ti64 ret __attribute__((unused)) = write(tlog_fd, buf, len);
+		ti ret __attribute__((unused)) = write(tlog_fd, buf, len);
 
 #ifndef NTEST
 		if (level >= TLOG_T)
 		{
-			ti64 ret __attribute__((unused)) = write(tlog_test_fd, buf, len);
+			ti ret __attribute__((unused)) = write(tlog_test_fd, buf, len);
 		}
 #endif
 	}
