@@ -13,9 +13,7 @@
 #define _POSIX_THREAD_SAFE_FUNCTIONS
 #endif
 #include <time.h>
-#include <sys/time.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -59,26 +57,37 @@ ti tlog_debug(const tc *format, ...)
 	};
 }
 
-ti64 tlog_getTimeMs()
+ti64 tlog_getTimeNs()
 {
-	ti64 ms = 0;
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
+	ti64 ns = 0;
 
-	ms = (ti64)tv.tv_sec * 1000 + (ti64)tv.tv_usec / 1000;
+	struct timespec tp;
+	clock_gettime(CLOCK_REALTIME, &tp);
 
-	return ms;
+	ns = (ti64)tp.tv_sec * 1000 * 1000 * 1000 + (ti64)tp.tv_nsec;
+
+	return ns;
 }
 
 ti64 tlog_getTimeUs()
 {
-	ti64 us = 0;
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-
-	us = (ti64)tv.tv_sec * 1000 * 1000 + (ti64)tv.tv_usec;
+	ti64 us = tlog_getTimeNs() / 1000;
 
 	return us;
+}
+
+ti64 tlog_getTimeMs()
+{
+	ti64 ms = tlog_getTimeNs() / 1000 / 1000;
+
+	return ms;
+}
+
+ti64 tlog_getTime()
+{
+	ti64 s = tlog_getTimeNs() / 1000 / 1000 / 1000;
+
+	return s;
 }
 
 ti tlog_set_global_filter(ti filter)

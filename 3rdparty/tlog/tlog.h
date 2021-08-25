@@ -69,6 +69,12 @@
 extern "C"
 {
 #endif
+	/**
+	 * @brief 获取时间戳, s
+	 * 
+	 * @return s
+	 */
+	ti64 tlog_getTime();
 
 	/**
 	 * @brief 获取时间戳, ms
@@ -83,6 +89,14 @@ extern "C"
 	 * @return us
 	 */
 	ti64 tlog_getTimeUs();
+
+	/**
+	 * @brief 获取时间戳, ns
+	 * 精度: 100ns
+	 * 
+	 * @return ns
+	 */
+	ti64 tlog_getTimeNs();
 
 	/**
 	 * @brief tlog 初始化
