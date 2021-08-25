@@ -42,13 +42,12 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 
 	tc buf[256] = {0};
 
-	ti ms = 0;
+	tf ms = 0;
 	if (run)
 	{
-		ti64 start = tlog_getTimeMs();
+		ti64 watch = tlog_watch(tnull);
 		ttest_test(subret);
-		ti64 end = tlog_getTimeMs();
-		ms = end - start;
+		ms = tlog_watch(&watch) * 1e3;
 
 		if (((timeout > 0) && (ms > timeout)))
 		{
@@ -81,7 +80,7 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 
 	tlog_rawprint(file, line, func, filter, TLOG_T,
 				  "%s %s\n"
-				  "%8d ms  sum  passed  failed skipped\n"
+				  "%8.0f ms  sum  passed  failed skipped\n"
 				  "this      %6d  %6d  %6d  %6d\n"
 				  "all       %6d  %6d  %6d  %6d",
 				  buf, ttest_test_name,
