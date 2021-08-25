@@ -162,36 +162,20 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 	ti len = 0;
 	tc buf[TLOG_BUF_SIZE] = {0};
 
-	ti64 us = tlog_getTimeUs();
+	struct timespec tp;
+	clock_gettime(CLOCK_REALTIME, &tp);
 
 	// "[20000101.000000.000 0]"
 	{
-		time_t rawtime = us / (1000 * 1000);
-		ti rawtime_us = us % (1000 * 1000);
 		struct tm now;
-		if (TLOG_USE_UTC)
-		{
-			gmtime_r(&rawtime, &now);
+		gmtime_r(&tp.tv_sec, &now);
 
-			len += snprintf(buf + len, 64,
-							"[%04d%02d%02d.%02d%02d%02d.%06d %lld]",
-							now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-							now.tm_hour, now.tm_min, now.tm_sec,
-							rawtime_us,
-							seq_now);
-		}
-		else
-		{
-			localtime_r(&rawtime, &now);
-
-			len += snprintf(buf + len, 64,
-							"[%04d%02d%02d.%02d%02d%02d.%06d%+03ld%02ld %lld]",
-							now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-							now.tm_hour, now.tm_min, now.tm_sec,
-							rawtime_us,
-							(-timezone) / 3600, (-timezone) % 3600,
-							seq_now);
-		}
+		len += snprintf(buf + len, 64,
+						"[%04d%02d%02d.%02d%02d%02d.%03ld %lld]",
+						now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
+						now.tm_hour, now.tm_min, now.tm_sec,
+						tp.tv_nsec / 1000 / 1000,
+						seq_now);
 	}
 
 	// "[D/main.cpp:32 main]"

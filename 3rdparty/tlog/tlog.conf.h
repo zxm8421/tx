@@ -9,7 +9,6 @@
  * @brief 配置项
  * 
  */
-#define TLOG_USE_UTC 0
 #define TLOG_BUF_SIZE 4096
 #define TLOG_CONSOLE_ENABLE 1
 #define TLOG_FILE_ENABLE 1
