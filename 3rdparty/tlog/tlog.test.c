@@ -30,7 +30,9 @@ ttest_static(tlog_test_tlog_qps)
 	pthread_t tid[4] = {0};
 	ti cnt = 10000;
 	tlog(TLOG_D, "main pid = %d, tid = %lu", getpid(), pthread_self());
-	ti64 start = tlog_getTimeUs();
+	ti64 watch = 0;
+	tlog_watch(&watch);
+	tlog(TLOG_T, "watch = %lld ns", watch);
 	for (ti i = 0; i < tx_array_size(tid); i++)
 	{
 		pthread_create(&tid[i], NULL, tlog_test_tlog_qps_main, &cnt);
@@ -41,11 +43,11 @@ ttest_static(tlog_test_tlog_qps)
 	{
 		pthread_join(tid[i], NULL);
 	}
-	ti64 end = tlog_getTimeUs();
+	tf cost = tlog_watch(&watch);
 
-	ti qps = 1e6 * cnt * tx_array_size(tid) / (end - start);
+	ti qps = cnt * tx_array_size(tid) / cost;
 	tlog(TLOG_T, "qps = %d", qps);
-	ttest_check_gt(qps, 0);
+	ttest_check_gt(qps, 100);
 }
 
 ttest_static(tlog_test_tlog_hexdump)
@@ -105,7 +107,8 @@ ttest_static(tlog_test_tlog_hexdump_qps)
 	pthread_t tid[4] = {0};
 	ti cnt = 1000;
 	tlog(TLOG_D, "main pid = %d, tid = %lu", getpid(), pthread_self());
-	ti64 start = tlog_getTimeUs();
+	ti64 watch = 0;
+	tlog_watch(&watch);
 	for (ti i = 0; i < tx_array_size(tid); i++)
 	{
 		pthread_create(&tid[i], NULL, tlog_test_tlog_hexdump_qps_main, &cnt);
@@ -116,11 +119,11 @@ ttest_static(tlog_test_tlog_hexdump_qps)
 	{
 		pthread_join(tid[i], NULL);
 	}
-	ti64 end = tlog_getTimeUs();
+	tf cost = tlog_watch(&watch);
 
-	ti qps = 1e6 * cnt * tx_array_size(tid) / (end - start);
+	ti qps = cnt * tx_array_size(tid) / cost;
 	tlog(TLOG_T, "qps = %d", qps);
-	ttest_check_gt(qps, 0);
+	ttest_check_gt(qps, 100);
 }
 
 ttest_static(tlog_test_tlog_basename)
@@ -135,8 +138,9 @@ ttest_static(tlog_test_tlog_basename)
 
 ttest_static(tlog_test_tlog_watch)
 {
+	ttest_check_ge(tlog_watch(tnull), -1);
+	
 	ti64 watch = 0;
-	ttest_check_ge(tlog_watch(tnull), 0);
 	ttest_check_ge(tlog_watch(&watch), 0);
 	ttest_check_gt(watch, 0);
 	ttest_check_ge(tlog_watch(&watch), 0);

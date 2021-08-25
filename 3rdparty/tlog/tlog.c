@@ -59,10 +59,9 @@ ti tlog_debug(const tc *format, ...)
 
 tf tlog_watch(ti64 *watch)
 {
-	ti64 m_watch = 0;
 	if (watch == tnull)
 	{
-		watch = &m_watch;
+		return -1;
 	}
 
 	struct timespec tp;
@@ -74,7 +73,7 @@ tf tlog_watch(ti64 *watch)
 
 	*watch = end;
 
-	return cost / 1e9;
+	return cost;
 }
 
 ti64 tlog_getTimeNs()

@@ -46,7 +46,8 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 	tf ms = 0;
 	if (run)
 	{
-		ti64 watch = tlog_watch(tnull);
+		ti64 watch = 0;
+		tlog_watch(&watch);
 		ttest_test(subret);
 		ms = tlog_watch(&watch) * 1e3;
 
