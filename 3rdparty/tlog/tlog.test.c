@@ -133,6 +133,16 @@ ttest_static(tlog_test_tlog_basename)
 	ttest_check_str_eq(tlog_basename("C:\\桌面\\123/abc/main.c"), "main.c");
 }
 
+ttest_static(tlog_test_tlog_watch)
+{
+	ti64 watch = 0;
+	ttest_check_ge(tlog_watch(tnull), 0);
+	ttest_check_ge(tlog_watch(&watch), 0);
+	ttest_check_gt(watch, 0);
+	ttest_check_ge(tlog_watch(&watch), 0);
+	ttest_check_gt(watch, 0);
+}
+
 ttest_export(tlog_test)
 {
 	ttest_run(tlog_test_tlog, 10);
@@ -142,4 +152,5 @@ ttest_export(tlog_test)
 	ttest_run(tlog_test_tlog_hexdump_qps, 1000 * 2);
 
 	ttest_run(tlog_test_tlog_basename, 10);
+	ttest_run(tlog_test_tlog_watch, 10);
 }
