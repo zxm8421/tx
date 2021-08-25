@@ -69,8 +69,8 @@ ttest_static(ttype_test_ttype)
 	ttest_check_eq(sizeof(ti128), 16);
 #endif
 	ttest_check_true((sizeof(ti) == 4) || (sizeof(ti) == 8));
-	ttest_check_true((sizeof(tu) == 4) || (sizeof(tu) == 8));
-	ttest_check_true((sizeof(ts) == 4) || (sizeof(ts) == 8));
+	ttest_check_true((sizeof(tisize) == 4) || (sizeof(tisize) == 8));
+	ttest_check_true((sizeof(tusize) == 4) || (sizeof(tusize) == 8));
 
 	ttest_check_eq(sizeof(tf32), 4);
 	ttest_check_eq(sizeof(tf64), 8);
