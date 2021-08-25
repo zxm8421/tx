@@ -13,18 +13,18 @@
 typedef unsigned char tu8;
 typedef signed char ti8;
 typedef unsigned short tu16;
-typedef short ti16;
+typedef signed short ti16;
 typedef unsigned int tu32;
-typedef int ti32;
+typedef signed int ti32;
 typedef unsigned long long tu64;
-typedef long long ti64;
+typedef signed long long ti64;
 #ifdef __SIZEOF_INT128__
 typedef __uint128_t tu128;
 typedef __int128_t ti128;
 #endif
+typedef signed long tisize;
+typedef unsigned long tusize;
 typedef int ti;
-typedef unsigned long tu;
-typedef long ts;
 
 // 浮点数
 typedef float tf32;
@@ -42,6 +42,7 @@ typedef tu8 tb8;
 typedef tu16 tb16;
 typedef tu32 tb32;
 typedef tu64 tb64;
+typedef tusize tbsize;
 typedef tb8 tb;
 
 //字符
@@ -49,6 +50,7 @@ typedef tb8 tc8;
 typedef tb16 tc16;
 typedef tb32 tc32;
 typedef tb64 tc64;
+typedef tbsize tcsize;
 
 typedef char tc;
 typedef wchar_t twc;
@@ -72,4 +74,4 @@ typedef ti te;
 #define textern extern
 #endif
 
-#define tx_array_size(a) ((ts)(sizeof(a) / sizeof(a[0])))
+#define tx_array_size(a) ((tisize)(sizeof(a) / sizeof(a[0])))

@@ -272,7 +272,7 @@ void *tlog_thread_run(void *arg __attribute__((unused)))
 
 		struct stat statbuf;
 		stat(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
-		ts size = statbuf.st_size;
+		tisize size = statbuf.st_size;
 
 		if (size >= TLOG_FILE_SIZE)
 		{
@@ -307,7 +307,7 @@ ti tlog_init()
 #if defined(__MINGW64__) || defined(__MINGW32__)
 	struct stat statbuf;
 	stat(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
-	ts size = statbuf.st_size;
+	tisize size = statbuf.st_size;
 
 	if (size >= TLOG_FILE_SIZE)
 	{
