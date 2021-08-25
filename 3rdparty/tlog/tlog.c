@@ -308,6 +308,11 @@ void *tlog_thread_run(void *arg __attribute__((unused)))
 
 ti tlog_init()
 {
+#if defined(__MINGW64__) || defined(__MINGW32__)
+	SetConsoleOutputCP(CP_UTF8);
+	// FreeConsole();
+#endif
+
 	if (TLOG_FILE_ENABLE == 0)
 	{
 		return 0;
