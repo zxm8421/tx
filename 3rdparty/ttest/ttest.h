@@ -11,11 +11,12 @@
 
 struct ttest_Ret
 {
-	ti sum;
-	ti passed;
-	ti failed;
-	ti skipped;
+	ti test;
+	ti test_passed;
+	ti test_failed;
+	ti test_skipped;
 
+	ti check;
 	ti check_passed;
 	ti check_failed;
 };
@@ -94,7 +95,7 @@ extern "C"
 	 * @param v 
 	 * @return 
 	 */
-	ti ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v);
+	bool ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v);
 
 #ifdef __cplusplus
 }

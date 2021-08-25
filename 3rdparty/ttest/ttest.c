@@ -24,7 +24,7 @@ int ttest_main(int argc, char *argv[])
 
 	tlog(TLOG_T, "结束自动化测试");
 
-	return ret->failed;
+	return ret->test_failed;
 }
 
 ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), const tc *ttest_test_name, bool run, ti timeout)
@@ -33,6 +33,7 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 				  "测试开始 %s",
 				  ttest_test_name);
 
+	ret->check = 0;
 	ret->check_passed = 0;
 	ret->check_failed = 0;
 
@@ -51,59 +52,60 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 
 		if (((timeout > 0) && (ms > timeout)))
 		{
-			subret->failed += 1;
+			subret->test_failed += 1;
 			snprintf(buf, sizeof(buf), "测试超时");
 		}
-		else if ((subret->check_failed > 0) || (subret->failed > 0))
+		else if ((subret->check_failed > 0) || (subret->test_failed > 0))
 		{
-			subret->failed += 1;
+			subret->test_failed += 1;
 			snprintf(buf, sizeof(buf), "测试失败");
 		}
 		else
 		{
-			subret->passed += 1;
+			subret->test_passed += 1;
 			snprintf(buf, sizeof(buf), "测试通过");
 		}
 	}
 	else
 	{
-		subret->skipped += 1;
+		subret->test_skipped += 1;
 		snprintf(buf, sizeof(buf), "测试跳过");
 	}
 
-	subret->sum += 1;
+	subret->test += 1;
 
-	ret->passed += subret->passed;
-	ret->failed += subret->failed;
-	ret->skipped += subret->skipped;
-	ret->sum += subret->sum;
+	ret->test_passed += subret->test_passed;
+	ret->test_failed += subret->test_failed;
+	ret->test_skipped += subret->test_skipped;
+	ret->test += subret->test;
 
 	tlog_rawprint(file, line, func, filter, TLOG_T,
-				  "%s %s\n"
+				  "%s %s  核对: %d, %d 通过, %d 失败\n"
 				  "%8.0f ms  sum  passed  failed skipped\n"
 				  "this      %6d  %6d  %6d  %6d\n"
 				  "all       %6d  %6d  %6d  %6d",
-				  buf, ttest_test_name,
+				  buf, ttest_test_name, subret->check, subret->check_passed, subret->check_failed,
 				  ms,
-				  subret->sum, subret->passed, subret->failed, subret->skipped,
-				  ret->sum, ret->passed, ret->failed, ret->skipped);
+				  subret->test, subret->test_passed, subret->test_failed, subret->test_skipped,
+				  ret->test, ret->test_passed, ret->test_failed, ret->test_skipped);
 
-	return subret->failed;
+	return subret->test_failed;
 }
 
-ti ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v)
+bool ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v)
 {
 	if (v)
 	{
 		ret->check_passed += 1;
 		// tlog_rawprint(file, line, func, filter, TLOG_T, "核对通过");
-		return 0;
 	}
 	else
 	{
 		ret->check_failed += 1;
 		tlog_rawprint(file, line, func, filter, TLOG_T, "核对失败");
-
-		return 1;
 	}
+
+	ret->check += 1;
+
+	return v;
 }

@@ -126,11 +126,11 @@ ttest_static(tlog_test_tlog_hexdump_qps)
 ttest_static(tlog_test_tlog_basename)
 {
 	ttest_check_null(tlog_basename(NULL));
-	ttest_check_not_null(tlog_basename("main.c"));
-	ttest_check_not_null(tlog_basename("/home/test/abc/main.c"));
-	ttest_check_not_null(tlog_basename("C:\\main.c"));
-	ttest_check_not_null(tlog_basename("C:\\桌面\\main.c"));
-	ttest_check_not_null(tlog_basename("C:\\桌面\\123/abc/main.c"));
+	ttest_check_str_eq(tlog_basename("main.c"), "main.c");
+	ttest_check_str_eq(tlog_basename("/home/test/abc/main.c"), "main.c");
+	ttest_check_str_eq(tlog_basename("C:\\main.c"), "main.c");
+	ttest_check_str_eq(tlog_basename("C:\\桌面\\main.c"), "main.c");
+	ttest_check_str_eq(tlog_basename("C:\\桌面\\123/abc/main.c"), "main.c");
 }
 
 ttest_export(tlog_test)
