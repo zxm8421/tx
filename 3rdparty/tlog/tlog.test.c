@@ -139,12 +139,15 @@ ttest_static(tlog_test_tlog_basename)
 ttest_static(tlog_test_tlog_watch)
 {
 	ttest_check_ge(tlog_watch(tnull), -1);
-	
+
 	ti64 watch = 0;
 	ttest_check_ge(tlog_watch(&watch), 0);
 	ttest_check_gt(watch, 0);
-	ttest_check_ge(tlog_watch(&watch), 0);
+	usleep(1000 * 20);
+	tf cost = tlog_watch(&watch);
 	ttest_check_gt(watch, 0);
+	tlog(TLOG_T, "usleep(1000*2), cost = %.09f s", cost);
+	ttest_check_in_range(cost, 0.01, 0.05);
 }
 
 ttest_export(tlog_test)
@@ -156,5 +159,5 @@ ttest_export(tlog_test)
 	ttest_run(tlog_test_tlog_hexdump_qps, 1000 * 2);
 
 	ttest_run(tlog_test_tlog_basename, 10);
-	ttest_run(tlog_test_tlog_watch, 10);
+	ttest_run(tlog_test_tlog_watch, 1000);
 }
