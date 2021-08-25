@@ -57,6 +57,25 @@ ti tlog_debug(const tc *format, ...)
 	};
 }
 
+tf tlog_watch(ti64 *watch)
+{
+	if (watch == tnull)
+	{
+		return -1;
+	}
+
+	struct timespec tp;
+	clock_gettime(CLOCK_MONOTONIC, &tp);
+
+	ti64 start = *watch;
+	ti64 end = (ti64)tp.tv_sec + (ti64)tp.tv_nsec * 1000 * 1000 * 1000;
+	tf cost = (end - start) / 1e9;
+
+	*watch = end;
+
+	return cost;
+}
+
 ti64 tlog_getTimeNs()
 {
 	ti64 ns = 0;

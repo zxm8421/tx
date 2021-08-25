@@ -70,6 +70,15 @@ extern "C"
 {
 #endif
 	/**
+	 * @brief 得到watch的耗时, s
+	 * 精度: 100ns
+	 * 
+	 * @param watch 
+	 * @return 
+	 */
+	tf tlog_watch(ti64 *watch);
+
+	/**
 	 * @brief 获取时间戳, s
 	 * 
 	 * @return s
@@ -92,7 +101,7 @@ extern "C"
 
 	/**
 	 * @brief 获取时间戳, ns
-	 * 精度: 100ns
+	 * 精度: 100ns, 15.625ms(1s/64)
 	 * 
 	 * @return ns
 	 */
