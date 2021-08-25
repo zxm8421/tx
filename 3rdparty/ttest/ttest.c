@@ -84,7 +84,7 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 	{
 		tlog_rawprint(file, line, func, filter, TLOG_T,
 					  "%s %s 核对: %d (%d 通过, %d 失败)\n"
-					  "%8.0f ms  sum  passed  failed skipped\n"
+					  "%8.0f ms test  passed  failed skipped\n"
 					  "this      %6d  %6d  %6d  %6d\n"
 					  "all       %6d  %6d  %6d  %6d",
 					  buf, ttest_test_name, subret->check, subret->check_passed, subret->check_failed,
@@ -96,7 +96,7 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 	{
 		tlog_rawprint(file, line, func, filter, TLOG_T,
 					  "%s %s\n"
-					  "%8.0f ms  sum  passed  failed skipped\n"
+					  "%8.0f ms test  passed  failed skipped\n"
 					  "this      %6d  %6d  %6d  %6d\n"
 					  "all       %6d  %6d  %6d  %6d",
 					  buf, ttest_test_name,
