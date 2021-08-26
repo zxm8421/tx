@@ -13,7 +13,8 @@
 #define buildTime 0LL
 #endif
 #ifndef buildSalt
-#define buildSalt "000000"
+#pragma message("编译器未生成buildSalt")
+#define buildSalt 1000000
 #endif
 #ifndef buildBranch
 #pragma message("编译器未生成buildBranch")
@@ -93,24 +94,6 @@ QDateTime getBuildTime()
 QString getBuildSalt()
 {
 	return QString(buildSalt);
-}
-
-constexpr tu64 getBuildSalt_u64()
-{
-	const tu64 prime = 0x00000100000001B3ULL;
-	const tu64 basis = 0xCBF29CE484222325ULL;
-
-	tu64 ret = basis;
-	tc *str = (tc *)buildSalt;
-
-	while (*str)
-	{
-		ret ^= *str;
-		ret *= prime;
-		str++;
-	}
-
-	return ret;
 }
 
 QString getBuildBranch()

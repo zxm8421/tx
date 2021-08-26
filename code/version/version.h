@@ -46,13 +46,6 @@ QDateTime getBuildTime();
 QString getBuildSalt();
 
 /**
- * @brief 获取编译盐
- * 
- * @return 
- */
-constexpr tu64 getBuildSalt_u64();
-
-/**
  * @brief 获取编译分支
  * 
  * @return 

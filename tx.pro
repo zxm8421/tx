@@ -14,7 +14,7 @@ CONFIG(release, debug|release) {
 	DEFINES += NDEBUG
 }
 
-# DEFINES += NTEST
+DEFINES += NTEST
 !contains(DEFINES, NTEST) {
 	QT += testlib
 	CONFIG += testcase
@@ -28,11 +28,11 @@ VERSION = $${buildVer_Major}.$${buildVer_Minor}.$${buildVer_Patch}
 
 contains(QMAKE_HOST.os, Windows) {
 buildTime = "$(shell PowerShell (Get-Date (Get-Date).ToUniversalTime() -UFormat %s).Split(\\\'.\\\')[0])"
-buildSalt = "$(shell PowerShell Get-Date -Format %ffffff)"
+buildSalt = "$(shell PowerShell Get-Date -Format 1%ffffff)"
 
 } else {
 buildTime = "$(shell date +%s)"
-buildSalt = "$(shell date +%6N)"
+buildSalt = "$(shell date +1%6N)"
 
 }
 
@@ -45,7 +45,7 @@ DEFINES += \
 	buildVer_Minor=$${buildVer_Minor}	\
 	buildVer_Patch=$${buildVer_Patch}	\
 	buildTime=$${buildTime}	\
-	buildSalt=\\\"$${buildSalt}\\\"	\
+	buildSalt=$${buildSalt}	\
 	buildBranch=\\\"$${buildBranch}\\\"	\
 	buildSHA1=\\\"$${buildSHA1}\\\"
 
