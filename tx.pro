@@ -10,6 +10,16 @@ CONFIG += c++17
 
 # win32: CONFIG += console
 
+CONFIG(release, debug|release) {
+	DEFINES += NDEBUG
+}
+
+# DEFINES += NTEST
+!contains(DEFINES, NTEST) {
+	QT += testlib
+}
+
+
 buildVer_Major = 0
 buildVer_Minor = 1
 buildVer_Patch = 0
@@ -38,76 +48,38 @@ DEFINES += \
 	buildBranch=\\\"$${buildBranch}\\\"	\
 	buildSHA1=\\\"$${buildSHA1}\\\"
 
-INCLUDEPATH += \
-	3rdparty
+contains(QMAKE_HOST.os, Windows) {
+	buildVer.commands = "PowerShell if (Test-Path $${OUT_PWD}/release/version.o) { (ls $${OUT_PWD}/release/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" };	\
+									if (Test-Path $${OUT_PWD}/debug/version.o) { (ls $${OUT_PWD}/debug/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" }"
+} else {
+	buildVer.commands = "touch -t 200001010000.00 version.o"
+}
+QMAKE_EXTRA_TARGETS += buildVer
+PRE_TARGETDEPS += buildVer
 
-SOURCES +=	\
-	3rdparty/tlog/tlog.c
 
-HEADERS += \
-	3rdparty/tjz/ttype.h	\
-	3rdparty/tjz/ttype.inc.h	\
-	3rdparty/tlog/tlog.h	\
-	3rdparty/tlog/tlog.inc.h	\
-	3rdparty/tlog/tlog.conf.h
+include(3rdparty/tlib.pri)
+
 
 INCLUDEPATH +=	\
 	code
-
-SOURCES +=	\
-	code/main.cpp	\
-	code/ui/mainwindow.cpp	\
-	code/version/version.cpp
 
 HEADERS +=	\
 	code/stable.h	\
 	code/ui/mainwindow.h	\
 	code/version/version.h
 
+SOURCES +=	\
+	code/main.cpp	\
+	code/ui/mainwindow.cpp	\
+	code/version/version.cpp
+
 DISTFILES +=	\
 	LICENSE.md	\
 	README.md
 
-CONFIG(release, debug | release) {
-DEFINES += NDEBUG
-
-}
-
-# 单元测试
-DEFINES += NTEST
 !contains(DEFINES, NTEST) {
-message(进行单元测试)
-QT += testlib
-
-SOURCES +=	\
-	3rdparty/ttest/ttest.c	\
-	3rdparty/tjz/ttype.test.c	\
-	3rdparty/tlog/tlog.test.c
-
-HEADERS += \
-	3rdparty/ttest/ttest.h	\
-	3rdparty/ttest/ttest.inc.h
-
-SOURCES +=	\
-	code/main.test.cpp	\
-	code/version/version.test.cpp
-
-HEADERS += \
-	
+	SOURCES +=	\
+		code/main.test.cpp	\
+		code/version/version.test.cpp
 }
-
-contains(QMAKE_HOST.os, Windows) {
-buildVer.commands = "PowerShell if (Test-Path $${OUT_PWD}/release/version.o) { (ls $${OUT_PWD}/release/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" };	\
-								if (Test-Path $${OUT_PWD}/debug/version.o) { (ls $${OUT_PWD}/debug/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" }"
-
-} else {
-buildVer.commands = "touch -t 200001010000.00 version.o"
-
-}
-QMAKE_EXTRA_TARGETS += buildVer
-PRE_TARGETDEPS += buildVer
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
