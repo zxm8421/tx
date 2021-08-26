@@ -60,6 +60,9 @@ typedef ti te;
 
 // 布尔
 #include <stdbool.h>
+typedef bool tbo;
+#define tbt true
+#define tbf false
 
 #ifdef __cplusplus
 #define tnull nullptr
