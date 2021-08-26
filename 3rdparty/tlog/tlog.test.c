@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 #include <unistd.h>
+#include <time.h>
 
 #include <ttest/ttest.h>
 
@@ -19,7 +20,10 @@ void *tlog_test_tlog_qps_main(void *arg)
 
 	for (ti i = 0; i < cnt; i++)
 	{
-		tlog(TLOG_D, "task arg = %d, tid = %lu, cnt = %d", i, pthread_self(), cnt);
+		struct timespec tp;
+		clock_gettime(CLOCK_MONOTONIC, &tp);
+		ti64 us = (ti64)tp.tv_sec * 1000 * 1000 * 1000 + (ti64)tp.tv_nsec;
+		tlog(TLOG_D, "task arg = %d, tid = %p, cnt = %d, us = %lld, %lld", i, pthread_self(), cnt, tlog_getTimeUs(), us);
 	}
 
 	return NULL;
@@ -29,14 +33,13 @@ ttest_static(tlog_test_tlog_qps)
 {
 	pthread_t tid[4] = {0};
 	ti cnt = 10000;
-	tlog(TLOG_D, "main pid = %d, tid = %lu", getpid(), pthread_self());
+	tlog(TLOG_D, "main pid = %p, tid = %p", getpid(), pthread_self());
 	ti64 watch = 0;
 	tlog_watch(&watch);
-	tlog(TLOG_T, "watch = %lld ns", watch);
 	for (ti i = 0; i < tx_array_size(tid); i++)
 	{
 		pthread_create(&tid[i], NULL, tlog_test_tlog_qps_main, &cnt);
-		tlog(TLOG_D, "create tid = %lu", tid);
+		tlog(TLOG_D, "create tid = %p", tid);
 	}
 
 	for (ti i = 0; i < tx_array_size(tid); i++)

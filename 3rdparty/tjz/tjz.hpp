@@ -77,6 +77,13 @@ public:
 	ti getSize();
 	std::string getName();
 
+	ti add(const tJZ &jz);
+	ti add(const tc *path, const tJZ &jz);
+	ti add(const std::string path, const tJZ &jz);
+
+	ti remove(const tc *name);
+	ti remove(const std::string &name);
+
 	ti from_tbo(const tbo &v);
 	ti from_ti(const ti &v);
 	ti from_tf(const tf &v);
@@ -109,7 +116,7 @@ private:
 	std::vector<tb> rawByte;
 
 	std::weak_ptr<tJZ> super;
-	std::vector<std::shared_ptr<tJZ>> child;
+	std::map<std::string, std::shared_ptr<tJZ>> child;
 
 	union Var
 	{
