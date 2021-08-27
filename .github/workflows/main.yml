@@ -62,13 +62,10 @@ jobs:
           cd ${{github.workspace}}/build/output
           cp ${{github.workspace}}/build/release/${{env.APP}} ${{github.workspace}}/build/output/
 
-      - run: |
-          tree -L 3 -h ${{github.workspace}}
-
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          name: ${{env.APP}}_${{env.APP_TIME}}
+          name: ${{env.APP}}_${{env.APP_TIME}}_$${github.sha}_$${{github.run_number}}
           path: |
             ${{github.workspace}}/build/test/log/*.log
             ${{github.workspace}}/build/output/
