@@ -15,6 +15,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: ${{ runner.os }}-QtCache
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.14.0
         with:
@@ -23,14 +30,18 @@ jobs:
           target: "desktop"
           dir: "${{ github.workspace }}/example/"
           install-deps: "true"
-          cached: "false"
+          cached: "${{ steps.cache-qt.outputs.cache-hit }}"
           setup-python: "true"
 
       - uses: actions/checkout@v2
 
       - name: build
         run: |
-          mkdir ../build
-          cd ../build
+          echo ${PATH}
+          cd ..
+          ls -AFlh
+          tree -L 2 -h
+          mkdir build
+          cd build
           qmake ../tx/tx.pro
           make -j$(nproc)
