@@ -57,13 +57,9 @@ jobs:
           mkdir -p ${GITHUB_WORKSPACE}/../output
           cd ${GITHUB_WORKSPACE}/../output
           cp ${GITHUB_WORKSPACE}/../build/${APP} ./
-          echo ${{github.action_path}}
-          echo ${GITHUB_ACTION_PATH}
-          echo ${{github.workspace}}
-          echo ${GITHUB_WORKSPACE}
 
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          name: ${APP}
-          path: ${{github.workspace}}/../output/
+          name: ${APP}_$(date -u  +%Y%m%d%H%M%S)
+          path: ${GITHUB_WORKSPACE}/../output/
