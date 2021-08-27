@@ -30,5 +30,7 @@ jobs:
 
       - name: build
         run: |
-          ls -AFlh
-          tree -h
+          mkdir ../build
+          cd ../build
+          qmake ../tx/tx.pro
+          make -j$(nproc)
