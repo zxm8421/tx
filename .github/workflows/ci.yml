@@ -33,7 +33,7 @@ jobs:
       - name: info
         run: |
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-          echo "APP_SHA1=${${{github.sha}}:0:7}" >> $GITHUB_ENV
+          echo "APP_SHA1=`${${{github.sha}}:0:7}`" >> $GITHUB_ENV
 
       - name: Cache Qt
         id: cache-qt
