@@ -57,11 +57,10 @@ jobs:
           mkdir -p ${GITHUB_WORKSPACE}/../output
           cd ${GITHUB_WORKSPACE}/../output
           cp ${GITHUB_WORKSPACE}/../build/${APP} ./
-          echo ${HOME}
-          echo $${{runner.temp}}
+          cp ${GITHUB_WORKSPACE}/../test/log/${APP}.test.log ./
 
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          name: "${APP}_$(date -u  +%Y%m%d%H%M%S)"
-          path: "${GITHUB_WORKSPACE}/../output/"
+          name: ${APP}_$(date -u  +%Y%m%d%H%M%S)
+          path: output/
