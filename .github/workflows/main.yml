@@ -36,12 +36,14 @@ jobs:
 
       - name: build
         run: |
-          echo ${PATH}
-          pwd
-          cd ../
-          ls -AFlh
-          tree -L 2 -h
-          mkdir build
-          cd build
-          qmake ../tx/tx.pro
+          mkdir ${GITHUB_WORKSPACE}/build
+          cd ${GITHUB_WORKSPACE}/build
+          qmake ${GITHUB_WORKSPACE}/tx/tx.pro
+          make -j$(nproc)
+
+      - name: test
+        run: |
+          mkdir ${GITHUB_WORKSPACE}/test
+          cd ${GITHUB_WORKSPACE}/test
+          qmake ${GITHUB_WORKSPACE}/tx/tx.pro
           make -j$(nproc)
