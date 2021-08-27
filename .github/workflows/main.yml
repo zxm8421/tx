@@ -28,17 +28,19 @@ jobs:
           version: "5.12.11"
           host: "linux"
           target: "desktop"
-          dir: "${{ github.workspace }}/example/"
-          install-deps: "true"
           cached: "${{ steps.cache-qt.outputs.cache-hit }}"
           setup-python: "true"
+        run: |
+          echo "${PATH}" >> $GITHUB_PATH
 
-      - uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v2
 
       - name: build
         run: |
           echo ${PATH}
-          cd ..
+          pwd
+          cd ../
           ls -AFlh
           tree -L 2 -h
           mkdir build
