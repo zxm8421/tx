@@ -1,5 +1,5 @@
 # tx
-qt练习 [![CI](https://github.com/zxm8421/tx/actions/workflows/main.yml/badge.svg)](https://github.com/zxm8421/tx/actions/workflows/main.yml)
+qt练习 [![CI](https://github.com/zxm8421/tx/actions/workflows/ci.yml/badge.svg)](https://github.com/zxm8421/tx/actions/workflows/ci.yml)
 
 
 # [License](LICENSE.md)
