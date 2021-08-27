@@ -18,12 +18,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: info
+        run: |
+          echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
         with:
           path: ../Qt
-          key: ${{ runner.os }}-QtCache
+          key: ${{runner.os}}-QtCache
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -31,7 +35,7 @@ jobs:
           version: "5.12.11"
           host: "linux"
           target: "desktop"
-          cached: "${{ steps.cache-qt.outputs.cache-hit }}"
+          cached: "${{steps.cache-qt.outputs.cache-hit}}"
           setup-python: "true"
 
       - name: checkout
@@ -39,33 +43,32 @@ jobs:
 
       - name: test
         run: |
-          mkdir -p ${GITHUB_WORKSPACE}/build/test
-          cd ${GITHUB_WORKSPACE}/build/test
-          qmake APP_TEST=1 ${GITHUB_WORKSPACE}/${APP}.pro
+          mkdir -p ${{github.workspace}}/build/test
+          cd ${{github.workspace}}/build/test
+          qmake APP_TEST=1 ${{github.workspace}}/${{env.APP}}.pro
           make -j$(nproc)
           make check
 
       - name: build release
         run: |
-          mkdir -p ${GITHUB_WORKSPACE}/build/release
-          cd ${GITHUB_WORKSPACE}/build/release
-          qmake APP_TEST=0 ${GITHUB_WORKSPACE}/${APP}.pro
+          mkdir -p ${{github.workspace}}/build/release
+          cd ${{github.workspace}}/build/release
+          qmake APP_TEST=0 ${{github.workspace}}/${{env.APP}}.pro
           make -j$(nproc)
 
       - name: deploy
         run: |
-          mkdir -p ${GITHUB_WORKSPACE}/build/output
-          cd ${GITHUB_WORKSPACE}/build/output
-          cp ${GITHUB_WORKSPACE}/build/release/${APP} ${GITHUB_WORKSPACE}/build/output/
-          cp ${GITHUB_WORKSPACE}/build/test/log/*.log ${GITHUB_WORKSPACE}/build/output/
+          mkdir -p ${{github.workspace}}/build/output
+          cd ${{github.workspace}}/build/output
+          cp ${{github.workspace}}/build/release/${{env.APP}} ${{github.workspace}}/build/output/
 
       - run: |
-          tree -L 3 -h ${GITHUB_WORKSPACE}
+          tree -L 3 -h ${{github.workspace}}
 
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          name: ${APP}_$(date -u  +%Y%m%d%H%M%S)
+          name: ${{env.APP}}_${{env.APP_TIME}}
           path: |
             ${{github.workspace}}/build/test/log/*.log
             ${{github.workspace}}/build/output/
