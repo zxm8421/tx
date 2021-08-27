@@ -37,13 +37,6 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: build
-        run: |
-          mkdir -p ${GITHUB_WORKSPACE}/../build
-          cd ${GITHUB_WORKSPACE}/../build
-          qmake APP_TEST=0 ${GITHUB_WORKSPACE}/${APP}.pro
-          make -j$(nproc)
-
       - name: test
         run: |
           mkdir -p ${GITHUB_WORKSPACE}/../test
@@ -51,3 +44,22 @@ jobs:
           qmake APP_TEST=1 ${GITHUB_WORKSPACE}/${APP}.pro
           make -j$(nproc)
           make check
+
+      - name: build
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/../build
+          cd ${GITHUB_WORKSPACE}/../build
+          qmake APP_TEST=0 ${GITHUB_WORKSPACE}/${APP}.pro
+          make -j$(nproc)
+
+      - name: deploy
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/../output
+          cd ${GITHUB_WORKSPACE}/../output
+          cp ${GITHUB_WORKSPACE}/../build/${APP} ./
+
+      - name: upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${APP}
+          path: ${GITHUB_WORKSPACE}/../output/
