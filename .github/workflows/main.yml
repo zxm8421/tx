@@ -57,6 +57,8 @@ jobs:
           mkdir -p ${GITHUB_WORKSPACE}/../output
           cd ${GITHUB_WORKSPACE}/../output
           cp ${GITHUB_WORKSPACE}/../build/${APP} ./
+          echo ${HOME}
+          echo $${runner.temp}
 
       - name: upload
         uses: actions/upload-artifact@v2
