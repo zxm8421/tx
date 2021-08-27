@@ -26,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-QtCache
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@latest
+        uses: jurplel/install-qt-action@v2
         with:
           version: "5.12.11"
           host: "linux"
@@ -35,7 +35,7 @@ jobs:
           setup-python: "true"
 
       - name: checkout
-        uses: actions/checkout@latest
+        uses: actions/checkout@v2
 
       - name: build
         run: |
