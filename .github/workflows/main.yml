@@ -67,5 +67,5 @@ jobs:
         with:
           name: ${APP}_$(date -u  +%Y%m%d%H%M%S)
           path: |
-            ${GITHUB_WORKSPACE}/build/test/log/*.log
-            ${GITHUB_WORKSPACE}/build/output/
+            ${{github.workspace}}/build/test/log/*.log
+            ${{github.workspace}}/build/output/
