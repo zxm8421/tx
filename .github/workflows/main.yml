@@ -56,8 +56,11 @@ jobs:
         run: |
           mkdir -p ${GITHUB_WORKSPACE}/build/output
           cd ${GITHUB_WORKSPACE}/build/output
-          cp ${GITHUB_WORKSPACE}/build/release/${APP} ./
-          cp ${GITHUB_WORKSPACE}/build/test/log/${APP}.test.log ./
+          cp ${GITHUB_WORKSPACE}/build/release/${APP} ${GITHUB_WORKSPACE}/build/output/
+          cp ${GITHUB_WORKSPACE}/build/test/log/${APP}.test.log ${GITHUB_WORKSPACE}/build/output/
+
+      - run: |
+          tree -L 3 -h ${GITHUB_WORKSPACE}
 
       - name: upload
         uses: actions/upload-artifact@v2
