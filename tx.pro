@@ -14,7 +14,10 @@ CONFIG(release, debug|release) {
 	DEFINES += NDEBUG
 }
 
-DEFINES += NTEST
+!equals(APP_TEST, 1) {
+	DEFINES += NTEST
+}
+
 !contains(DEFINES, NTEST) {
 	QT += testlib
 	CONFIG += testcase
