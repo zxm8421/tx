@@ -30,8 +30,6 @@ jobs:
           target: "desktop"
           cached: "${{ steps.cache-qt.outputs.cache-hit }}"
           setup-python: "true"
-        run: |
-          echo "${PATH}" >> $GITHUB_PATH
 
       - name: checkout
         uses: actions/checkout@v2
