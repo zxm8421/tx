@@ -50,3 +50,4 @@ jobs:
           cd ${GITHUB_WORKSPACE}/../test
           qmake APP_TEST=1 ${GITHUB_WORKSPACE}/${APP}.pro
           make -j$(nproc)
+          make check
