@@ -34,8 +34,14 @@ jobs:
           cached: "${{ steps.cache-qt.outputs.cache-hit }}"
           setup-python: "true"
 
+      - run: |
+          echo ${GITHUB_WORKSPACE}
+
       - name: checkout
         uses: actions/checkout@v2
+
+      - run: |
+          echo ${GITHUB_WORKSPACE}
 
       - name: test
         run: |
