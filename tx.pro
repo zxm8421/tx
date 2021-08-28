@@ -30,8 +30,8 @@ buildVer_Patch = 0
 VERSION = $${buildVer_Major}.$${buildVer_Minor}.$${buildVer_Patch}
 
 contains(QMAKE_HOST.os, Windows) {
-buildTime = "$(shell PowerShell (Get-Date (Get-Date).ToUniversalTime() -UFormat %s).Split(\\\'.\\\')[0])"
-buildSalt = "$(shell PowerShell Get-Date -Format 1%ffffff)"
+buildTime = "$(shell PowerShell $'(Get-Date (Get-Date).ToUniversalTime() -UFormat %s).Split(\\\'.\\\')[0]$')"
+buildSalt = "$(shell PowerShell $'Get-Date -Format 1%ffffff$')"
 
 } else {
 buildTime = "$(shell date +%s)"
@@ -53,8 +53,8 @@ DEFINES += \
 	buildSHA1=\\\"$${buildSHA1}\\\"
 
 contains(QMAKE_HOST.os, Windows) {
-	buildVer.commands = "PowerShell if (Test-Path $${OUT_PWD}/release/version.o) { (ls $${OUT_PWD}/release/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" };	\
-									if (Test-Path $${OUT_PWD}/debug/version.o) { (ls $${OUT_PWD}/debug/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" }"
+	buildVer.commands = "PowerShell $'if (Test-Path $${OUT_PWD}/release/version.o) { (ls $${OUT_PWD}/release/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" };	\
+									if (Test-Path $${OUT_PWD}/debug/version.o) { (ls $${OUT_PWD}/debug/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" }$'"
 } else {
 	buildVer.commands = "touch -t 200001010000.00 version.o"
 }

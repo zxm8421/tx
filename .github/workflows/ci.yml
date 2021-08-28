@@ -119,8 +119,6 @@ jobs:
       - name: info
         shell: bash
         run: |
-          echo $RUNNER_WORKSPACE
-          echo ${{runner.workspace}}
           echo "APP_ARCH=mingw32" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -159,7 +157,7 @@ jobs:
       - name: test
         shell: cmd
         run: |
-          mkdir '${{github.workspace}}/build/test'
+          mkdir '${{github.workspace}}\\build\\test'
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
           dir
@@ -170,7 +168,7 @@ jobs:
       - name: build release
         shell: cmd
         run: |
-          mkdir '${{github.workspace}}/build/release'
+          mkdir '${{github.workspace}}\\build\\release'
           cd '${{github.workspace}}/build/release'
           qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           dir
