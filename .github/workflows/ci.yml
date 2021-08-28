@@ -157,6 +157,9 @@ jobs:
       - name: test
         run: |
           echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
+          dir '${{env.IQTA_TOOLS}}'
+          dir '${{env.IQTA_TOOLS}}/mingw730_32'
+          dir '${{env.IQTA_TOOLS}}/mingw730_32/bin'
           which gcc
           gcc --version
           which make
