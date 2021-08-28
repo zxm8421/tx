@@ -32,6 +32,7 @@ jobs:
     steps:
       - name: info
         run: |
+          echo "APP_ARCH=linux" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
           echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
@@ -41,7 +42,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ../Qt
-          key: ${{runner.os}}-QtCache
+          key: QtCache_${{env.APP_ARCH}}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -93,7 +94,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{github.run_number}}
+          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
           path: |
             ${{github.workspace}}/build/test/log/*.log
             ${{github.workspace}}/build/output/
@@ -119,6 +120,7 @@ jobs:
     steps:
       - name: info
         run: |
+          echo "APP_ARCH=mingw32" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
           echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
@@ -128,7 +130,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ../Qt
-          key: ${{runner.os}}-QtCache
+          key: QtCache_${{env.APP_ARCH}}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -180,7 +182,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{github.run_number}}
+          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
           path: |
             '${{github.workspace}}/build/test/log/*.log'
             '${{github.workspace}}/build/output/'
@@ -206,6 +208,7 @@ jobs:
     steps:
       - name: info
         run: |
+          echo "APP_ARCH=mingw64" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
           echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
@@ -215,7 +218,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ../Qt
-          key: ${{runner.os}}-QtCache
+          key: QtCache_${{env.APP_ARCH}}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -267,7 +270,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{github.run_number}}
+          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
           path: |
             ${{github.workspace}}/build/test/log/*.log
             ${{github.workspace}}/build/output/
