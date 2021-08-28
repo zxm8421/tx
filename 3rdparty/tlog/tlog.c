@@ -24,7 +24,9 @@
 static ti tlog_filter = TLOG_ALL;
 static volatile _Atomic ti64 tlog_seq = 0;
 static ti tlog_fd = -1;
+#ifndef NTEST
 static ti tlog_test_fd = -1;
+#endif
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #else
 #define __USE_GNU
