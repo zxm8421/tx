@@ -157,6 +157,8 @@ jobs:
       - name: test
         run: |
           echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
+          echo $PATH
+          ls -AFlh $Qt5_DIR
           ls -AFlh '${{env.IQTA_TOOLS}}'
           ls -AFlh '${{env.IQTA_TOOLS}}/mingw730_32'
           ls -AFlh '${{env.IQTA_TOOLS}}/mingw730_32/bin'
