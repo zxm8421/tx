@@ -39,8 +39,8 @@ jobs:
         id: cache-qt
         uses: actions/cache@v1
         with:
-          path: ../Qt
           key: QtCache_${{env.APP_ARCH}}
+          path: ../Qt
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -131,8 +131,8 @@ jobs:
         id: cache-qt
         uses: actions/cache@v1
         with:
-          path: ../Qt
           key: QtCache_${{env.APP_ARCH}}
+          path: ../Qt
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -182,7 +182,8 @@ jobs:
       - name: deploy
         run: |
           cd '${{github.workspace}}/build/output'
-          cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
+          cp '${{github.workspace}}/build/release/release/${{env.APP}}.exe' '${{github.workspace}}/build/output/'
+          windeployqt ${{env.APP}}.exe
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
@@ -224,8 +225,8 @@ jobs:
         id: cache-qt
         uses: actions/cache@v1
         with:
-          path: ../Qt
           key: QtCache_${{env.APP_ARCH}}
+          path: ../Qt
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -275,7 +276,8 @@ jobs:
       - name: deploy
         run: |
           cd '${{github.workspace}}/build/output'
-          cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
+          cp '${{github.workspace}}/build/release/release/${{env.APP}}.exe' '${{github.workspace}}/build/output/'
+          windeployqt ${{env.APP}}.exe
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
