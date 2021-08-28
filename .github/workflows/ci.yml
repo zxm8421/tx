@@ -34,9 +34,6 @@ jobs:
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
           echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-          mkdir -p '${{github.workspace}}/build/test'
-          mkdir -p '${{github.workspace}}/build/release'
-          mkdir -p '${{github.workspace}}/build/output'
 
       - name: Cache Qt
         id: cache-qt
@@ -70,6 +67,7 @@ jobs:
 
       - name: test
         run: |
+          mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
           make -j$(nproc)
@@ -77,12 +75,14 @@ jobs:
 
       - name: build release
         run: |
+          mkdir -p '${{github.workspace}}/build/release'
           cd '${{github.workspace}}/build/release'
           qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           make -j$(nproc)
 
       - name: deploy
         run: |
+          mkdir -p '${{github.workspace}}/build/output'
           cd '${{github.workspace}}/build/output'
           cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
 
@@ -123,9 +123,6 @@ jobs:
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
           echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-          mkdir -p '${{github.workspace}}/build/test'
-          mkdir -p '${{github.workspace}}/build/release'
-          mkdir -p '${{github.workspace}}/build/output'
 
       - name: Cache Qt
         id: cache-qt
@@ -160,25 +157,27 @@ jobs:
       - name: test
         shell: cmd
         run: |
+          mkdir '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
           dir
-          type Makefile*
+          echo %NUMBER_OF_PROCESSORS%
           mingw32-make.exe -j%NUMBER_OF_PROCESSORS%
           mingw32-make.exe check
 
       - name: build release
         shell: cmd
         run: |
+          mkdir '${{github.workspace}}/build/release'
           cd '${{github.workspace}}/build/release'
           qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           dir
-          type Makefile*
           mingw32-make.exe -j%NUMBER_OF_PROCESSORS%
 
       - name: deploy
         shell: bash
         run: |
+          mkdir -p '${{github.workspace}}/build/release'
           cd '${{github.workspace}}/build/output'
           cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
 
@@ -190,5 +189,5 @@ jobs:
         with:
           name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
           path: |
-            '${{github.workspace}}/build/test/log/*.log'
-            '${{github.workspace}}/build/output/'
+            ${{github.workspace}}/build/test/log/*.log
+            ${{github.workspace}}/build/output/
