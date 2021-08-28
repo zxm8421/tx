@@ -37,10 +37,10 @@ jobs:
 
       - name: Cache Qt
         id: cache-qt
-        uses: actions/cache@v2
+        uses: actions/cache@v1
         with:
           path: ../Qt
-          key: QtCache-${{env.APP_ARCH}}
+          key: QtCache_${{env.APP_ARCH}}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -101,7 +101,7 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        shell: bash
+        shell: cmd
     permissions:
       actions: read
       contents: read
@@ -117,6 +117,7 @@ jobs:
 
     steps:
       - name: info
+        shell: bash
         run: |
           echo "APP_ARCH=mingw32" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
@@ -128,10 +129,10 @@ jobs:
 
       - name: Cache Qt
         id: cache-qt
-        uses: actions/cache@v2
+        uses: actions/cache@v1
         with:
           path: ../Qt
-          key: QtCache-${{env.APP_ARCH}}
+          key: QtCache_${{env.APP_ARCH}}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -157,7 +158,6 @@ jobs:
           # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
       - name: test
-        shell: cmd
         run: |
           cd '${{github.workspace}}/build/test'
           qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
@@ -165,13 +165,13 @@ jobs:
           make check
 
       - name: build release
-        shell: cmd
         run: |
           cd '${{github.workspace}}/build/release'
           qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           make -j%NUMBER_OF_PROCESSORS%
 
       - name: deploy
+        shell: bash
         run: |
           cd '${{github.workspace}}/build/output'
           cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
