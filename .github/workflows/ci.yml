@@ -139,6 +139,7 @@ jobs:
           arch: "win32_mingw73"
           cached: "${{steps.cache-qt.outputs.cache-hit}}"
           setup-python: "true"
+          tools: "qt.tools.win32_mingw730"
 
       - name: checkout
         uses: actions/checkout@v2
@@ -163,6 +164,7 @@ jobs:
           qmake --version
           which mingw32-make
           echo ${{env.IQTA_TOOLS}}
+          echo "${{env.IQTA_TOOLS}}/mingw730_32/bin" >> $GITHUB_PATH
           mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
