@@ -155,6 +155,13 @@ jobs:
 
       - name: test
         run: |
+          which gcc
+          gcc --version
+          which make
+          make --version
+          which qmake
+          qmake --version
+          which mingw32-make
           mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
