@@ -49,6 +49,7 @@ jobs:
           host: "linux"
           target: "desktop"
           arch: "gcc_64"
+          modules: "all"
           cached: "${{steps.cache-qt.outputs.cache-hit}}"
           setup-python: "true"
 
@@ -121,7 +122,7 @@ jobs:
     steps:
       - name: info
         run: |
-          echo "APP_ARCH=mingw32" >> $GITHUB_ENV
+          echo "APP_ARCH=win32_mingw73" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
           echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
@@ -139,7 +140,8 @@ jobs:
           version: "5.12.11"
           host: "windows"
           target: "desktop"
-          arch: "win32_mingw73"
+          arch: "${{env.APP_ARCH}}"
+          modules: "all"
           cached: "${{steps.cache-qt.outputs.cache-hit}}"
           setup-python: "true"
           tools: "tools_mingw,7.3.0,qt.tools.win32_mingw730"
@@ -213,7 +215,7 @@ jobs:
     steps:
       - name: info
         run: |
-          echo "APP_ARCH=mingw64" >> $GITHUB_ENV
+          echo "APP_ARCH=win64_mingw73" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
           echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
@@ -231,7 +233,8 @@ jobs:
           version: "5.12.11"
           host: "windows"
           target: "desktop"
-          arch: "win32_mingw73"
+          arch: "${{env.APP_ARCH}}"
+          modules: "all"
           cached: "${{steps.cache-qt.outputs.cache-hit}}"
           setup-python: "true"
           tools: "tools_mingw,7.3.0,qt.tools.win64_mingw730"
