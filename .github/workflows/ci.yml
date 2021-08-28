@@ -137,7 +137,7 @@ jobs:
           host: "windows"
           target: "desktop"
           arch: "win32_mingw73"
-          # cached: "${{steps.cache-qt.outputs.cache-hit}}"
+          cached: "${{steps.cache-qt.outputs.cache-hit}}"
           setup-python: "true"
           tools: "tools_mingw,7.3.0,qt.tools.win32_mingw730"
 
@@ -154,14 +154,14 @@ jobs:
           # Prefix the list here with "+" to use these queries and those in the config file.
           # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
+      - name: pre-build
+        run: |
+          echo '${{env.IQTA_TOOLS}}'
+          echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
+
       - name: test
         run: |
           echo $PATH
-          ls -AFlh '${{env.Qt5_DIR}}'
-          ls -AFlh '${{env.Qt5_DIR}}/../'
-          ls -AFlh '${{env.Qt5_DIR}}/../../'
-          ls -AFlh '${{env.Qt5_DIR}}/../../Tools'
-          ls -AFlh '${{env.IQTA_TOOLS}}'
           which gcc
           gcc --version
           which make
@@ -169,11 +169,11 @@ jobs:
           which qmake
           qmake --version
           which mingw32-make
-          # mkdir -p '${{github.workspace}}/build/test'
-          # cd '${{github.workspace}}/build/test'
-          # qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
-          # mingw32-make.exe -j$(nproc)
-          # mingw32-make.exe check
+          mkdir -p '${{github.workspace}}/build/test'
+          cd '${{github.workspace}}/build/test'
+          qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
+          mingw32-make.exe -j$(nproc)
+          mingw32-make.exe check
       # - name: build release
       #   run: |
       #     mkdir -p '${{github.workspace}}/build/release'
