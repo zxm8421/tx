@@ -156,6 +156,7 @@ jobs:
 
       - name: test
         run: |
+          echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
           which gcc
           gcc --version
           which make
@@ -163,8 +164,6 @@ jobs:
           which qmake
           qmake --version
           which mingw32-make
-          echo ${{env.IQTA_TOOLS}}
-          echo "${{env.IQTA_TOOLS}}/mingw730_32/bin" >> $GITHUB_PATH
           mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
