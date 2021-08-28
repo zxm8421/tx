@@ -47,6 +47,7 @@ INCLUDEPATH +=	\
 HEADERS +=	\
 	code/stable.h	\
 	code/ui/mainwindow.h	\
+	code/version/buildVer.h
 	code/version/version.h
 
 SOURCES +=	\

@@ -117,7 +117,6 @@ jobs:
 
     steps:
       - name: info
-        shell: bash
         run: |
           echo "APP_ARCH=mingw32" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
