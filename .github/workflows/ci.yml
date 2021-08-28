@@ -116,13 +116,6 @@ jobs:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
-      - name: info
-        run: |
-          echo "APP_ARCH=mingw32" >> $GITHUB_ENV
-          echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-          echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
-          echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -153,15 +146,19 @@ jobs:
           # By default, queries listed here will override any specified in a config file.
           # Prefix the list here with "+" to use these queries and those in the config file.
           # queries: ./path/to/local/query, your-org/your-repo/queries@main
+      
+      - name: info
+        run: |
+          echo "APP_ARCH=mingw32" >> $GITHUB_ENV
+          echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
 
       - name: test
         run: |
-          echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
           echo $PATH
-          ls -AFlh $Qt5_DIR
-          ls -AFlh '${{env.IQTA_TOOLS}}'
-          ls -AFlh '${{env.IQTA_TOOLS}}/mingw730_32'
-          ls -AFlh '${{env.IQTA_TOOLS}}/mingw730_32/bin'
+          ls -AFlh '${{env.Qt5_DIR}}'
           which gcc
           gcc --version
           which make
