@@ -158,7 +158,7 @@ jobs:
           mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           cmd.exe /C qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
-          cmd.exe /C make -j$(nproc)
+          cmd.exe /C make -j%NUMBER_OF_PROCESSORS%
           cmd.exe /C make check
 
       - name: build release
@@ -166,7 +166,7 @@ jobs:
           mkdir -p '${{github.workspace}}/build/release'
           cd '${{github.workspace}}/build/release'
           cmd.exe /C qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
-          cmd.exe /C make -j$(nproc)
+          cmd.exe /C make -j%NUMBER_OF_PROCESSORS%
 
       - name: deploy
         run: |
