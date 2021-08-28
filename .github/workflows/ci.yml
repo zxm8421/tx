@@ -116,6 +116,13 @@ jobs:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
+      - name: info
+        run: |
+          echo "APP_ARCH=mingw32" >> $GITHUB_ENV
+          echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
       - name: Cache Qt
         id: cache-qt
         uses: actions/cache@v1
@@ -146,14 +153,6 @@ jobs:
           # By default, queries listed here will override any specified in a config file.
           # Prefix the list here with "+" to use these queries and those in the config file.
           # queries: ./path/to/local/query, your-org/your-repo/queries@main
-      
-      - name: info
-        run: |
-          echo "APP_ARCH=mingw32" >> $GITHUB_ENV
-          echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-          echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
-          echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-          echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
 
       - name: test
         run: |
@@ -171,23 +170,19 @@ jobs:
           # qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
           # mingw32-make.exe -j$(nproc)
           # mingw32-make.exe check
-
       # - name: build release
       #   run: |
       #     mkdir -p '${{github.workspace}}/build/release'
       #     cd '${{github.workspace}}/build/release'
       #     qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
       #     mingw32-make.exe -j$(nproc)
-
       # - name: deploy
       #   run: |
       #     mkdir -p '${{github.workspace}}/build/release'
       #     cd '${{github.workspace}}/build/output'
       #     cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
-
       # - name: Perform CodeQL Analysis
       #   uses: github/codeql-action/analyze@v1
-
       # - name: upload
       #   uses: actions/upload-artifact@v2
       #   with:
