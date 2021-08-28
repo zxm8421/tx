@@ -158,6 +158,10 @@ jobs:
         run: |
           echo $PATH
           ls -AFlh '${{env.Qt5_DIR}}'
+          ls -AFlh '${{env.Qt5_DIR}}/../'
+          ls -AFlh '${{env.Qt5_DIR}}/../../'
+          ls -AFlh '${{env.Qt5_DIR}}/../../Tools'
+          ls -AFlh '${{env.IQTA_TOOLS}}'
           which gcc
           gcc --version
           which make
