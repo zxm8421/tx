@@ -159,16 +159,16 @@ jobs:
         run: |
           mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
-          qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
-          make -j$(nproc)
-          make check
+          cmd.exe /C qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
+          cmd.exe /C make -j$(nproc)
+          cmd.exe /C make check
 
       - name: build release
         run: |
           mkdir -p '${{github.workspace}}/build/release'
           cd '${{github.workspace}}/build/release'
-          qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
-          make -j$(nproc)
+          cmd.exe /C qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
+          cmd.exe /C make -j$(nproc)
 
       - name: deploy
         run: |
