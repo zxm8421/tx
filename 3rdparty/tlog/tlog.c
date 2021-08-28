@@ -358,11 +358,15 @@ ti tlog_init()
 
 	ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
 	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+#ifndef NTEST
 	tlog_test_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".test.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+#endif
 #else
 	ti ret __attribute__((unused)) = system("mkdir -m 755 -p " TLOG_FILE_DIR);
 	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+#ifndef NTEST
 	tlog_test_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".test.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
+#endif
 
 	pthread_create(&tlog_tid, NULL, tlog_thread_run, tnull);
 	pthread_setname_np(tlog_tid, "tlog");
