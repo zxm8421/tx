@@ -157,8 +157,8 @@ jobs:
       - name: test
         shell: cmd
         run: |
-          mkdir '${{github.workspace}}\\build\\test'
-          cd '${{github.workspace}}/build/test'
+          mkdir '${{github.workspace}}\build\test'
+          cd '${{github.workspace}}\build\test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
           dir
           echo %NUMBER_OF_PROCESSORS%
@@ -168,8 +168,8 @@ jobs:
       - name: build release
         shell: cmd
         run: |
-          mkdir '${{github.workspace}}\\build\\release'
-          cd '${{github.workspace}}/build/release'
+          mkdir '${{github.workspace}}\build\release'
+          cd '${{github.workspace}}\build\release'
           qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           dir
           mingw32-make.exe -j%NUMBER_OF_PROCESSORS%
