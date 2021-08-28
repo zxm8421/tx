@@ -65,9 +65,14 @@ jobs:
           # Prefix the list here with "+" to use these queries and those in the config file.
           # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-      - name: test
+      - name: pre-build
         run: |
           mkdir -p '${{github.workspace}}/build/test'
+          mkdir -p '${{github.workspace}}/build/release'
+          mkdir -p '${{github.workspace}}/build/output'
+
+      - name: test
+        run: |
           cd '${{github.workspace}}/build/test'
           qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
           make -j$(nproc)
@@ -75,14 +80,12 @@ jobs:
 
       - name: build release
         run: |
-          mkdir -p '${{github.workspace}}/build/release'
           cd '${{github.workspace}}/build/release'
           qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           make -j$(nproc)
 
       - name: deploy
         run: |
-          mkdir -p '${{github.workspace}}/build/output'
           cd '${{github.workspace}}/build/output'
           cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
 
@@ -123,12 +126,12 @@ jobs:
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
           echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-      # - name: Cache Qt
-      #   id: cache-qt
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: ../Qt
-      #     key: QtCache_${{env.APP_ARCH}}
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: QtCache_${{env.APP_ARCH}}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -156,41 +159,127 @@ jobs:
 
       - name: pre-build
         run: |
-          echo '${{env.IQTA_TOOLS}}'
           echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
+          mkdir -p '${{github.workspace}}/build/test'
+          mkdir -p '${{github.workspace}}/build/release'
+          mkdir -p '${{github.workspace}}/build/output'
 
       - name: test
         run: |
-          echo $PATH
-          which gcc
-          gcc --version
-          which make
-          make --version
-          which qmake
-          qmake --version
-          which mingw32-make
-          mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
           mingw32-make.exe check
-      # - name: build release
-      #   run: |
-      #     mkdir -p '${{github.workspace}}/build/release'
-      #     cd '${{github.workspace}}/build/release'
-      #     qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
-      #     mingw32-make.exe -j$(nproc)
-      # - name: deploy
-      #   run: |
-      #     mkdir -p '${{github.workspace}}/build/release'
-      #     cd '${{github.workspace}}/build/output'
-      #     cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
-      # - name: Perform CodeQL Analysis
-      #   uses: github/codeql-action/analyze@v1
-      # - name: upload
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
-      #     path: |
-      #       ${{github.workspace}}/build/test/log/*.log
-      #       ${{github.workspace}}/build/output/
+
+      - name: build release
+        run: |
+          cd '${{github.workspace}}/build/release'
+          qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
+          mingw32-make.exe -j$(nproc)
+
+      - name: deploy
+        run: |
+          cd '${{github.workspace}}/build/output'
+          cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+      - name: upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
+          path: |
+            ${{github.workspace}}/build/test/log/*.log
+            ${{github.workspace}}/build/output/
+
+  build-mingw64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["cpp"]
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+        # Learn more:
+        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
+
+    steps:
+      - name: info
+        run: |
+          echo "APP_ARCH=mingw64" >> $GITHUB_ENV
+          echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "APP_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: QtCache_${{env.APP_ARCH}}
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: "5.12.11"
+          host: "windows"
+          target: "desktop"
+          arch: "win32_mingw73"
+          cached: "${{steps.cache-qt.outputs.cache-hit}}"
+          setup-python: "true"
+          tools: "tools_mingw,7.3.0,qt.tools.win64_mingw730"
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{matrix.language}}
+          # If you wish to specify custom queries, you can do so here or in a config file.
+          # By default, queries listed here will override any specified in a config file.
+          # Prefix the list here with "+" to use these queries and those in the config file.
+          # queries: ./path/to/local/query, your-org/your-repo/queries@main
+
+      - name: pre-build
+        run: |
+          echo '${{env.IQTA_TOOLS}}/mingw730_64/bin' >> $GITHUB_PATH
+          mkdir -p '${{github.workspace}}/build/test'
+          mkdir -p '${{github.workspace}}/build/release'
+          mkdir -p '${{github.workspace}}/build/output'
+
+      - name: test
+        run: |
+          cd '${{github.workspace}}/build/test'
+          qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
+          mingw32-make.exe -j$(nproc)
+          mingw32-make.exe check
+
+      - name: build release
+        run: |
+          cd '${{github.workspace}}/build/release'
+          qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
+          mingw32-make.exe -j$(nproc)
+
+      - name: deploy
+        run: |
+          cd '${{github.workspace}}/build/output'
+          cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+      - name: upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
+          path: |
+            ${{github.workspace}}/build/test/log/*.log
+            ${{github.workspace}}/build/output/
