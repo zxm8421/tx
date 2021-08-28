@@ -119,6 +119,8 @@ jobs:
       - name: info
         shell: bash
         run: |
+          echo $RUNNER_WORKSPACE
+          echo ${{runner.workspace}}
           echo "APP_ARCH=mingw32" >> $GITHUB_ENV
           echo "APP_TIME=$(date -u  +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_SHA1=${GITHUB_SHA::7}" >> $GITHUB_ENV
