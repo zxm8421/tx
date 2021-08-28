@@ -23,47 +23,20 @@ CONFIG(release, debug|release) {
 	CONFIG += testcase
 }
 
-SHELL = \"C:\\\\Program Files\\\\Git\\\\bin\\\\bash.exe\" -c
-
 buildVer_Major = 0
 buildVer_Minor = 1
 buildVer_Patch = 0
 VERSION = $${buildVer_Major}.$${buildVer_Minor}.$${buildVer_Patch}
 
-contains(QMAKE_HOST.os, Windows) {
-#buildTime = "$(shell PowerShell $'(Get-Date (Get-Date).ToUniversalTime() -UFormat %s).Split(\\\'.\\\')[0]$')"
-buildTime = "$(shell $${SHELL} \"date +%s\")"
-buildSalt = "$(shell PowerShell $'Get-Date -Format 1%ffffff$')"
-buildSalt = "$(shell $${SHELL} \"date +1%6N\")"
-
-} else {
-buildTime = "$(shell date +%s)"
-buildSalt = "$(shell date +1%6N)"
-
-}
-
-buildBranch = "$(shell git --git-dir $${PWD}/.git rev-parse --abbrev-ref HEAD)"
-buildSHA1 = "$(shell git --git-dir $${PWD}/.git rev-parse --short=7 HEAD)"
-
 DEFINES += \
 	buildTarget=\\\"$${TARGET}\\\"	\
 	buildVer_Major=$${buildVer_Major}	\
 	buildVer_Minor=$${buildVer_Minor}	\
-	buildVer_Patch=$${buildVer_Patch}	\
-	buildTime=$${buildTime}	\
-	buildSalt=$${buildSalt}	\
-	buildBranch=\\\"$${buildBranch}\\\"	\
-	buildSHA1=\\\"$${buildSHA1}\\\"
+	buildVer_Patch=$${buildVer_Patch}
 
-contains(QMAKE_HOST.os, Windows) {
-	buildVer.commands = "PowerShell if (Test-Path $${OUT_PWD}/release/version.o) { (ls $${OUT_PWD}/release/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" };	\
-									if (Test-Path $${OUT_PWD}/debug/version.o) { (ls $${OUT_PWD}/debug/version.o).LastWriteTimeUtc = Get-Date -Date \"2000/01/01\" }"
-} else {
-	buildVer.commands = "touch -t 200001010000.00 version.o"
-}
+buildVer.commands = python $${PWD}/code/version/buildVer.py
 QMAKE_EXTRA_TARGETS += buildVer
 PRE_TARGETDEPS += buildVer
-
 
 include(3rdparty/tlib.pri)
 

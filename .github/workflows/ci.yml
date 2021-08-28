@@ -101,7 +101,7 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        shell: cmd
+        shell: bash
     permissions:
       actions: read
       contents: read
@@ -155,27 +155,21 @@ jobs:
           # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
       - name: test
-        shell: cmd
         run: |
-          mkdir '${{github.workspace}}\build\test'
-          cd '${{github.workspace}}\build\test'
+          mkdir '${{github.workspace}}/build/test'
+          cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
-          dir
-          echo %NUMBER_OF_PROCESSORS%
-          mingw32-make.exe -j%NUMBER_OF_PROCESSORS%
+          mingw32-make.exe -j$(nproc)
           mingw32-make.exe check
 
       - name: build release
-        shell: cmd
         run: |
           mkdir '${{github.workspace}}\build\release'
           cd '${{github.workspace}}\build\release'
           qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
-          dir
-          mingw32-make.exe -j%NUMBER_OF_PROCESSORS%
+          mingw32-make.exe -j$(nproc)
 
       - name: deploy
-        shell: bash
         run: |
           mkdir -p '${{github.workspace}}/build/release'
           cd '${{github.workspace}}/build/output'

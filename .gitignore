@@ -78,3 +78,6 @@ Thumbs.db
 .vscode/*
 !.vscode/c_cpp_properties.json
 !.vscode/setting.json
+
+# buildVer.py自动生成
+code/version/buildVer.h

@@ -7,23 +7,8 @@
 #define TLOG_LOCAL_FILTER TLOG_D
 #include <tlog/tlog.h>
 
-// qmake 会自动生成版本信息
-#ifndef buildTime
-#pragma message("编译器未生成buildTime")
-#define buildTime 0LL
-#endif
-#ifndef buildSalt
-#pragma message("编译器未生成buildSalt")
-#define buildSalt 1000000
-#endif
-#ifndef buildBranch
-#pragma message("编译器未生成buildBranch")
-#define buildBranch "none"
-#endif
-#ifndef buildSHA1
-#pragma message("编译器未生成buildSHA1")
-#define buildSHA1 "0000000"
-#endif
+// 由buildVer.py自动生成
+#include "buildVer.h"
 
 #ifndef buildTarget
 #pragma message("编译器未生成buildTarget")
