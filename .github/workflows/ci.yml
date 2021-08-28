@@ -157,9 +157,9 @@ jobs:
       - name: test
         run: |
           echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
-          dir '${{env.IQTA_TOOLS}}'
-          dir '${{env.IQTA_TOOLS}}/mingw730_32'
-          dir '${{env.IQTA_TOOLS}}/mingw730_32/bin'
+          ls -AFlh '${{env.IQTA_TOOLS}}'
+          ls -AFlh '${{env.IQTA_TOOLS}}/mingw730_32'
+          ls -AFlh '${{env.IQTA_TOOLS}}/mingw730_32/bin'
           which gcc
           gcc --version
           which make
@@ -167,32 +167,32 @@ jobs:
           which qmake
           qmake --version
           which mingw32-make
-          mkdir -p '${{github.workspace}}/build/test'
-          cd '${{github.workspace}}/build/test'
-          qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
-          mingw32-make.exe -j$(nproc)
-          mingw32-make.exe check
+          # mkdir -p '${{github.workspace}}/build/test'
+          # cd '${{github.workspace}}/build/test'
+          # qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
+          # mingw32-make.exe -j$(nproc)
+          # mingw32-make.exe check
 
-      - name: build release
-        run: |
-          mkdir -p '${{github.workspace}}/build/release'
-          cd '${{github.workspace}}/build/release'
-          qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
-          mingw32-make.exe -j$(nproc)
+      # - name: build release
+      #   run: |
+      #     mkdir -p '${{github.workspace}}/build/release'
+      #     cd '${{github.workspace}}/build/release'
+      #     qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
+      #     mingw32-make.exe -j$(nproc)
 
-      - name: deploy
-        run: |
-          mkdir -p '${{github.workspace}}/build/release'
-          cd '${{github.workspace}}/build/output'
-          cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
+      # - name: deploy
+      #   run: |
+      #     mkdir -p '${{github.workspace}}/build/release'
+      #     cd '${{github.workspace}}/build/output'
+      #     cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+      # - name: Perform CodeQL Analysis
+      #   uses: github/codeql-action/analyze@v1
 
-      - name: upload
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
-          path: |
-            ${{github.workspace}}/build/test/log/*.log
-            ${{github.workspace}}/build/output/
+      # - name: upload
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
+      #     path: |
+      #       ${{github.workspace}}/build/test/log/*.log
+      #       ${{github.workspace}}/build/output/
