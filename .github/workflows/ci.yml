@@ -162,6 +162,7 @@ jobs:
           which qmake
           qmake --version
           which mingw32-make
+          echo ${{env.iqta_tools}}
           mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
