@@ -139,7 +139,7 @@ jobs:
           arch: "win32_mingw73"
           # cached: "${{steps.cache-qt.outputs.cache-hit}}"
           setup-python: "true"
-          tools: "qt.tools.mingw,7.3.0,qt.tools.win32_mingw730"
+          tools: "tools_mingw,7.3.0,qt.tools.win32_mingw730"
 
       - name: checkout
         uses: actions/checkout@v2
