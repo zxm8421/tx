@@ -156,7 +156,7 @@ jobs:
 
       - name: test
         run: |
-          mkdir '${{github.workspace}}/build/test'
+          mkdir -p '${{github.workspace}}/build/test'
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
@@ -164,8 +164,8 @@ jobs:
 
       - name: build release
         run: |
-          mkdir '${{github.workspace}}\build\release'
-          cd '${{github.workspace}}\build\release'
+          mkdir -p '${{github.workspace}}/build/release'
+          cd '${{github.workspace}}/build/release'
           qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
 
