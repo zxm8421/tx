@@ -158,17 +158,19 @@ jobs:
           # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
       - name: test
+        shell: cmd
         run: |
           cd '${{github.workspace}}/build/test'
           qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
-          make -j%NUMBER_OF_PROCESSORS%
-          make check
+          mingw32-make -j%NUMBER_OF_PROCESSORS%
+          mingw32-make check
 
       - name: build release
+        shell: cmd
         run: |
           cd '${{github.workspace}}/build/release'
           qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
-          make -j%NUMBER_OF_PROCESSORS%
+          mingw32-make -j%NUMBER_OF_PROCESSORS%
 
       - name: deploy
         shell: bash
