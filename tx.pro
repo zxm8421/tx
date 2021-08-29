@@ -34,7 +34,11 @@ DEFINES += \
 	buildVer_Minor=$${buildVer_Minor}	\
 	buildVer_Patch=$${buildVer_Patch}
 
-buildVer.commands = python $${PWD}/code/version/buildVer.py
+contains(QMAKE_HOST.os, Windows) {
+	buildVer.commands = python $${PWD}/code/version/buildVer.py
+} else {
+	buildVer.commands = python3 $${PWD}/code/version/buildVer.py
+}
 QMAKE_EXTRA_TARGETS += buildVer
 PRE_TARGETDEPS += buildVer
 
