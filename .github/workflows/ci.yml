@@ -72,7 +72,7 @@ jobs:
           mkdir -p '${{github.workspace}}/build/release'
           mkdir -p '${{github.workspace}}/build/dist'
 
-      - name: test
+      - name: build test
         run: |
           cd '${{github.workspace}}/build/test'
           qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
@@ -85,7 +85,7 @@ jobs:
           qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           make -j$(nproc)
 
-      - name: deploy
+      - name: post-build
         run: |
           cd '${{github.workspace}}/build/dist'
           cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/dist/'
@@ -166,7 +166,7 @@ jobs:
           mkdir -p '${{github.workspace}}/build/release'
           mkdir -p '${{github.workspace}}/build/dist'
 
-      - name: test
+      - name: build test
         run: |
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
@@ -179,7 +179,7 @@ jobs:
           qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
 
-      - name: deploy
+      - name: post-build
         run: |
           cd '${{github.workspace}}/build/dist'
           cp '${{github.workspace}}/build/release/release/${{env.APP}}.exe' '${{github.workspace}}/build/dist/'
@@ -187,6 +187,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
+
       - name: upload
         uses: actions/upload-artifact@v2
         with:
@@ -260,7 +261,7 @@ jobs:
           mkdir -p '${{github.workspace}}/build/release'
           mkdir -p '${{github.workspace}}/build/dist'
 
-      - name: test
+      - name: build test
         run: |
           cd '${{github.workspace}}/build/test'
           qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
@@ -273,7 +274,7 @@ jobs:
           qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
 
-      - name: deploy
+      - name: post-build
         run: |
           cd '${{github.workspace}}/build/dist'
           cp '${{github.workspace}}/build/release/release/${{env.APP}}.exe' '${{github.workspace}}/build/dist/'
@@ -281,6 +282,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
+
       - name: upload
         uses: actions/upload-artifact@v2
         with:
