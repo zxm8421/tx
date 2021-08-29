@@ -70,7 +70,7 @@ jobs:
         run: |
           mkdir -p '${{github.workspace}}/build/test'
           mkdir -p '${{github.workspace}}/build/release'
-          mkdir -p '${{github.workspace}}/build/output'
+          mkdir -p '${{github.workspace}}/build/dist'
 
       - name: test
         run: |
@@ -87,8 +87,8 @@ jobs:
 
       - name: deploy
         run: |
-          cd '${{github.workspace}}/build/output'
-          cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/output/'
+          cd '${{github.workspace}}/build/dist'
+          cp '${{github.workspace}}/build/release/${{env.APP}}' '${{github.workspace}}/build/dist/'
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
@@ -99,7 +99,7 @@ jobs:
           name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
           path: |
             ${{github.workspace}}/build/test/log/*.log
-            ${{github.workspace}}/build/output/
+            ${{github.workspace}}/build/dist/
 
   build-mingw32:
     runs-on: windows-latest
@@ -164,7 +164,7 @@ jobs:
           echo '${{env.IQTA_TOOLS}}/mingw730_32/bin' >> $GITHUB_PATH
           mkdir -p '${{github.workspace}}/build/test'
           mkdir -p '${{github.workspace}}/build/release'
-          mkdir -p '${{github.workspace}}/build/output'
+          mkdir -p '${{github.workspace}}/build/dist'
 
       - name: test
         run: |
@@ -181,8 +181,8 @@ jobs:
 
       - name: deploy
         run: |
-          cd '${{github.workspace}}/build/output'
-          cp '${{github.workspace}}/build/release/release/${{env.APP}}.exe' '${{github.workspace}}/build/output/'
+          cd '${{github.workspace}}/build/dist'
+          cp '${{github.workspace}}/build/release/release/${{env.APP}}.exe' '${{github.workspace}}/build/dist/'
           windeployqt ${{env.APP}}.exe
 
       - name: Perform CodeQL Analysis
@@ -193,7 +193,7 @@ jobs:
           name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
           path: |
             ${{github.workspace}}/build/test/log/*.log
-            ${{github.workspace}}/build/output/
+            ${{github.workspace}}/build/dist/
 
   build-mingw64:
     runs-on: windows-latest
@@ -258,7 +258,7 @@ jobs:
           echo '${{env.IQTA_TOOLS}}/mingw730_64/bin' >> $GITHUB_PATH
           mkdir -p '${{github.workspace}}/build/test'
           mkdir -p '${{github.workspace}}/build/release'
-          mkdir -p '${{github.workspace}}/build/output'
+          mkdir -p '${{github.workspace}}/build/dist'
 
       - name: test
         run: |
@@ -275,8 +275,8 @@ jobs:
 
       - name: deploy
         run: |
-          cd '${{github.workspace}}/build/output'
-          cp '${{github.workspace}}/build/release/release/${{env.APP}}.exe' '${{github.workspace}}/build/output/'
+          cd '${{github.workspace}}/build/dist'
+          cp '${{github.workspace}}/build/release/release/${{env.APP}}.exe' '${{github.workspace}}/build/dist/'
           windeployqt ${{env.APP}}.exe
 
       - name: Perform CodeQL Analysis
@@ -287,4 +287,4 @@ jobs:
           name: ${{env.APP}}_${{env.APP_TIME}}_${{env.APP_SHA1}}_${{env.APP_BRANCH}}_${{env.APP_ARCH}}_${{github.run_number}}
           path: |
             ${{github.workspace}}/build/test/log/*.log
-            ${{github.workspace}}/build/output/
+            ${{github.workspace}}/build/dist/
