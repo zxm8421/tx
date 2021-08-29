@@ -253,7 +253,7 @@ ti tlog_rawhexdump(const tc *file, const ti line, const tc *func, const ti filte
 
 	ti cur = 0;
 	cur += snprintf(buf + cur, 256,
-					"le = %dB, %s",
+					"le = %d, %s",
 					le, info);
 
 	for (ti i = 0; i < le; i++)
