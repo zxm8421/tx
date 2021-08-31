@@ -54,9 +54,9 @@ ti64 tlib_getTime_us()
 	return us;
 }
 
-ti64 tlob_getTime_ms()
+ti64 tlib_getTime_ms()
 {
-	ti64 ms = tlib_getTime_us() / 1000 / 1000;
+	ti64 ms = tlib_getTime_ns() / 1000 / 1000;
 
 	return ms;
 }
@@ -68,7 +68,7 @@ tf tlib_getTime()
 	return ts;
 }
 
-tc *tlib_basename(const tc *path)
+tc *tlib_basename(const tc path[])
 {
 	if (path == tnull)
 	{
@@ -85,7 +85,7 @@ tc *tlib_basename(const tc *path)
 	return token;
 }
 
-ti tlib_system(const tc *cmd)
+ti tlib_system(const tc cmd[])
 {
 	ti ret = 0;
 #if defined(__MINGW64__) || defined(__MINGW32__)
@@ -99,7 +99,7 @@ ti tlib_system(const tc *cmd)
 	return ret;
 }
 
-tu32 tlib_hash_str(const tc *str)
+tu32 tlib_hash_str(const tc str[])
 {
 	// FNV hash, http://www.isthe.com/chongo/tech/comp/fnv/index.html
 	const tu32 basis = 2166136261;
@@ -121,4 +121,148 @@ tu32 tlib_hash_str(const tc *str)
 	}
 
 	return hash;
+}
+
+ti tlib_atox(tc c)
+{
+	ti x = 0;
+
+	switch (c)
+	{
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+		x = c - '0';
+		break;
+
+	case 'A':
+	case 'B':
+	case 'C':
+	case 'D':
+	case 'E':
+	case 'F':
+		x = c - 'A';
+		break;
+
+	case 'a':
+	case 'b':
+	case 'c':
+	case 'd':
+	case 'e':
+	case 'f':
+		x = c - 'a';
+		break;
+
+	default:
+		x = -1;
+		break;
+	}
+
+	return x;
+}
+
+tc tlib_xtoa(ti x)
+{
+	tc c = '\0';
+
+	switch (x)
+	{
+	case 0:
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+		c = x + '0';
+		break;
+
+	case 0xA:
+	case 0xB:
+	case 0xC:
+	case 0xD:
+	case 0xE:
+	case 0xF:
+		c = x + 'A';
+		break;
+
+	default:
+		c = '\0';
+		break;
+	}
+
+	return c;
+}
+
+ti tlib_byteToHex(const tb byte[], const ti len, tc hex[])
+{
+	if (byte == tnull)
+	{
+		return -1;
+	}
+
+	if (len < 0)
+	{
+		return -1;
+	}
+
+	ti ret = 2 * len;
+
+	if (hex != tnull)
+	{
+		for (ti i = 0; i < len; i++)
+		{
+			hex[2 * i] = tlib_xtoa((byte[i] >> 4) & 0x0F);
+			hex[2 * i + 1] = tlib_xtoa(byte[i] & 0x0F);
+		}
+		hex[2 * len] = '\0';
+	}
+
+	return ret;
+}
+
+ti tlib_hexToByte(const tc hex[], const ti len, tb byte[])
+{
+	if (hex == tnull)
+	{
+		return -1;
+	}
+
+	if (len < 0)
+	{
+		return -1;
+	}
+
+	if (len % 2 != 0)
+	{
+		return -1;
+	}
+
+	ti ret = len / 2;
+	if (byte != tnull)
+	{
+		for (ti i = 0; i < len; i = i + 2)
+		{
+			ti byte_H = tlib_atox(hex[i]);
+			ti byte_L = tlib_atox(hex[i + 1]);
+			if ((byte_H < 0) || (byte_L < 0))
+			{
+				return -1;
+			}
+
+			byte[i / 2] = (byte_H << 4) + byte_L;
+		}
+	}
+
+	return ret;
 }

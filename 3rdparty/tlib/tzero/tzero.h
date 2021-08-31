@@ -37,7 +37,7 @@ extern "C"
 	 * @param path 
 	 * @return 
 	 */
-	tc *tlib_basename(const tc *path);
+	tc *tlib_basename(const tc path[]);
 
 	/**
 	 * @brief 跨平台, system
@@ -45,7 +45,7 @@ extern "C"
 	 * @param cmd 
 	 * @return 
 	 */
-	ti tlib_system(const tc *cmd);
+	ti tlib_system(const tc cmd[]);
 
 	/**
 	 * @brief 求str的hash
@@ -53,7 +53,13 @@ extern "C"
 	 * @param str 
 	 * @return 
 	 */
-	tu32 tlib_hash_str(const tc *str);
+	tu32 tlib_hash_str(const tc str[]);
+
+	ti tlib_atox(tc c);
+	tc tlib_xtoa(ti x);
+
+	ti tlib_byteToHex(const tb byte[], const ti len, tc hex[]);
+	ti tlib_hexToByte(const tc hex[], const ti len, tb byte[]);
 
 #ifdef __cplusplus
 }
