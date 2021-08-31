@@ -55,9 +55,19 @@ extern "C"
 	 */
 	tu32 tlib_hash_str(const tc str[]);
 
+	/**
+	 * @brief char hex 相互转换
+	 * 
+	 * @return 
+	 */
 	ti tlib_atox(tc c);
 	tc tlib_xtoa(ti x);
 
+	/**
+	 * @brief byte hex 互相转换
+	 * 
+	 * @return 
+	 */
 	ti tlib_byteToHex(const tb byte[], const ti len, tc hex[]);
 	ti tlib_hexToByte(const tc hex[], const ti len, tb byte[]);
 
