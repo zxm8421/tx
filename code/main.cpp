@@ -1,14 +1,11 @@
-#include "stable.h"
+/**
+ * @brief 
+ * 
+ * @file main.cpp
+ */
+#include <tlib.h>
 
 #include <QApplication>
-
-#define TLOG_LOCAL_FILTER TLOG_D
-#include <tlog/tlog.h>
-#ifndef NTEST
-#include <ttest/ttest.h>
-#endif
-
-#include "tsh/tsh.h"
 
 #include "version/version.h"
 #include "ui/mainwindow.h"

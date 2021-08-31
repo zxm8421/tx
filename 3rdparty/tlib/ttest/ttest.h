@@ -4,10 +4,12 @@
  * @file ttest.h
  */
 #pragma once
+#include "ttest.conf.h"
 
 #include <string.h>
 #include <stdarg.h>
-#include <tjz/ttype.h>
+
+#include <tlib.h>
 
 struct ttest_Ret
 {

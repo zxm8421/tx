@@ -1,8 +1,9 @@
-#include "stable.h"
-
-#define TLOG_LOCAL_FILTER TLOG_D
-#include <tlog/tlog.h>
-#include <ttest/ttest.h>
+/**
+ * @brief 
+ * 
+ * @file main.test.cpp
+ */
+#include <tlib.h>
 
 ttest_import(ttype_test);
 ttest_import(tlog_test);

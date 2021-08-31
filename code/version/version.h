@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <tjz/ttype.h>
+#include <tlib.h>
 
 #include <QVersionNumber>
 #include <QDateTime>

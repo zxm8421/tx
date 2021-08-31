@@ -1,11 +1,14 @@
+/**
+ * @brief 
+ * 
+ * @file version.cpp
+ */
 #include "version.h"
-#include "stable.h"
+
+#include <tlib.h>
 
 #include <QDateTime>
 #include <QTimeZone>
-
-#define TLOG_LOCAL_FILTER TLOG_D
-#include <tlog/tlog.h>
 
 // 由buildVer.py自动生成
 #include "buildVer.h"

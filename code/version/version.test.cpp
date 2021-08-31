@@ -1,9 +1,11 @@
+/**
+ * @brief 
+ * 
+ * @file version.test.cpp
+ */
 #include "version.h"
-#include "stable.h"
 
-#define TLOG_LOCAL_FILTER TLOG_D
-#include <tlog/tlog.h>
-#include <ttest/ttest.h>
+#include <tlib.h>
 
 ttest_static(version_test_showVer)
 {

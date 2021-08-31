@@ -42,14 +42,14 @@ contains(QMAKE_HOST.os, Windows) {
 QMAKE_EXTRA_TARGETS += buildVer
 PRE_TARGETDEPS += buildVer
 
-include(3rdparty/tlib.pri)
+
+include(3rdparty/tlib/tlib.pri)
 
 
 INCLUDEPATH +=	\
-	code
+	code/
 
 HEADERS +=	\
-	code/stable.h	\
 	code/ui/mainwindow.h	\
 	code/version/buildVer.h
 	code/version/version.h

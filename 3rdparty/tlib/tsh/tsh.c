@@ -1,4 +1,9 @@
-#include "tsh.inc.h"
+/**
+ * @brief 
+ * 
+ * @file tsh.c
+ */
+#include "tsh.in.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -10,8 +15,8 @@
 #include <pthread.h>
 static pthread_t tsh_tid = -1;
 
+#undef TLOG_LOCAL_FILTER
 #define TLOG_LOCAL_FILTER TLOG_D
-#include <tlog/tlog.h>
 
 extern struct tsh_Cmd *__start_tsh_cmd_vt;
 extern struct tsh_Cmd *__stop_tsh_cmd_vt;

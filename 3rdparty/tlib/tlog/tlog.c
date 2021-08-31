@@ -1,5 +1,9 @@
-#define TLOG_LOCAL_FILTER TLOG_D
-#include "tlog.inc.h"
+/**
+ * @brief 
+ * 
+ * @file tlog.c
+ */
+#include "tlog.in.h"
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #define __USE_MINGW_ANSI_STDIO 1

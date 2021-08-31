@@ -1,3 +1,8 @@
+/**
+ * @brief 
+ * 
+ * @file mainwindow.h
+ */
 #pragma once
 
 #include <QMainWindow>

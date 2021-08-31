@@ -4,6 +4,7 @@
  * @file ttype.h
  */
 #pragma once
+#include "ttype.conf.h"
 
 #include <wchar.h>
 

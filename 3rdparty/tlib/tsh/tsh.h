@@ -4,7 +4,9 @@
  * @file tsh.h
  */
 #pragma once
-#include <tjz/ttype.h>
+#include "tsh.conf.h"
+
+#include <tlib.h>
 
 struct tsh_Cmd
 {

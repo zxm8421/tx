@@ -1,8 +1,11 @@
-#include "ttype.inc.h"
+/**
+ * @brief 
+ * 
+ * @file ttype.test.c
+ */
+#include "ttype.h"
 
-#define TLOG_LOCAL_FILTER TLOG_D
-#include <tlog/tlog.h>
-#include <ttest/ttest.h>
+#include <tlib.h>
 
 ttest_static(ttype_test_os)
 {
@@ -13,6 +16,7 @@ ttest_static(ttype_test_os)
 #elif defined(__linux__)
 	tlog(TLOG_T, "linux");
 #endif
+	tlog(TLOG_T, "other os");
 	ttest_check_pass();
 }
 

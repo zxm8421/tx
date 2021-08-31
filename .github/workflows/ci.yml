@@ -75,14 +75,14 @@ jobs:
       - name: build test
         run: |
           cd '${{github.workspace}}/build/test'
-          qmake APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
+          qmake "APP_TEST=1" '${{github.workspace}}/${{env.APP}}.pro'
           make -j$(nproc)
           make check
 
       - name: build release
         run: |
           cd '${{github.workspace}}/build/release'
-          qmake APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
+          qmake "APP_TEST=0" '${{github.workspace}}/${{env.APP}}.pro'
           make -j$(nproc)
 
       - name: post-build
@@ -169,14 +169,14 @@ jobs:
       - name: build test
         run: |
           cd '${{github.workspace}}/build/test'
-          qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
+          qmake.exe "APP_TEST=1" '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
           mingw32-make.exe check
 
       - name: build release
         run: |
           cd '${{github.workspace}}/build/release'
-          qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
+          qmake.exe "APP_TEST=0" '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
 
       - name: post-build
@@ -264,14 +264,14 @@ jobs:
       - name: build test
         run: |
           cd '${{github.workspace}}/build/test'
-          qmake.exe APP_TEST=1 '${{github.workspace}}/${{env.APP}}.pro'
+          qmake.exe "APP_TEST=1" '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
           mingw32-make.exe check
 
       - name: build release
         run: |
           cd '${{github.workspace}}/build/release'
-          qmake.exe APP_TEST=0 '${{github.workspace}}/${{env.APP}}.pro'
+          qmake.exe "APP_TEST=0" '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
 
       - name: post-build

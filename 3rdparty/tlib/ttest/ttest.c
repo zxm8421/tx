@@ -1,10 +1,7 @@
-#include "ttest.inc.h"
+#include "ttest.in.h"
 
 #include <stdio.h>
 #include <string.h>
-
-#define TLOG_LOCAL_FILTER TLOG_D
-#include <tlog/tlog.h>
 
 ttest_import(main_test);
 int ttest_main(int argc, char *argv[])

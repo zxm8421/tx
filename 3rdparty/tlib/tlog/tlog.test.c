@@ -1,11 +1,14 @@
-#define TLOG_LOCAL_FILTER TLOG_D
-#include "tlog.inc.h"
+/**
+ * @brief 
+ * 
+ * @file tlog.test.c
+ */
+#include "tlog.h"
 
+#define __USE_GNU
 #include <pthread.h>
 #include <unistd.h>
 #include <time.h>
-
-#include <ttest/ttest.h>
 
 ttest_static(tlog_test_tlog)
 {

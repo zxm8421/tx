@@ -5,16 +5,6 @@
  */
 #pragma once
 #include "tlog.conf.h"
-/**
- * @brief 使用方法
-
-在每个c/cpp文件开头
-
-#define TLOG_LOCAL_FILTER TLOG_D
-#include <tlog/tlog.h>
-
- * 
- */
 
 /**
  * @brief 日志等级
@@ -36,11 +26,9 @@
 #define TLOG_ALL 0
 #define TLOG_OFF 16
 
-#ifndef TLOG_LOCAL_FILTER
-#define TLOG_LOCAL_FILTER TLOG_I
-#endif
+#define TLOG_LOCAL_FILTER TLOG_ALL
 
-#include <tjz/ttype.h>
+#include <tlib.h>
 
 /**
  * @brief 日志打印函数, 语法同printf
