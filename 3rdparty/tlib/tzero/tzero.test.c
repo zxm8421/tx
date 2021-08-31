@@ -102,6 +102,7 @@ ttest_static(test_tzero_tlib_xtoa)
 	ttest_check_eq(tlib_xtoa(7), '7');
 	ttest_check_eq(tlib_xtoa(8), '8');
 	ttest_check_eq(tlib_xtoa(9), '9');
+
 	ttest_check_eq(tlib_xtoa(0xA), 'A');
 	ttest_check_eq(tlib_xtoa(0xB), 'B');
 	ttest_check_eq(tlib_xtoa(0xC), 'C');
@@ -114,6 +115,10 @@ ttest_static(test_tzero_tlib_xtoa)
 
 ttest_static(test_tzero_tlib_byteToHex)
 {
+	tb byte[256] = {0};
+	tc hex[512] = {0};
+
+	ttest_check_eq(tlib_byteToHex(tnull, 1, tnull), -1);
 }
 
 ttest_static(test_tzero_tlib_hexToByte)

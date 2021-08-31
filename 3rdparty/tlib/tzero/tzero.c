@@ -148,7 +148,7 @@ ti tlib_atox(tc c)
 	case 'D':
 	case 'E':
 	case 'F':
-		x = c - 'A';
+		x = c - 'A' + 0xA;
 		break;
 
 	case 'a':
@@ -157,7 +157,7 @@ ti tlib_atox(tc c)
 	case 'd':
 	case 'e':
 	case 'f':
-		x = c - 'a';
+		x = c - 'a' + 0xA;
 		break;
 
 	default:
@@ -193,7 +193,7 @@ tc tlib_xtoa(ti x)
 	case 0xD:
 	case 0xE:
 	case 0xF:
-		c = x + 'A';
+		c = x - 0xA + 'A';
 		break;
 
 	default:
