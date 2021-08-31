@@ -5,19 +5,19 @@
  */
 #include "tlog.h"
 
-#define __USE_GNU
-#include <pthread.h>
-#include <unistd.h>
 #include <time.h>
 
-ttest_static(tlog_test_tlog)
+#define __USE_GNU
+#include <pthread.h>
+
+ttest_static(test_tlog_tlog)
 {
 	ttest_check_gt(tlog(TLOG_D, ""), 0);
 	ttest_check_gt(tlog(TLOG_D, "This is a test log"), 0);
 	ttest_check_gt(tlog(TLOG_D, "这是一条测试消息"), 0);
 }
 
-void *tlog_test_tlog_qps_main(void *arg)
+void *tlog_test_tlog_qps_thread_run(void *arg)
 {
 	ti cnt = *((int *)arg);
 
@@ -26,22 +26,22 @@ void *tlog_test_tlog_qps_main(void *arg)
 		struct timespec tp;
 		clock_gettime(CLOCK_MONOTONIC, &tp);
 		ti64 us = (ti64)tp.tv_sec * 1000 * 1000 * 1000 + (ti64)tp.tv_nsec;
-		tlog(TLOG_D, "task arg = %d, tid = %p, cnt = %d, us = %lld, %lld", i, pthread_self(), cnt, tlog_getTimeUs(), us);
+		tlog(TLOG_D, "task arg = %d, tid = %p, cnt = %d, us = %lld, %lld", i, pthread_self(), cnt, tlib_getTime_us(), us);
 	}
 
 	return NULL;
 }
 
-ttest_static(tlog_test_tlog_qps)
+ttest_static(test_tlog_tlog_qps)
 {
 	pthread_t tid[4] = {0};
 	ti cnt = 10000;
 	tlog(TLOG_D, "main pid = %p, tid = %p", getpid(), pthread_self());
 	ti64 watch = 0;
-	tlog_watch(&watch);
+	tlib_watch(&watch);
 	for (ti i = 0; i < tx_array_size(tid); i++)
 	{
-		pthread_create(&tid[i], NULL, tlog_test_tlog_qps_main, &cnt);
+		pthread_create(&tid[i], NULL, tlog_test_tlog_qps_thread_run, &cnt);
 		tlog(TLOG_D, "create tid = %p", tid);
 	}
 
@@ -49,14 +49,14 @@ ttest_static(tlog_test_tlog_qps)
 	{
 		pthread_join(tid[i], NULL);
 	}
-	tf cost = tlog_watch(&watch);
+	tf cost = tlib_watch(&watch);
 
 	ti qps = cnt * tx_array_size(tid) / cost;
 	tlog(TLOG_T, "qps = %d", qps);
 	ttest_check_gt(qps, 100);
 }
 
-ttest_static(tlog_test_tlog_hexdump)
+ttest_static(test_tlog_tlog_hexdump)
 {
 	const tc hexTable[256 * 2 + 1] = "000102030405060708090A0B0C0D0E0F"
 									 "101112131415161718191A1B1C1D1E1F"
@@ -79,7 +79,7 @@ ttest_static(tlog_test_tlog_hexdump)
 	ttest_check_gt(tlog_hexdump(TLOG_D, "info", hexTable, sizeof(hexTable)), 0);
 }
 
-void *tlog_test_tlog_hexdump_qps_main(void *arg)
+void *tlog_test_tlog_hexdump_qps_thread_run(void *arg)
 {
 	ti cnt = *((int *)arg);
 
@@ -108,16 +108,16 @@ void *tlog_test_tlog_hexdump_qps_main(void *arg)
 	return NULL;
 }
 
-ttest_static(tlog_test_tlog_hexdump_qps)
+ttest_static(test_tlog_tlog_hexdump_qps)
 {
 	pthread_t tid[4] = {0};
 	ti cnt = 1000;
 	tlog(TLOG_D, "main pid = %d, tid = %lu", getpid(), pthread_self());
 	ti64 watch = 0;
-	tlog_watch(&watch);
+	tlib_watch(&watch);
 	for (ti i = 0; i < tx_array_size(tid); i++)
 	{
-		pthread_create(&tid[i], NULL, tlog_test_tlog_hexdump_qps_main, &cnt);
+		pthread_create(&tid[i], NULL, tlog_test_tlog_hexdump_qps_thread_run, &cnt);
 		tlog(TLOG_D, "create tid = %lu", tid);
 	}
 
@@ -125,45 +125,18 @@ ttest_static(tlog_test_tlog_hexdump_qps)
 	{
 		pthread_join(tid[i], NULL);
 	}
-	tf cost = tlog_watch(&watch);
+	tf cost = tlib_watch(&watch);
 
 	ti qps = cnt * tx_array_size(tid) / cost;
 	tlog(TLOG_T, "qps = %d", qps);
 	ttest_check_gt(qps, 100);
 }
 
-ttest_static(tlog_test_tlog_basename)
+ttest_export(test_tlog)
 {
-	ttest_check_null(tlog_basename(NULL));
-	ttest_check_str_eq(tlog_basename("main.c"), "main.c");
-	ttest_check_str_eq(tlog_basename("/home/test/abc/main.c"), "main.c");
-	ttest_check_str_eq(tlog_basename("C:\\main.c"), "main.c");
-	ttest_check_str_eq(tlog_basename("C:\\桌面\\main.c"), "main.c");
-	ttest_check_str_eq(tlog_basename("C:\\桌面\\123/abc/main.c"), "main.c");
-}
+	ttest_run(test_tlog_tlog, 10);
+	ttest_run(test_tlog_tlog_qps, 1000 * 2);
 
-ttest_static(tlog_test_tlog_watch)
-{
-	ttest_check_ge(tlog_watch(tnull), -1);
-
-	ti64 watch = 0;
-	ttest_check_ge(tlog_watch(&watch), 0);
-	ttest_check_gt(watch, 0);
-	usleep(1000 * 20);
-	tf cost = tlog_watch(&watch);
-	ttest_check_gt(watch, 0);
-	tlog(TLOG_T, "usleep(1000*2), cost = %.09f s", cost);
-	ttest_check_in_range(cost, 0.01, 0.05);
-}
-
-ttest_export(tlog_test)
-{
-	ttest_run(tlog_test_tlog, 10);
-	ttest_run(tlog_test_tlog_qps, 1000 * 2);
-
-	ttest_run(tlog_test_tlog_hexdump, 10);
-	ttest_run(tlog_test_tlog_hexdump_qps, 1000 * 2);
-
-	ttest_run(tlog_test_tlog_basename, 10);
-	ttest_run(tlog_test_tlog_watch, 1000);
+	ttest_run(test_tlog_tlog_hexdump, 10);
+	ttest_run(test_tlog_tlog_hexdump_qps, 1000 * 2);
 }

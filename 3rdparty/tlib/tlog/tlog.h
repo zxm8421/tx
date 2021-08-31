@@ -58,44 +58,6 @@ extern "C"
 {
 #endif
 	/**
-	 * @brief 得到watch的耗时, s
-	 * 精度: 100ns
-	 * 
-	 * @param watch 
-	 * @return 
-	 */
-	tf tlog_watch(ti64 *watch);
-
-	/**
-	 * @brief 获取时间戳, s
-	 * 
-	 * @return s
-	 */
-	ti64 tlog_getTime();
-
-	/**
-	 * @brief 获取时间戳, ms
-	 * 
-	 * @return ms
-	 */
-	ti64 tlog_getTimeMs();
-
-	/**
-	 * @brief 获取时间戳, us
-	 * 
-	 * @return us
-	 */
-	ti64 tlog_getTimeUs();
-
-	/**
-	 * @brief 获取时间戳, ns
-	 * 精度: 100ns, 15.625ms(1s/64)
-	 * 
-	 * @return ns
-	 */
-	ti64 tlog_getTimeNs();
-
-	/**
 	 * @brief tlog 初始化
 	 * 
 	 * @return 
@@ -109,22 +71,6 @@ extern "C"
 	 * @return 
 	 */
 	ti tlog_set_global_filter(ti filter);
-
-	/**
-	 * @brief 跨平台，得到文件的basename
-	 * 
-	 * @param path 
-	 * @return 
-	 */
-	tc *tlog_basename(const tc *path);
-
-	/**
-	 * @brief 跨平台, system
-	 * 
-	 * @param cmd 
-	 * @return 
-	 */
-	ti tlog_system(const tc *cmd);
 
 	/**
  	 * @brief 请勿直接使用，请使用tlog

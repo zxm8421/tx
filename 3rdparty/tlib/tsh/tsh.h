@@ -35,7 +35,6 @@ extern "C"
 #endif
 
 	ti tsh_init();
-	tu32 tsh_hash(const tc *str);
 	ti tsh_cmd_enable(const tc *cmd);
 	ti tsh_cmd_disable(const tc *cmd);
 	ti tsh_exec(tc *cmd);

@@ -75,25 +75,6 @@ TSH_CMD_DEFINE(echo, "")
 	return 0;
 }
 
-// FNV hash, http://www.isthe.com/chongo/tech/comp/fnv/index.html
-tu32 tsh_hash(const tc *str)
-{
-	const tu32 basis = 2166136261;
-	const tu32 prime = 16777619;
-
-	tu32 hash = basis;
-	tc *cur = (tc *)str;
-
-	while (*cur)
-	{
-		hash ^= *cur;
-		hash *= prime;
-		cur++;
-	}
-
-	return hash;
-}
-
 void *tsh_thread_run(void *arg __attribute__((unused)))
 {
 	struct
@@ -110,9 +91,6 @@ void *tsh_thread_run(void *arg __attribute__((unused)))
 	while (true)
 	{
 		{
-			// ti64 now = tlog_getTimeMs();
-			// ti64 ms = (now / 50 + 1) * 50 - now;
-			// usleep(1000 * ms);
 			static struct timespec tp;
 			clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &tp, NULL);
 			clock_gettime(CLOCK_MONOTONIC, &tp);
@@ -146,7 +124,7 @@ void *tsh_thread_run(void *arg __attribute__((unused)))
 					tlog(TLOG_D, "cmd.argv[%d] = %s", cmd.argc - 1, cmd.argv[cmd.argc - 1]);
 				}
 
-				cmd.hash = tsh_hash(cmd.argv[0]);
+				cmd.hash = tlib_hash_str(cmd.argv[0]);
 
 				struct tsh_Cmd **iter = tnull;
 				for (iter = &__start_tsh_cmd_vt; iter < &__stop_tsh_cmd_vt; iter++)
@@ -188,7 +166,7 @@ ti tsh_init()
 	qsort(&__start_tsh_cmd_vt, &__stop_tsh_cmd_vt - &__start_tsh_cmd_vt - 1, sizeof(void *), &tsh_cmd_cmp);
 	for (struct tsh_Cmd **iter = &__start_tsh_cmd_vt; iter < &__stop_tsh_cmd_vt; iter++)
 	{
-		(*iter)->cmd_hash = tsh_hash((*iter)->cmd_name);
+		(*iter)->cmd_hash = tlib_hash_str((*iter)->cmd_name);
 
 		tlog(TLOG_D, "iter = %p", iter);
 		tlog(TLOG_D, "*iter = %p", *iter);

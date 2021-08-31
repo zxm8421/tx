@@ -3,7 +3,13 @@
 #include <stdio.h>
 #include <string.h>
 
-ttest_import(main_test);
+__attribute__((weak)) ttest_export(test_main)
+{
+	tlog(TLOG_T, "请定义test_main");
+	ttest_check_fail();
+}
+
+ttest_import(test_main);
 int ttest_main(int argc, char *argv[])
 {
 	tlog(TLOG_T, "开始自动化测试");
@@ -17,7 +23,7 @@ int ttest_main(int argc, char *argv[])
 	struct ttest_Ret _ret;
 	struct ttest_Ret *ret = &_ret;
 	memset(ret, 0, sizeof(struct ttest_Ret));
-	ttest_run(main_test, 0);
+	ttest_run(test_main, 0);
 
 	tlog(TLOG_T, "结束自动化测试");
 

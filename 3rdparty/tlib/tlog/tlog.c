@@ -9,7 +9,6 @@
 #define __USE_MINGW_ANSI_STDIO 1
 #endif
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdatomic.h>
 #include <stdarg.h>
@@ -63,92 +62,10 @@ ti tlog_debug(const tc *format, ...)
 	};
 }
 
-tf tlog_watch(ti64 *watch)
-{
-	if (watch == tnull)
-	{
-		return -1;
-	}
-
-	struct timespec tp;
-	clock_gettime(CLOCK_MONOTONIC, &tp);
-
-	ti64 start = *watch;
-	ti64 end = (ti64)tp.tv_sec * 1000 * 1000 * 1000 + (ti64)tp.tv_nsec;
-	tf cost = (end - start) / 1e9;
-
-	*watch = end;
-
-	return cost;
-}
-
-ti64 tlog_getTimeNs()
-{
-	ti64 ns = 0;
-
-	struct timespec tp;
-	clock_gettime(CLOCK_REALTIME, &tp);
-
-	ns = (ti64)tp.tv_sec * 1000 * 1000 * 1000 + (ti64)tp.tv_nsec;
-
-	return ns;
-}
-
-ti64 tlog_getTimeUs()
-{
-	ti64 us = tlog_getTimeNs() / 1000;
-
-	return us;
-}
-
-ti64 tlog_getTimeMs()
-{
-	ti64 ms = tlog_getTimeNs() / 1000 / 1000;
-
-	return ms;
-}
-
-ti64 tlog_getTime()
-{
-	ti64 s = tlog_getTimeNs() / 1000 / 1000 / 1000;
-
-	return s;
-}
-
 ti tlog_set_global_filter(ti filter)
 {
 	tlog_filter = filter;
 	return tlog_filter;
-}
-
-tc *tlog_basename(const tc *path)
-{
-	if (path == tnull)
-	{
-		return tnull;
-	}
-
-	tc *p1 = strrchr(path, '/');
-	tc *p2 = strrchr(path, '\\');
-
-	tc *p = (p1 > p2) ? (p1) : (p2);
-	p = (p == tnull) ? ((tc *)path) : (p + 1);
-
-	return p;
-}
-
-ti tlog_system(const tc *cmd)
-{
-	ti ret = 0;
-#if defined(__MINGW64__) || defined(__MINGW32__)
-	wchar_t wcmd[2048] = L"";
-	MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, cmd, -1, wcmd, tx_array_size(wcmd));
-	ret = _wsystem(wcmd);
-#else
-	ret = system(cmd);
-#endif
-
-	return ret;
 }
 
 ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter, const ti level, const tc *format, ...)
@@ -190,7 +107,7 @@ ti tlog_rawprint(const tc *file, const ti line, const tc *func, const ti filter,
 		len += snprintf(buf + len, 256,
 						"[%c/%s:%d %s]",
 						level_table[level],
-						tlog_basename(file), line,
+						tlib_basename(file), line,
 						func);
 	}
 
@@ -362,7 +279,7 @@ ti tlog_init()
 		}
 	}
 
-	ti ret __attribute__((unused)) = tlog_system("mkdir " TLOG_FILE_DIR);
+	ti ret __attribute__((unused)) = tlib_system("mkdir " TLOG_FILE_DIR);
 	tlog_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
 #ifndef NTEST
 	tlog_test_fd = open(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".test.log", O_CREAT | O_WRONLY | O_APPEND, 0644);
