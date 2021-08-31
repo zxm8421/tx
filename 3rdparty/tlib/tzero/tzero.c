@@ -255,7 +255,7 @@ ti tlib_hexToByte(const tc hex[], const ti len, tb byte[])
 		{
 			ti byte_H = tlib_atox(hex[i]);
 			ti byte_L = tlib_atox(hex[i + 1]);
-			if ((byte_H == '\0') || (byte_L == '\0'))
+			if ((byte_H < 0) || (byte_L < 0))
 			{
 				return -1;
 			}
