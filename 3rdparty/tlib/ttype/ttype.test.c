@@ -15,8 +15,9 @@ ttest_static(test_ttype_os)
 	tlog(TLOG_T, "mingw32");
 #elif defined(__linux__)
 	tlog(TLOG_T, "linux");
-#endif
+#else
 	tlog(TLOG_T, "other os");
+#endif
 	ttest_check_pass();
 }
 
