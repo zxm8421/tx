@@ -50,9 +50,9 @@ ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter
 	if (run)
 	{
 		ti64 watch = 0;
-		tlog_watch(&watch);
+		tlib_watch(&watch);
 		ttest_test(subret);
-		ms = tlog_watch(&watch) * 1e3;
+		ms = tlib_watch(&watch) * 1e3;
 
 		if (((timeout > 0) && (ms > timeout)))
 		{
