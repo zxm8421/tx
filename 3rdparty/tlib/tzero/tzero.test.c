@@ -115,18 +115,27 @@ ttest_static(test_tzero_tlib_xtoa)
 
 ttest_static(test_tzero_tlib_byteToHex)
 {
-	tb byte[256] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
-	tc hex[512] = {0};
+	tb byte[64] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
+	tc hex[64] = {0};
 
 	ttest_check_eq(tlib_byteToHex(tnull, 1, tnull), -1);
 	ttest_check_eq(tlib_byteToHex(byte, -1, tnull), -1);
 	ttest_check_eq(tlib_byteToHex(byte, 10, tnull), 20);
 	ttest_check_eq(tlib_byteToHex(byte, 10, hex), 20);
-	ttest_check_str_eq(hex, "000102030405060708090A0B0C0D0E0F");
+	ttest_check_str_eq(hex, "00010203040506070809");
 }
 
 ttest_static(test_tzero_tlib_hexToByte)
 {
+	tc hex[64] = "00010203040506070809";
+	tb byte[64] = {0};
+
+	ttest_check_eq(tlib_hexToByte(tnull, 1, tnull), -1);
+	ttest_check_eq(tlib_hexToByte(hex, -1, tnull), -1);
+	ttest_check_eq(tlib_hexToByte(hex, 1, tnull), -1);
+	ttest_check_eq(tlib_hexToByte(hex, 20, tnull), 10);
+	ttest_check_eq(tlib_hexToByte(hex, 20, byte), 10);
+	ttest_check_bytes_eq(byte, "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09", 10);
 }
 
 ttest_export(test_tzero)

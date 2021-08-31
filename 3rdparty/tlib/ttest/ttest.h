@@ -44,6 +44,9 @@ struct ttest_Ret
 #define ttest_check_str_eq(s1, s2) ttest_check(strcmp(s1, s2) == 0)
 #define ttest_check_str_ne(s1, s2) ttest_check(strcmp(s1, s2) != 0)
 
+#define ttest_check_bytes_eq(b1, b2, n) ttest_check(memcmp(b1, b2, n) == 0)
+#define ttest_check_bytes_ne(b1, b2, n) ttest_check(memcmp(b1, b2, n) != 0)
+
 #define ttest_static(ttest_test) tstatic void ttest_test(struct ttest_Ret *ret)
 #define ttest_export(ttest_test) textern void ttest_test(struct ttest_Ret *ret)
 #define ttest_import(ttest_test) textern void ttest_test(struct ttest_Ret *ret)
