@@ -92,24 +92,24 @@ ttest_static(test_tzero_tlib_atox)
 
 ttest_static(test_tzero_tlib_xtoa)
 {
-	ttest_tlib_check(tlib_xtoa(0), '0');
-	ttest_tlib_check(tlib_xtoa(1), '1');
-	ttest_tlib_check(tlib_xtoa(2), '2');
-	ttest_tlib_check(tlib_xtoa(3), '3');
-	ttest_tlib_check(tlib_xtoa(4), '4');
-	ttest_tlib_check(tlib_xtoa(5), '5');
-	ttest_tlib_check(tlib_xtoa(6), '6');
-	ttest_tlib_check(tlib_xtoa(7), '7');
-	ttest_tlib_check(tlib_xtoa(8), '8');
-	ttest_tlib_check(tlib_xtoa(9), '9');
-	ttest_tlib_check(tlib_xtoa(0xA), 'A');
-	ttest_tlib_check(tlib_xtoa(0xB), 'B');
-	ttest_tlib_check(tlib_xtoa(0xC), 'C');
-	ttest_tlib_check(tlib_xtoa(0xD), 'D');
-	ttest_tlib_check(tlib_xtoa(0xE), 'E');
-	ttest_tlib_check(tlib_xtoa(0xF), 'F');
+	ttest_check_eq(tlib_xtoa(0), '0');
+	ttest_check_eq(tlib_xtoa(1), '1');
+	ttest_check_eq(tlib_xtoa(2), '2');
+	ttest_check_eq(tlib_xtoa(3), '3');
+	ttest_check_eq(tlib_xtoa(4), '4');
+	ttest_check_eq(tlib_xtoa(5), '5');
+	ttest_check_eq(tlib_xtoa(6), '6');
+	ttest_check_eq(tlib_xtoa(7), '7');
+	ttest_check_eq(tlib_xtoa(8), '8');
+	ttest_check_eq(tlib_xtoa(9), '9');
+	ttest_check_eq(tlib_xtoa(0xA), 'A');
+	ttest_check_eq(tlib_xtoa(0xB), 'B');
+	ttest_check_eq(tlib_xtoa(0xC), 'C');
+	ttest_check_eq(tlib_xtoa(0xD), 'D');
+	ttest_check_eq(tlib_xtoa(0xE), 'E');
+	ttest_check_eq(tlib_xtoa(0xF), 'F');
 
-	ttest_tlib_check(tlib_xtoa(-1), '\0');
+	ttest_check_eq(tlib_xtoa(-1), '\0');
 }
 
 ttest_static(test_tzero_tlib_byteToHex)
