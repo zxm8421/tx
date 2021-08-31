@@ -82,7 +82,7 @@ jobs:
       - name: build release
         run: |
           cd '${{github.workspace}}/build/release'
-          qmake "APP_TEST=0" '${{github.workspace}}/${{env.APP}}.pro'
+          qmake '${{github.workspace}}/${{env.APP}}.pro'
           make -j$(nproc)
 
       - name: post-build
@@ -176,7 +176,7 @@ jobs:
       - name: build release
         run: |
           cd '${{github.workspace}}/build/release'
-          qmake.exe "APP_TEST=0" '${{github.workspace}}/${{env.APP}}.pro'
+          qmake.exe '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
 
       - name: post-build
@@ -271,7 +271,7 @@ jobs:
       - name: build release
         run: |
           cd '${{github.workspace}}/build/release'
-          qmake.exe "APP_TEST=0" '${{github.workspace}}/${{env.APP}}.pro'
+          qmake.exe '${{github.workspace}}/${{env.APP}}.pro'
           mingw32-make.exe -j$(nproc)
 
       - name: post-build
