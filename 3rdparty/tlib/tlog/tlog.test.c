@@ -111,7 +111,7 @@ void *tlog_test_tlog_hexdump_qps_thread_run(void *arg)
 ttest_static(test_tlog_tlog_hexdump_qps)
 {
 	pthread_t tid[4] = {0};
-	ti cnt = 1000;
+	ti cnt = 10000;
 	tlog(TLOG_D, "main pid = %d, tid = %lu", getpid(), pthread_self());
 	ti64 watch = 0;
 	tlib_watch(&watch);
@@ -135,8 +135,8 @@ ttest_static(test_tlog_tlog_hexdump_qps)
 ttest_export(test_tlog)
 {
 	ttest_run(test_tlog_tlog, 10);
-	ttest_run(test_tlog_tlog_qps, 1000 * 2);
+	ttest_run(test_tlog_tlog_qps, 1000 * 60);
 
 	ttest_run(test_tlog_tlog_hexdump, 10);
-	ttest_run(test_tlog_tlog_hexdump_qps, 1000 * 2);
+	ttest_run(test_tlog_tlog_hexdump_qps, 1000 * 60);
 }
