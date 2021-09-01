@@ -7,7 +7,6 @@
 
 #include <ttype/ttype.h>
 #include <tlog/tlog.h>
-#include <tsh/tsh.h>
 #include <tzero/tzero.h>
 
 #ifndef NTEST
