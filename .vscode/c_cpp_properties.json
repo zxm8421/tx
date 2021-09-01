@@ -8,7 +8,7 @@
 			],
 			"defines": [],
 			"compilerPath": "/usr/bin/gcc",
-			"cStandard": "gnu17",
+			"cStandard": "gnu11",
 			"cppStandard": "gnu++17",
 			"intelliSenseMode": "linux-gcc-x64"
 		},
@@ -20,7 +20,7 @@
 			],
 			"defines": [],
 			"compilerPath": "${LocalAppData}/Qt/Tools/mingw730_32/bin/gcc.exe",
-			"cStandard": "gnu17",
+			"cStandard": "gnu11",
 			"cppStandard": "gnu++17",
 			"intelliSenseMode": "windows-gcc-x86"
 		},
@@ -32,7 +32,7 @@
 			],
 			"defines": [],
 			"compilerPath": "${LocalAppData}/Qt/Tools/mingw730_64/bin/gcc.exe",
-			"cStandard": "gnu17",
+			"cStandard": "gnu11",
 			"cppStandard": "gnu++17",
 			"intelliSenseMode": "windows-gcc-x64"
 		}
