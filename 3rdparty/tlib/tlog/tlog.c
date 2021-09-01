@@ -294,8 +294,8 @@ ti tlog_init()
 	pthread_create(&tlog_tid, NULL, tlog_thread_run, tnull);
 	pthread_setname_np(tlog_tid, "tlog");
 
-	tlog(TLOG_D, "当前 pid = %d, tid = %p", getpid(), pthread_self());
-	tlog(TLOG_D, "创建tlog线程 tid = %p", tlog_tid);
+	tlog(TLOG_D, "当前 pid = %d, tid = %u", getpid(), pthread_self());
+	tlog(TLOG_D, "创建tlog线程 tid = %u", tlog_tid);
 #endif
 
 	return 0;

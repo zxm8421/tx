@@ -36,13 +36,13 @@ ttest_static(test_tlog_tlog_qps)
 {
 	pthread_t tid[4] = {0};
 	ti cnt = 10000;
-	tlog(TLOG_D, "main pid = %p, tid = %p", getpid(), pthread_self());
+	tlog(TLOG_D, "main pid = %d, tid = %u", getpid(), pthread_self());
 	ti64 watch = 0;
 	tlib_watch(&watch);
 	for (ti i = 0; i < tx_array_size(tid); i++)
 	{
 		pthread_create(&tid[i], NULL, tlog_test_tlog_qps_thread_run, &cnt);
-		tlog(TLOG_D, "create tid = %p", tid);
+		tlog(TLOG_D, "create tid = %u", tid);
 	}
 
 	for (ti i = 0; i < tx_array_size(tid); i++)

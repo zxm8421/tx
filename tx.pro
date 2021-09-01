@@ -14,6 +14,7 @@ CONFIG(release, debug|release) {
 	DEFINES += NDEBUG
 }
 
+# APP_TEST = 1
 !equals(APP_TEST, 1) {
 	DEFINES += NTEST
 }
