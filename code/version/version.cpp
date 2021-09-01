@@ -43,7 +43,7 @@ ti showVer()
 				   .arg(buildSHA1)
 				   .arg(buildBranch)
 				   .arg(buildSalt);
-	verInfo += QDateTime::fromSecsSinceEpoch(buildTime).toString("yyyyMMdd.HHmmss(t) ");
+	verInfo += QDateTime::fromSecsSinceEpoch(buildTime).toUTC().toString("yyyyMMdd.HHmmss(t) ");
 #ifdef NDEBUG
 	verInfo += QString("Release ");
 #else
