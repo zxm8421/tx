@@ -7,6 +7,7 @@
 
 #include <time.h>
 
+#include <unistd.h>
 #define __USE_GNU
 #include <pthread.h>
 
