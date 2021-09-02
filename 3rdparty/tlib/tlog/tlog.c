@@ -248,11 +248,6 @@ ti tlog_init()
 	}
 	init = true;
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
-	SetConsoleOutputCP(CP_UTF8);
-	// FreeConsole();
-#endif
-
 	if (TLOG_FILE_ENABLE == 0)
 	{
 		return 0;
