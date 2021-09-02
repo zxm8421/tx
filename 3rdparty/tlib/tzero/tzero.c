@@ -92,7 +92,7 @@ tc *tlib_basename(const tc path[])
 
 ti tlib_system(const tc *format, ...)
 {
-	tc cmd[_POSIX_ARG_MAX] = "";
+	tc cmd[2048] = "";
 	ti len = 0;
 
 	ti ret = 0;
@@ -103,7 +103,7 @@ ti tlib_system(const tc *format, ...)
 	va_end(ap);
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
-	wchar_t wcmd[_POSIX_ARG_MAX] = L"";
+	wchar_t wcmd[2048] = L"";
 	MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, cmd, -1, wcmd, tx_array_size(wcmd));
 	ret = _wsystem(wcmd);
 #else
