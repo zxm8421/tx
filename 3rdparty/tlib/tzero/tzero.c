@@ -5,7 +5,12 @@
  */
 #include "tzero.in.h"
 
+#if defined(__MINGW64__) || defined(__MINGW32__)
+#define __USE_MINGW_ANSI_STDIO 1
+#endif
+#include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #define _POSIX_
 #endif
@@ -85,9 +90,18 @@ tc *tlib_basename(const tc path[])
 	return token;
 }
 
-ti tlib_system(const tc cmd[])
+ti tlib_system(const tc *format, ...)
 {
+	tc cmd[_POSIX_ARG_MAX] = "";
+	ti len = 0;
+
 	ti ret = 0;
+
+	va_list ap;
+	va_start(ap, format);
+	len = vsnprintf(cmd, sizeof(cmd), format, ap);
+	va_end(ap);
+
 #if defined(__MINGW64__) || defined(__MINGW32__)
 	wchar_t wcmd[_POSIX_ARG_MAX] = L"";
 	MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, cmd, -1, wcmd, tx_array_size(wcmd));

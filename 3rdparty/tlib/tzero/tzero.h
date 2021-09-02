@@ -45,7 +45,7 @@ extern "C"
 	 * @param cmd 
 	 * @return 
 	 */
-	ti tlib_system(const tc cmd[]);
+	ti tlib_system(const tc *cmd, ...);
 
 	/**
 	 * @brief 求str的hash
