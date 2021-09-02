@@ -71,6 +71,14 @@ extern "C"
 	ti tlib_byteToHex(const tb byte[], const ti len, tc hex[]);
 	ti tlib_hexToByte(const tc hex[], const ti len, tb byte[]);
 
+	ti tlib_format(tc *buf, tc *format, ...);
+
+	struct tlib_format_info
+	{
+		enum tType;
+	};
+	ti tlib_format_u8(tc *buf, struct );
+
 #ifdef __cplusplus
 }
 #endif

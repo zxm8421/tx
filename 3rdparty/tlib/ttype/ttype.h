@@ -19,10 +19,6 @@ typedef unsigned int tu32;
 typedef signed int ti32;
 typedef unsigned long long tu64;
 typedef signed long long ti64;
-#ifdef __SIZEOF_INT128__
-typedef __uint128_t tu128;
-typedef __int128_t ti128;
-#endif
 typedef signed long tisize;
 typedef unsigned long tusize;
 typedef int ti;
@@ -30,12 +26,6 @@ typedef int ti;
 // 浮点数
 typedef float tf32;
 typedef double tf64;
-#if __SIZEOF_LONG_DOUBLE__ == 16
-typedef long double tf128;
-#elif __SIZEOF_LONG_DOUBLE__ == 12
-typedef long double tf96;
-#else
-#endif
 typedef double tf;
 
 //字节
@@ -47,14 +37,12 @@ typedef tusize tbsize;
 typedef tb8 tb;
 
 //字符
+typedef char tc;
+typedef wchar_t twc;
+
 typedef tb8 tc8;
 typedef tb16 tc16;
 typedef tb32 tc32;
-typedef tb64 tc64;
-typedef tbsize tcsize;
-
-typedef char tc;
-typedef wchar_t twc;
 
 //错误
 typedef ti te;
@@ -79,3 +67,47 @@ typedef bool tbo;
 #endif
 
 #define tx_array_size(a) ((tisize)(sizeof(a) / sizeof(a[0])))
+
+/**
+ * @brief 类型枚举
+ * 类型最大值应该<= 0b00111111, 即64
+ * 
+ */
+enum tType
+{
+	tType_none = 0,
+
+	tType_null = 1,
+	tType_bo,
+	tType_e,
+
+	tType_u8 = 10,
+	tType_i8,
+	tType_u16,
+	tType_i16,
+	tType_u32,
+	tType_i32,
+	tType_i = tType_i32,
+	tType_u64,
+	tType_i64,
+	tType_usize,
+	tType_isize,
+
+	tType_f32 = 20,
+	tType_f64,
+	tType_f = tType_f64,
+
+	tType_b8 = 30,
+	tType_b = tType_b8,
+	tType_b16,
+	tType_b32,
+	tType_b64,
+	tType_bsize,
+
+	tType_c,
+	tType_wc,
+	tType_c8,
+	tType_c16,
+	tType_c32,
+
+};
