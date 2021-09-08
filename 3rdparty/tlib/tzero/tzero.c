@@ -94,13 +94,12 @@ tc *tlib_basename(const tc path[])
 ti tlib_system(const tc *format, ...)
 {
 	tc cmd[_POSIX_ARG_MAX] = "";
-	ti len = 0;
 
 	ti ret = 0;
 
 	va_list ap;
 	va_start(ap, format);
-	len = vsnprintf(cmd, sizeof(cmd), format, ap);
+	vsnprintf(cmd, sizeof(cmd), format, ap);
 	va_end(ap);
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
@@ -281,3 +280,72 @@ ti tlib_hexToByte(const tc hex[], const ti len, tb byte[])
 
 	return ret;
 }
+
+// struct tlib_format_Info
+// {
+// 	tc spec[64];
+// 	ti size; // 注意类型提升, 0 表示长度可变
+// 	tlib_format_Handle handle;
+// };
+
+// struct tlib_format_Info tlib_format_info[] = {
+// 	{"u8", 4, &tlib_vformat_u8},
+// 	{"i8", 4, &tlib_vformat_i8},
+// 	tnull,
+// };
+
+// struct tlib_format_Arg
+// {
+// 	void *p;
+// 	ti size;
+// };
+
+// struct tlib_format_Arg tlib_format_arg[10] = {
+// 	{},
+// 	{},
+// 	tnull,
+// };
+
+// ti tlib_format(tc *buf, const tc *format, ...)
+// {
+// 	ti len = 0;
+
+// 	va_list ap;
+// 	va_start(ap, format);
+// 	len = tlib_vformat(buf, format, ap);
+// 	va_end(ap);
+
+// 	return len;
+// }
+
+// ti tlib_vformat(tc *buf, const tc *format, va_list ap)
+// {
+// 	ti len = 0;
+
+// 	void *pv = va_arg(ap, int);
+// 	len += tlib_format_u8(buf, NULL, ap);
+
+// 	return len;
+// }
+
+// ti tlib_vformat_u8(tc *buf, const struct tlib_format_info *info, const void *const pv)
+// {
+// 	tlog_hexdump(TLOG_D, "", pv, 32);
+
+// 	ti len = 0;
+// 	tc *cur = buf;
+
+// 	tu8 *v = (tu8 *)pv;
+
+// 	tc n[4] = "000";
+
+// 	n[0] = tlib_xtoa((*v) % 10);
+// 	n[1] = tlib_xtoa((*v) / 10 % 10);
+// 	n[2] = tlib_xtoa((*v) / 100 % 10);
+
+// 	buf[len++] = n[2];
+// 	buf[len++] = n[1];
+// 	buf[len++] = n[0];
+
+// 	return len;
+// }

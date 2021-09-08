@@ -79,12 +79,6 @@ ttest_static(test_ttype_ttype)
 
 	ttest_check_eq(sizeof(tf32), 4);
 	ttest_check_eq(sizeof(tf64), 8);
-#if __SIZEOF_LONG_DOUBLE__ == 16
-	ttest_check_eq(sizeof(tf128), 16);
-#elif __SIZEOF_LONG_DOUBLE__ == 12
-	ttest_check_eq(sizeof(tf96), 12);
-#else
-#endif
 	ttest_check_true((sizeof(tf) == 4) || (sizeof(tf) == 8));
 
 	ttest_check_eq(sizeof(tb8), 1);
@@ -96,7 +90,6 @@ ttest_static(test_ttype_ttype)
 	ttest_check_eq(sizeof(tc8), 1);
 	ttest_check_eq(sizeof(tc16), 2);
 	ttest_check_eq(sizeof(tc32), 4);
-	ttest_check_eq(sizeof(tc64), 8);
 	ttest_check_eq(sizeof(tc), 1);
 
 	ttest_check_eq(tnull, NULL);

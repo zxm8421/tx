@@ -77,9 +77,9 @@ enum tType
 {
 	tType_none = 0,
 
-	tType_null = 1,
-	tType_bo,
+	tType_bo = 1,
 	tType_e,
+	tType_p,
 
 	tType_u8 = 10,
 	tType_i8,
