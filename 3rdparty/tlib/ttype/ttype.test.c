@@ -69,10 +69,6 @@ ttest_static(test_ttype_ttype)
 	ttest_check_eq(sizeof(ti32), 4);
 	ttest_check_eq(sizeof(tu64), 8);
 	ttest_check_eq(sizeof(ti64), 8);
-#ifdef __SIZEOF_INT128__
-	ttest_check_eq(sizeof(tu128), 16);
-	ttest_check_eq(sizeof(ti128), 16);
-#endif
 	ttest_check_true((sizeof(ti) == 4) || (sizeof(ti) == 8));
 	ttest_check_true((sizeof(tisize) == 4) || (sizeof(tisize) == 8));
 	ttest_check_true((sizeof(tusize) == 4) || (sizeof(tusize) == 8));
@@ -85,6 +81,7 @@ ttest_static(test_ttype_ttype)
 	ttest_check_eq(sizeof(tb16), 2);
 	ttest_check_eq(sizeof(tb32), 4);
 	ttest_check_eq(sizeof(tb64), 8);
+	ttest_check_true((sizeof(tbsize) == 4) || (sizeof(tbsize) == 8));
 	ttest_check_eq(sizeof(tb), 1);
 
 	ttest_check_eq(sizeof(tc8), 1);
