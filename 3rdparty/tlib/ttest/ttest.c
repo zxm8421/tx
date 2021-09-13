@@ -13,6 +13,7 @@
 #include <string.h>
 
 #include <tlog/tlog.h>
+#include <tzero/tzero.h>
 
 __attribute__((weak)) ttest_export(test_main)
 {
