@@ -37,6 +37,8 @@ static ti tlog_test_fd = -1;
 static pthread_t tlog_tid = -1;
 #endif
 
+#include <tzero/tzero.h>
+
 ti tlog_debug(const tc *format, ...)
 {
 	tc buf[TLOG_BUF_SIZE] = {0};
