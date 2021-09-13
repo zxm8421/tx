@@ -6,10 +6,10 @@
  */
 #pragma once
 
-#include <tlib.h>
-
 #include <QDateTime>
 #include <QVersionNumber>
+
+#include <tlib.h>
 
 /**
  * @brief 显示版本号以及编译信息

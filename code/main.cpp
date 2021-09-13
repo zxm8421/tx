@@ -8,9 +8,9 @@
 #include <windows.h>
 #endif
 
-#include <tlib.h>
-
 #include <QApplication>
+
+#include <tlib.h>
 
 #include "ui/mainwindow.h"
 #include "version/version.h"

@@ -6,10 +6,10 @@
  */
 #include "version.h"
 
-#include <tlib.h>
-
 #include <QDateTime>
 #include <QTimeZone>
+
+#include <tlib.h>
 
 // 由buildVer.py自动生成
 #include "buildVer.h"
