@@ -1,34 +1,38 @@
 /**
+ * @file tlog.h
+ * 
  * @brief 
  * 
- * @file tlog.h
  */
 #pragma once
-#include "tlog.conf.h"
-
-/**
- * @brief 日志等级
- * DEBUG	调试信息
- * INFO		正常信息
- * WARNING	可处理的问题，比如丢包，畸形包等
- * ERROR	正常情况下不应该出现，需要立刻修复甚至停止运行
- * TEST		单元测试使用
- * 
- * ALL	允许全部日志
- * OFF	关闭全部日志
- */
-#define TLOG_D 0
-#define TLOG_I 1
-#define TLOG_W 2
-#define TLOG_E 3
-#define TLOG_T 4
-
-#define TLOG_ALL 0
-#define TLOG_OFF 16
-
-#define TLOG_LOCAL_FILTER TLOG_ALL
-
 #include <tlib.h>
+
+/*******************************************************************************
+ * @par config
+ */
+#define TLOG_BUF_SIZE 4096
+#define TLOG_CONSOLE_ENABLE 1
+#define TLOG_FILE_ENABLE 1
+#define TLOG_FILE_NUM 10
+#define TLOG_FILE_SIZE (10 * 1024 * 1024)
+#define TLOG_FILE_DIR "log"
+#define TLOG_FILE_PREFIX "tx"
+
+/*******************************************************************************
+ * @par export
+ */
+// 日志等级
+#define TLOG_D 0 // DEBUG	调试信息
+#define TLOG_I 1 // INFO	正常信息
+#define TLOG_W 2 // WARNING	可处理的问题，比如丢包，畸形包等
+#define TLOG_E 3 // ERROR	正常情况下不应该出现，需要立刻修复甚至停止运行
+#define TLOG_T 4 // TEST	单元测试使用
+
+#define TLOG_ALL 0	// 允许全部日志
+#define TLOG_OFF 16 // 关闭全部日志
+
+// 默认文件日志等级
+#define TLOG_LOCAL_FILTER TLOG_ALL
 
 /**
  * @brief 日志打印函数, 语法同printf
@@ -72,6 +76,17 @@ extern "C"
 	 */
 	ti tlog_set_global_filter(ti filter);
 
+#ifdef __cplusplus
+}
+#endif
+
+/*******************************************************************************
+ * @par impl
+ */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 	/**
  	 * @brief 请勿直接使用，请使用tlog
  	 * 
@@ -100,6 +115,18 @@ extern "C"
 	 * @return 
 	 */
 	ti tlog_rawhexdump(const tc *file, const ti line, const tc *func, const ti filter, const ti level, const tc *info, const void *ptr, const ti len);
+
+	/**
+	 * @brief tlog自用, 打印函数
+	 * 用于tlog没起来的场合，以及tlog调试自己 \
+	 * 会在末尾添加'\\n'
+	 * 
+	 * 
+	 * @param format 
+	 * @param ... 
+	 * @return 
+	 */
+	ti tlog_debug(const tc *format, ...);
 
 #ifdef __cplusplus
 }

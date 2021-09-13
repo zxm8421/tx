@@ -4,13 +4,14 @@
  * @file ttest.h
  */
 #pragma once
-#include "ttest.conf.h"
-
-#include <string.h>
-#include <stdarg.h>
-
 #include <tlib.h>
 
+#include <stdarg.h>
+#include <string.h>
+
+/*******************************************************************************
+ * @par export
+ */
 struct ttest_Ret
 {
 	ti test;
@@ -100,7 +101,7 @@ extern "C"
 	 * @param v 
 	 * @return 
 	 */
-	bool ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v);
+	tbo ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v);
 
 #ifdef __cplusplus
 }

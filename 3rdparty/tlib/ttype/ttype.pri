@@ -1,9 +1,7 @@
 # tlib/ttype/ttype.pri
 
 HEADERS += \
-	$${PWD}/ttype.conf.h	\
-	$${PWD}/ttype.h	\
-	$${PWD}/ttype.in.h
+	$${PWD}/ttype.h
 
 SOURCES +=	\
 

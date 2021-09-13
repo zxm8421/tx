@@ -1,12 +1,16 @@
 /**
- * @brief 数据类型定义
- * C17, C++17
  * @file ttype.h
+ * 
+ * @brief 类型定义
+ * 
  */
 #pragma once
-#include "ttype.conf.h"
 
 #include <wchar.h>
+
+/*******************************************************************************
+ * @par export
+ */
 
 #define tp_size __SIZEOF_POINTER__
 

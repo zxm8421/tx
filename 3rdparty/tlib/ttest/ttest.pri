@@ -2,9 +2,7 @@
 
 !contains(DEFINES, NTEST) {
 	HEADERS += \
-		$${PWD}/ttest.conf.h	\
-		$${PWD}/ttest.h	\
-		$${PWD}/ttest.in.h
+		$${PWD}/ttest.h
 
 	SOURCES +=	\
 		$${PWD}/ttest.c

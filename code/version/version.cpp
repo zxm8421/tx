@@ -1,7 +1,8 @@
 /**
+ * @file version.cpp
+ * 
  * @brief 
  * 
- * @file version.cpp
  */
 #include "version.h"
 

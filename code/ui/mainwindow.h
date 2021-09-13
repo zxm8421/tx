@@ -1,7 +1,8 @@
 /**
+ * @file mainwindow.h
+ * 
  * @brief 
  * 
- * @file mainwindow.h
  */
 #pragma once
 

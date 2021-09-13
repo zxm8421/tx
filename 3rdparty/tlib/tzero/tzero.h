@@ -4,12 +4,13 @@
  * @file tzero.h
  */
 #pragma once
-#include "tzero.conf.h"
+#include <tlib.h>
 
 #include <stdarg.h>
 
-#include <tlib.h>
-
+/*******************************************************************************
+ * @par export
+ */
 #ifdef __cplusplus
 extern "C"
 {

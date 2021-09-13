@@ -1,7 +1,8 @@
 /**
+ * @file main.cpp
+ * 
  * @brief 
  * 
- * @file main.cpp
  */
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #include <windows.h>
@@ -11,8 +12,8 @@
 
 #include <QApplication>
 
-#include "version/version.h"
 #include "ui/mainwindow.h"
+#include "version/version.h"
 
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 {

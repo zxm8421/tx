@@ -1,9 +1,7 @@
 # tlib/tzero/tzero.pri
 
 HEADERS += \
-	$${PWD}/tzero.conf.h	\
-	$${PWD}/tzero.h	\
-	$${PWD}/tzero.in.h
+	$${PWD}/tzero.h
 
 SOURCES +=	\
 	$${PWD}/tzero.c

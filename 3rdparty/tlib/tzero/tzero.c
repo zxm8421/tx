@@ -3,14 +3,14 @@
  * 
  * @file tzero.c
  */
-#include "tzero.in.h"
+#include "tzero.h"
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #define __USE_MINGW_ANSI_STDIO 1
 #endif
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdarg.h>
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #define _POSIX_
 #endif

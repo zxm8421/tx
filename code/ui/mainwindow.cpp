@@ -1,7 +1,8 @@
 /**
+ * @file mainwindow.cpp
+ * 
  * @brief 
  * 
- * @file mainwindow.cpp
  */
 #include "mainwindow.h"
 

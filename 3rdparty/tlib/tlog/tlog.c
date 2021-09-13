@@ -1,23 +1,23 @@
 /**
+ * @file tlog.c
+ * 
  * @brief 
  * 
- * @file tlog.c
  */
-#include "tlog.in.h"
+#include "tlog.h"
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #define __USE_MINGW_ANSI_STDIO 1
-#endif
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdatomic.h>
-#include <stdarg.h>
-#if defined(__MINGW64__) || defined(__MINGW32__)
 #define _POSIX_THREAD_SAFE_FUNCTIONS
 #endif
+#include <stdarg.h>
+#include <stdatomic.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
-#include <sys/stat.h>
+
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #if defined(__MINGW64__) || defined(__MINGW32__)

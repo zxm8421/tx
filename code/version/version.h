@@ -1,14 +1,15 @@
 /**
+ * @file version.h
+ * 
  * @brief 
  * 
- * @file version.h
  */
 #pragma once
 
 #include <tlib.h>
 
-#include <QVersionNumber>
 #include <QDateTime>
+#include <QVersionNumber>
 
 /**
  * @brief 显示版本号以及编译信息

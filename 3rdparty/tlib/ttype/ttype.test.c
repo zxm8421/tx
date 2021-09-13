@@ -1,7 +1,8 @@
 /**
+ * @file ttype.test.c
+ * 
  * @brief 
  * 
- * @file ttype.test.c
  */
 #include "ttype.h"
 

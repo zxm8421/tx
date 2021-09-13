@@ -1,4 +1,4 @@
-#include "ttest.in.h"
+#include "ttest.h"
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
 #define __USE_MINGW_ANSI_STDIO 1

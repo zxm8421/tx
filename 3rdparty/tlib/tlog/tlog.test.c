@@ -1,15 +1,16 @@
 /**
+ * @file tlog.test.c
+ * 
  * @brief 
  * 
- * @file tlog.test.c
  */
 #include "tlog.h"
 
 #include <time.h>
 
-#include <unistd.h>
 #define __USE_GNU
 #include <pthread.h>
+#include <unistd.h>
 
 ttest_static(test_tlog_tlog)
 {
