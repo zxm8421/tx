@@ -4,9 +4,10 @@
  * @file tzero.h
  */
 #pragma once
-#include <tlib.h>
 
 #include <stdarg.h>
+
+#include <ttype/ttype.h>
 
 /*******************************************************************************
  * @par export

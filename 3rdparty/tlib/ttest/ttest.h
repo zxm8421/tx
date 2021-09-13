@@ -4,10 +4,11 @@
  * @file ttest.h
  */
 #pragma once
-#include <tlib.h>
 
 #include <stdarg.h>
 #include <string.h>
+
+#include <ttype/ttype.h>
 
 /*******************************************************************************
  * @par export

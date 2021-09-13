@@ -22,6 +22,8 @@
 #include <windows.h>
 #endif
 
+#include <tlog/tlog.h>
+
 tf tlib_watch(ti64 *watch)
 {
 	if (watch == tnull)

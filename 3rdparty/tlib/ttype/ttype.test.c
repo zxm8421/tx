@@ -6,6 +6,8 @@
  */
 #include "ttype.h"
 
+#include <tlib.h>
+
 ttest_static(test_ttype_os)
 {
 #if defined(__MINGW64__)

@@ -10,6 +10,8 @@
 
 #include <unistd.h>
 
+#include <tlib.h>
+
 ttest_static(test_tzero_tlib_getTime)
 {
 	ttest_check_gt(tlib_getTime(), 0);

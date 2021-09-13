@@ -5,7 +5,8 @@
  * 
  */
 #pragma once
-#include <tlib.h>
+
+#include <ttype/ttype.h>
 
 /*******************************************************************************
  * @par config

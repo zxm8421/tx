@@ -1,3 +1,9 @@
+/**
+ * @file ttest.c
+ * 
+ * @brief 
+ * 
+ */
 #include "ttest.h"
 
 #if defined(__MINGW64__) || defined(__MINGW32__)
@@ -5,6 +11,8 @@
 #endif
 #include <stdio.h>
 #include <string.h>
+
+#include <tlog/tlog.h>
 
 __attribute__((weak)) ttest_export(test_main)
 {
