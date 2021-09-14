@@ -30,7 +30,7 @@ ttest(test_tzero_tlib_watch, 0)
 	usleep(1000 * 20);
 	tf cost = tlib_watch(&watch);
 	ttest_check_gt(watch, 0);
-	tlog(TLOG_T, "usleep(1000*2), cost = %.09f s", cost);
+	tlog(TLOG_T, "usleep(1000*20), cost = %.09f s", cost);
 	ttest_check_in_range(cost, 0.01, 0.05);
 }
 
