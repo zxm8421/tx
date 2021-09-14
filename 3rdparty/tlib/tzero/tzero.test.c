@@ -12,7 +12,7 @@
 
 #include <tlib.h>
 
-ttest_static(test_tzero_tlib_getTime)
+ttest(test_tzero_tlib_getTime, 0)
 {
 	ttest_check_gt(tlib_getTime(), 0);
 	ttest_check_gt(tlib_getTime_ms(), 0);
@@ -20,7 +20,7 @@ ttest_static(test_tzero_tlib_getTime)
 	ttest_check_gt(tlib_getTime_ns(), 0);
 }
 
-ttest_static(test_tzero_tlib_watch)
+ttest(test_tzero_tlib_watch, 0)
 {
 	ttest_check_ge(tlib_watch(tnull), -1);
 
@@ -34,7 +34,7 @@ ttest_static(test_tzero_tlib_watch)
 	ttest_check_in_range(cost, 0.01, 0.05);
 }
 
-ttest_static(test_tzero_tlib_basename)
+ttest(test_tzero_tlib_basename, 0)
 {
 	ttest_check_null(tlib_basename(NULL));
 	ttest_check_str_eq(tlib_basename("main.c"), "main.c");
@@ -44,19 +44,19 @@ ttest_static(test_tzero_tlib_basename)
 	ttest_check_str_eq(tlib_basename("C:\\桌面\\123/abc/main.c"), "main.c");
 }
 
-ttest_static(test_tzero_tlib_system)
+ttest(test_tzero_tlib_system, 0)
 {
 	ttest_check_eq(tlib_system("echo 0123456789"), 0);
 }
 
-ttest_static(test_tzero_tlib_hash_str)
+ttest(test_tzero_tlib_hash_str, 0)
 {
 	ttest_check_ne(tlib_hash_str(tnull), 0);
 	ttest_check_ne(tlib_hash_str(""), 0);
 	ttest_check_ne(tlib_hash_str("0123456789ABCDEF"), 0);
 }
 
-ttest_static(test_tzero_tlib_atox)
+ttest(test_tzero_tlib_atox, 0)
 {
 	ttest_check_eq(tlib_atox('0'), 0);
 	ttest_check_eq(tlib_atox('1'), 1);
@@ -92,7 +92,7 @@ ttest_static(test_tzero_tlib_atox)
 	}
 }
 
-ttest_static(test_tzero_tlib_xtoa)
+ttest(test_tzero_tlib_xtoa, 0)
 {
 	ttest_check_eq(tlib_xtoa(0), '0');
 	ttest_check_eq(tlib_xtoa(1), '1');
@@ -115,7 +115,7 @@ ttest_static(test_tzero_tlib_xtoa)
 	ttest_check_eq(tlib_xtoa(-1), '\0');
 }
 
-ttest_static(test_tzero_tlib_byteToHex)
+ttest(test_tzero_tlib_byteToHex, 0)
 {
 	tb byte[64] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
 	tc hex[64] = {0};
@@ -127,7 +127,7 @@ ttest_static(test_tzero_tlib_byteToHex)
 	ttest_check_str_eq(hex, "00010203040506070809");
 }
 
-ttest_static(test_tzero_tlib_hexToByte)
+ttest(test_tzero_tlib_hexToByte, 0)
 {
 	tc hex[64] = "00010203040506070809";
 	tb byte[64] = {0};
@@ -138,17 +138,4 @@ ttest_static(test_tzero_tlib_hexToByte)
 	ttest_check_eq(tlib_hexToByte(hex, 20, tnull), 10);
 	ttest_check_eq(tlib_hexToByte(hex, 20, byte), 10);
 	ttest_check_bytes_eq(byte, "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09", 10);
-}
-
-ttest_export(test_tzero)
-{
-	ttest_run(test_tzero_tlib_getTime, 10);
-	ttest_run(test_tzero_tlib_watch, 1000 * 10);
-	ttest_run(test_tzero_tlib_basename, 10);
-	ttest_run(test_tzero_tlib_system, 1000);
-	ttest_run(test_tzero_tlib_hash_str, 10);
-	ttest_run(test_tzero_tlib_atox, 10);
-	ttest_run(test_tzero_tlib_xtoa, 10);
-	ttest_run(test_tzero_tlib_byteToHex, 10);
-	ttest_run(test_tzero_tlib_hexToByte, 10);
 }

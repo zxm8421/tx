@@ -8,7 +8,7 @@
 
 #include <tlib.h>
 
-ttest_static(test_ttype_os)
+ttest(test_ttype_os, 0)
 {
 #if defined(__MINGW64__)
 	tlog(TLOG_T, "mingw64");
@@ -22,7 +22,7 @@ ttest_static(test_ttype_os)
 	ttest_check_pass();
 }
 
-ttest_static(test_ttype_le_be)
+ttest(test_ttype_le_be, 0)
 {
 	union
 	{
@@ -42,7 +42,7 @@ ttest_static(test_ttype_le_be)
 	ttest_check_pass();
 }
 
-ttest_static(test_ttype_ctype)
+ttest(test_ttype_ctype, 0)
 {
 	tlog(TLOG_T, "__SIZEOF_POINTER__ = %d", __SIZEOF_POINTER__);
 	tlog(TLOG_T, "sizeof(void *) = %lu", sizeof(void *));
@@ -60,7 +60,7 @@ ttest_static(test_ttype_ctype)
 	ttest_check_pass();
 }
 
-ttest_static(test_ttype_ttype)
+ttest(test_ttype_ttype, 0)
 {
 	ttest_check_eq(sizeof(tu8), 1);
 	ttest_check_eq(sizeof(ti8), 1);
@@ -93,7 +93,7 @@ ttest_static(test_ttype_ttype)
 	ttest_check_eq(tnull, NULL);
 }
 
-ttest_static(test_ttype_tx_array_size)
+ttest(test_ttype_tx_array_size, 0)
 {
 	char a1[] = "1234";
 	ttest_check_eq(tx_array_size(a1), 5);
@@ -103,13 +103,4 @@ ttest_static(test_ttype_tx_array_size)
 
 	double a3[] = {0, 1, 2, 3, 4};
 	ttest_check_eq(tx_array_size(a3), 5);
-}
-
-ttest_export(test_ttype)
-{
-	ttest_run(test_ttype_os, 10);
-	ttest_run(test_ttype_le_be, 10);
-	ttest_run(test_ttype_ctype, 10);
-	ttest_run(test_ttype_ttype, 10);
-	ttest_run(test_ttype_tx_array_size, 10);
 }

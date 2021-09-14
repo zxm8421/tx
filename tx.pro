@@ -65,6 +65,5 @@ DISTFILES +=	\
 
 !contains(DEFINES, NTEST) {
 	SOURCES +=	\
-		code/main.test.cpp	\
 		code/version/version.test.cpp
 }

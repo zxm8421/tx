@@ -16,5 +16,5 @@ HEADERS += \
 
 !contains(DEFINES, NTEST) {
 	SOURCES +=	\
-		$${PWD}/tlib.test.c
+
 }

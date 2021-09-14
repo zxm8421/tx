@@ -10,133 +10,108 @@
 #define __USE_MINGW_ANSI_STDIO 1
 #endif
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <tlog/tlog.h>
 #include <tzero/tzero.h>
 
-__attribute__((weak)) ttest_export(test_main)
+static int ttest_Test_cmp(const void *a, const void *b)
 {
-	tlog(TLOG_T, "请定义test_main");
-	ttest_check_fail();
+	struct ttest_Test **itor_a = (struct ttest_Test **)a;
+	struct ttest_Test **itor_b = (struct ttest_Test **)b;
+
+	return strcmp((*itor_a)->name, (*itor_b)->name);
 }
 
-ttest_import(test_main);
 int ttest_main(int argc, char *argv[])
 {
 	tlog(TLOG_T, "开始自动化测试");
 
-	tlog(TLOG_T, "argc = %d", argc);
 	for (ti i = 0; i < argc; i++)
 	{
 		tlog(TLOG_T, "argv[%d] = %s", i, argv[i]);
 	}
 
-	struct ttest_Ret _ret;
-	struct ttest_Ret *ret = &_ret;
-	memset(ret, 0, sizeof(struct ttest_Ret));
-	ttest_run(test_main, 0);
+	extern struct ttest_Test *__start_ttest_Test_SymVTab;
+	extern struct ttest_Test *__stop_ttest_Test_SymVTab;
 
-	tlog(TLOG_T, "结束自动化测试");
+	qsort(&__start_ttest_Test_SymVTab,
+		  &__stop_ttest_Test_SymVTab - &__start_ttest_Test_SymVTab, sizeof(struct ttest_Test *),
+		  ttest_Test_cmp);
 
-	return ret->test_failed;
-}
+	struct ttest_Ret test;
+	memset(&test, 0, sizeof(struct ttest_Ret));
 
-ti ttest_run_test(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, void (*ttest_test)(struct ttest_Ret *ret), const tc *ttest_test_name, bool run, ti timeout)
-{
-	tlog_rawprint(file, line, func, filter, TLOG_T,
-				  "测试开始 %s",
-				  ttest_test_name);
+	struct ttest_Ret check;
+	memset(&check, 0, sizeof(struct ttest_Ret));
+	tf cost = 0;
 
-	ret->check = 0;
-	ret->check_passed = 0;
-	ret->check_failed = 0;
-
-	struct ttest_Ret _subret;
-	struct ttest_Ret *subret = &_subret;
-	memset(subret, 0, sizeof(struct ttest_Ret));
-
-	tc buf[256] = {0};
-
-	tf ms = 0;
-	if (run)
+	for (struct ttest_Test **itor = &__start_ttest_Test_SymVTab; itor < &__stop_ttest_Test_SymVTab; itor++)
 	{
+		tc buf[256] = {0};
+
 		ti64 watch = 0;
 		tlib_watch(&watch);
-		ttest_test(subret);
-		ms = tlib_watch(&watch) * 1e3;
+		(*itor)->testcase(&(*itor)->check);
+		(*itor)->cost = tlib_watch(&watch);
 
-		if (((timeout > 0) && (ms > timeout)))
+		if (((*itor)->cost_limit > 0) && ((*itor)->cost > (*itor)->cost_limit))
 		{
-			subret->test_failed += 1;
+			test.failed++;
 			snprintf(buf, sizeof(buf), "测试超时");
 		}
-		else if ((subret->check_failed > 0) || (subret->test_failed > 0))
+		else if ((*itor)->check.failed > 0)
 		{
-			subret->test_failed += 1;
+			test.failed++;
 			snprintf(buf, sizeof(buf), "测试失败");
 		}
 		else
 		{
-			subret->test_passed += 1;
+			test.passed++;
 			snprintf(buf, sizeof(buf), "测试通过");
 		}
+		cost += (*itor)->cost;
+		test.total++;
+
+		check.failed += (*itor)->check.failed;
+		check.passed += (*itor)->check.passed;
+		check.total += (*itor)->check.total;
+
+		tlog_rawprint((*itor)->file, (*itor)->line, (*itor)->name, (*itor)->filter,
+					  TLOG_T, "%s(%.03f) 核对: %d(= %d + %d)",
+					  buf, (*itor)->cost, (*itor)->check.total, (*itor)->check.passed, (*itor)->check.failed);
+	}
+
+	tc buf[256] = {0};
+	if (test.failed > 0)
+	{
+		snprintf(buf, sizeof(buf), "自动化测试失败");
 	}
 	else
 	{
-		subret->test_skipped += 1;
-		snprintf(buf, sizeof(buf), "测试跳过");
+		snprintf(buf, sizeof(buf), "自动化测试通过");
 	}
+	tlog(TLOG_T, "(%.03f) 核对: %d(= %d + %d)", cost, check.total, check.passed, check.failed);
+	tlog(TLOG_T, "%s 测试: %d(= %d + %d)", buf, test.total, test.passed, test.failed);
 
-	subret->test += 1;
-
-	ret->test_passed += subret->test_passed;
-	ret->test_failed += subret->test_failed;
-	ret->test_skipped += subret->test_skipped;
-	ret->test += subret->test;
-
-	if (subret->check > 0)
-	{
-		tlog_rawprint(file, line, func, filter, TLOG_T,
-					  "%s %s 核对: %d (%d 通过, %d 失败)\n"
-					  "%8.0f ms test  passed  failed skipped\n"
-					  "this      %6d  %6d  %6d  %6d\n"
-					  "all       %6d  %6d  %6d  %6d",
-					  buf, ttest_test_name, subret->check, subret->check_passed, subret->check_failed,
-					  ms,
-					  subret->test, subret->test_passed, subret->test_failed, subret->test_skipped,
-					  ret->test, ret->test_passed, ret->test_failed, ret->test_skipped);
-	}
-	else
-	{
-		tlog_rawprint(file, line, func, filter, TLOG_T,
-					  "%s %s\n"
-					  "%8.0f ms test  passed  failed skipped\n"
-					  "this      %6d  %6d  %6d  %6d\n"
-					  "all       %6d  %6d  %6d  %6d",
-					  buf, ttest_test_name,
-					  ms,
-					  subret->test, subret->test_passed, subret->test_failed, subret->test_skipped,
-					  ret->test, ret->test_passed, ret->test_failed, ret->test_skipped);
-	}
-
-	return subret->test_failed;
+	return test.failed;
 }
 
-bool ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *ret, bool v)
+tbo ttest_rawcheck(const tc *file, const ti line, const tc *func, const ti filter, struct ttest_Ret *check, tbo v)
 {
 	if (v)
 	{
-		ret->check_passed += 1;
+		check->passed += 1;
 		// tlog_rawprint(file, line, func, filter, TLOG_T, "核对通过");
 	}
 	else
 	{
-		ret->check_failed += 1;
+		check->failed += 1;
 		tlog_rawprint(file, line, func, filter, TLOG_T, "核对失败");
 	}
 
-	ret->check += 1;
+	check->total += 1;
 
 	return v;
 }

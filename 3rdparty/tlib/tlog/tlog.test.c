@@ -14,14 +14,14 @@
 
 #include <tlib.h>
 
-ttest_static(test_tlog_tlog)
+ttest(test_tlog, 0)
 {
 	ttest_check_gt(tlog(TLOG_D, ""), 0);
 	ttest_check_gt(tlog(TLOG_D, "This is a test log"), 0);
 	ttest_check_gt(tlog(TLOG_D, "这是一条测试消息"), 0);
 }
 
-void *tlog_test_tlog_qps_thread_run(void *arg)
+void *test_tlog_qps_thread_run(void *arg)
 {
 	ti cnt = *((int *)arg);
 
@@ -36,7 +36,7 @@ void *tlog_test_tlog_qps_thread_run(void *arg)
 	return NULL;
 }
 
-ttest_static(test_tlog_tlog_qps)
+ttest(test_tlog_qps, 60)
 {
 	pthread_t tid[4] = {0};
 	ti cnt = 10000;
@@ -45,7 +45,7 @@ ttest_static(test_tlog_tlog_qps)
 	tlib_watch(&watch);
 	for (ti i = 0; i < tx_array_size(tid); i++)
 	{
-		pthread_create(&tid[i], NULL, tlog_test_tlog_qps_thread_run, &cnt);
+		pthread_create(&tid[i], NULL, test_tlog_qps_thread_run, &cnt);
 		tlog(TLOG_D, "create tid = %u", tid);
 	}
 
@@ -60,7 +60,7 @@ ttest_static(test_tlog_tlog_qps)
 	ttest_check_gt(qps, 100);
 }
 
-ttest_static(test_tlog_tlog_hexdump)
+ttest(test_tlog_hexdump, 10)
 {
 	const tc hexTable[256 * 2 + 1] = "000102030405060708090A0B0C0D0E0F"
 									 "101112131415161718191A1B1C1D1E1F"
@@ -83,7 +83,7 @@ ttest_static(test_tlog_tlog_hexdump)
 	ttest_check_gt(tlog_hexdump(TLOG_D, "info", hexTable, sizeof(hexTable)), 0);
 }
 
-void *tlog_test_tlog_hexdump_qps_thread_run(void *arg)
+void *test_tlog_hexdump_qps_thread_run(void *arg)
 {
 	ti cnt = *((int *)arg);
 
@@ -112,7 +112,7 @@ void *tlog_test_tlog_hexdump_qps_thread_run(void *arg)
 	return NULL;
 }
 
-ttest_static(test_tlog_tlog_hexdump_qps)
+ttest(test_tlog_hexdump_qps, 60)
 {
 	pthread_t tid[4] = {0};
 	ti cnt = 10000;
@@ -121,7 +121,7 @@ ttest_static(test_tlog_tlog_hexdump_qps)
 	tlib_watch(&watch);
 	for (ti i = 0; i < tx_array_size(tid); i++)
 	{
-		pthread_create(&tid[i], NULL, tlog_test_tlog_hexdump_qps_thread_run, &cnt);
+		pthread_create(&tid[i], NULL, test_tlog_hexdump_qps_thread_run, &cnt);
 		tlog(TLOG_D, "create tid = %lu", tid);
 	}
 
@@ -134,13 +134,4 @@ ttest_static(test_tlog_tlog_hexdump_qps)
 	ti qps = cnt * tx_array_size(tid) / cost;
 	tlog(TLOG_T, "qps = %d", qps);
 	ttest_check_gt(qps, 100);
-}
-
-ttest_export(test_tlog)
-{
-	ttest_run(test_tlog_tlog, 10);
-	ttest_run(test_tlog_tlog_qps, 1000 * 60);
-
-	ttest_run(test_tlog_tlog_hexdump, 10);
-	ttest_run(test_tlog_tlog_hexdump_qps, 1000 * 60);
 }
