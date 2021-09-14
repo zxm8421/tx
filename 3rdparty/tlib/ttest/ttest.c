@@ -85,9 +85,9 @@ int ttest_main(int argc, char *argv[])
 
 	tlog(TLOG_T,
 		 "\n"
-		 "(%8.03f) total  passed  failed\n"
-		 " check:   %6d  %6d  %6d\n"
-		 " test :   %6d  %6d  %6d",
+		 "(%6.01f) total  passed  failed\n"
+		 "check:  %6d  %6d  %6d\n"
+		 "test :  %6d  %6d  %6d",
 		 cost, check.total, check.passed, check.failed,
 		 test.total, test.passed, test.failed);
 
