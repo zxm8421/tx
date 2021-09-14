@@ -83,17 +83,22 @@ int ttest_main(int argc, char *argv[])
 					  buf, (*itor)->cost, (*itor)->check.total, (*itor)->check.passed, (*itor)->check.failed);
 	}
 
-	tc buf[256] = {0};
+	tlog(TLOG_T,
+		 "\n"
+		 "(%8.03f) total  passed  failed\n"
+		 " check:   %6d  %6d  %6d\n"
+		 " test :   %6d  %6d  %6d",
+		 cost, check.total, check.passed, check.failed,
+		 test.total, test.passed, test.failed);
+
 	if (test.failed > 0)
 	{
-		snprintf(buf, sizeof(buf), "自动化测试失败");
+		tlog(TLOG_T, "自动化测试失败");
 	}
 	else
 	{
-		snprintf(buf, sizeof(buf), "自动化测试通过");
+		tlog(TLOG_T, "自动化测试通过");
 	}
-	tlog(TLOG_T, "(%.03f) 核对: %d(= %d + %d)", cost, check.total, check.passed, check.failed);
-	tlog(TLOG_T, "%s 测试: %d(= %d + %d)", buf, test.total, test.passed, test.failed);
 
 	return test.failed;
 }
