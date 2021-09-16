@@ -31,6 +31,10 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 	tlog(TLOG_I, "start ...");
 	showVer();
 
+	tString *s = tString_new("1234");
+	tlog(TLOG_D, "s = %s", s->data);
+	tString_del(s);
+
 	QApplication a(argc, argv);
 	MainWindow w;
 	w.show();
