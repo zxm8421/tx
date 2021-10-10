@@ -5,6 +5,7 @@ INCLUDEPATH += \
 
 include($${PWD}/ttype/ttype.pri)
 include($${PWD}/tlog/tlog.pri)
+include($${PWD}/tio/tio.pri)
 include($${PWD}/tzero/tzero.pri)
 
 !contains(DEFINES, NTEST) {
