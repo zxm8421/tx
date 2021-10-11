@@ -109,5 +109,4 @@ enum tType
 	tType_c8,
 	tType_c16,
 	tType_c32,
-
 };
