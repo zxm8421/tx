@@ -8,9 +8,6 @@
 
 #include <ttype/ttype.h>
 
-/*******************************************************************************
- * @par config
- */
 #define TLOG_BUF_SIZE 4096
 #define TLOG_CONSOLE_ENABLE 1
 #define TLOG_FILE_ENABLE 1
@@ -19,9 +16,6 @@
 #define TLOG_FILE_DIR "log"
 #define TLOG_FILE_PREFIX "tx"
 
-/*******************************************************************************
- * @par export
- */
 // 日志等级
 #define TLOG_D 0 // DEBUG	调试信息
 #define TLOG_I 1 // INFO	正常信息
@@ -77,17 +71,6 @@ extern "C"
 	 */
 	ti tlog_set_global_filter(ti filter);
 
-#ifdef __cplusplus
-}
-#endif
-
-/*******************************************************************************
- * @par impl
- */
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 	/**
  	 * @brief 请勿直接使用，请使用tlog
  	 * 
