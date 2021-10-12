@@ -4,11 +4,9 @@ HEADERS += \
 	$${PWD}/ttype.h	\
 	$${PWD}/tstring.h
 
-SOURCES +=	\
-	$${PWD}/tstring.c
+SOURCES +=
 
 !contains(DEFINES, NTEST) {
 	SOURCES +=	\
-		$${PWD}/ttype.test.c	\
-		$${PWD}/tstring.test.c
+		$${PWD}/ttype.test.c
 }
