@@ -60,7 +60,11 @@ ti showVer()
 	verInfo += QString("========================================\n");
 	verInfo += QString("========================================\n");
 
+#ifdef NTEST
 	tlog(TLOG_I, "%s", verInfo.toUtf8().data());
+#else
+	tlog(TLOG_T, "%s", verInfo.toUtf8().data());
+#endif
 
 	return 0;
 }

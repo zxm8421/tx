@@ -12,14 +12,17 @@ ttest(test_ttype_os, 0)
 {
 #if defined(__MINGW64__)
 	tlog(TLOG_T, "mingw64");
-#elif defined(__MINGW32__)
-	tlog(TLOG_T, "mingw32");
 #elif defined(__linux__)
 	tlog(TLOG_T, "linux");
 #else
 	tlog(TLOG_T, "other os");
 #endif
 	ttest_check_pass();
+}
+
+ttest(test_ttype_size, 0)
+{
+	ttest_check_eq(tx_size, 8);
 }
 
 ttest(test_ttype_le_be, 0)
@@ -70,19 +73,16 @@ ttest(test_ttype_ttype, 0)
 	ttest_check_eq(sizeof(ti32), 4);
 	ttest_check_eq(sizeof(tu64), 8);
 	ttest_check_eq(sizeof(ti64), 8);
-	ttest_check_true((sizeof(ti) == 4) || (sizeof(ti) == 8));
-	ttest_check_true((sizeof(tisize) == 4) || (sizeof(tisize) == 8));
-	ttest_check_true((sizeof(tusize) == 4) || (sizeof(tusize) == 8));
+	ttest_check_true(sizeof(ti) == 4);
 
 	ttest_check_eq(sizeof(tf32), 4);
 	ttest_check_eq(sizeof(tf64), 8);
-	ttest_check_true((sizeof(tf) == 4) || (sizeof(tf) == 8));
+	ttest_check_true(sizeof(tf) == 8);
 
 	ttest_check_eq(sizeof(tb8), 1);
 	ttest_check_eq(sizeof(tb16), 2);
 	ttest_check_eq(sizeof(tb32), 4);
 	ttest_check_eq(sizeof(tb64), 8);
-	ttest_check_true((sizeof(tbsize) == 4) || (sizeof(tbsize) == 8));
 	ttest_check_eq(sizeof(tb), 1);
 
 	ttest_check_eq(sizeof(tc8), 1);

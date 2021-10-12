@@ -8,7 +8,7 @@
 
 #include <wchar.h>
 
-#define tp_size __SIZEOF_POINTER__
+#define tx_size __SIZEOF_POINTER__
 
 // 整数
 typedef unsigned char tu8;
@@ -19,8 +19,6 @@ typedef unsigned int tu32;
 typedef signed int ti32;
 typedef unsigned long long tu64;
 typedef signed long long ti64;
-typedef signed long tisize;
-typedef unsigned long tusize;
 typedef int ti;
 
 // 浮点数
@@ -33,7 +31,6 @@ typedef tu8 tb8;
 typedef tu16 tb16;
 typedef tu32 tb32;
 typedef tu64 tb64;
-typedef tusize tbsize;
 typedef tb8 tb;
 
 //字符
@@ -66,7 +63,7 @@ typedef bool tbo;
 #define textern extern
 #endif
 
-#define tx_array_size(a) ((tisize)(sizeof(a) / sizeof(a[0])))
+#define tx_array_size(a) ((ti64)(sizeof(a) / sizeof(a[0])))
 
 /**
  * @brief 类型枚举
@@ -90,8 +87,6 @@ enum tType
 	tType_i = tType_i32,
 	tType_u64,
 	tType_i64,
-	tType_usize,
-	tType_isize,
 
 	tType_f32 = 20,
 	tType_f64,
@@ -102,7 +97,6 @@ enum tType
 	tType_b16,
 	tType_b32,
 	tType_b64,
-	tType_bsize,
 
 	tType_c,
 	tType_wc,

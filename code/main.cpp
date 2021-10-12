@@ -23,13 +23,12 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 #endif
 
 	tlog_init();
+	tlog(TLOG_I, "start ...");
+	showVer();
 
 #ifndef NTEST
 	return ttest_main(argc, argv);
 #endif
-
-	tlog(TLOG_I, "start ...");
-	showVer();
 
 	QApplication a(argc, argv);
 	MainWindow w;
