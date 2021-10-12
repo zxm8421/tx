@@ -16,6 +16,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifndef __MINGW64__
+#define __USE_LARGEFILE64
+#endif
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
