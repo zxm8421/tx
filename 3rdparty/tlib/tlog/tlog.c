@@ -205,9 +205,9 @@ ti tlog_rawhexdump(const tc *file, const ti line, const tc *func, const ti filte
 	return tlog_rawprint(file, line, func, filter, level, "%s", buf);
 }
 
-void *tlog_thread_run(void *arg __attribute__((unused)))
+void *tlog_thread_run(void *arg)
 {
-
+	tx_unused(arg);
 	while (true)
 	{
 		usleep(1000 * 200);

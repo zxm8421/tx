@@ -23,6 +23,9 @@ static int ttest_Test_cmp(const void *a, const void *b)
 
 int ttest_main(int argc, char *argv[])
 {
+	tx_unused(argc);
+	tx_unused(argv);
+
 	tlog(TLOG_T, "开始自动化测试");
 
 	for (ti i = 0; i < argc; i++)

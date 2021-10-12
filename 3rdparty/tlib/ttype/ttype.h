@@ -63,6 +63,8 @@ typedef bool tbo;
 #define textern extern
 #endif
 
+#define tx_unused(x) (void)x
+
 #define tx_array_size(a) ((ti64)(sizeof(a) / sizeof(a[0])))
 
 /**

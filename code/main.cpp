@@ -15,8 +15,11 @@
 #include "ui/mainwindow.h"
 #include "version/version.h"
 
-int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
+int main(int argc, char *argv[])
 {
+	tx_unused(argc);
+	tx_unused(argv);
+
 #ifdef __MINGW64__
 	SetConsoleOutputCP(CP_UTF8);
 	// FreeConsole();
