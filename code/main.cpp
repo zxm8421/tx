@@ -4,7 +4,7 @@
  * @brief 
  * 
  */
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #include <windows.h>
 #endif
 
@@ -17,7 +17,7 @@
 
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 {
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 	SetConsoleOutputCP(CP_UTF8);
 	// FreeConsole();
 #endif

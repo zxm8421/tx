@@ -6,7 +6,7 @@
  */
 #pragma once
 
-#include <ttype/ttype.h>
+#include <tlib.h>
 
 #define TLOG_BUF_SIZE 4096
 #define TLOG_CONSOLE_ENABLE 1

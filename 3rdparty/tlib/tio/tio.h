@@ -6,17 +6,14 @@
  */
 #pragma once
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #define __USE_MINGW_ANSI_STDIO 1
 #endif
 #include <stdarg.h>
 #include <stdio.h>
 
-#include <ttype/ttype.h>
+#include <tlib.h>
 
-/*******************************************************************************
- * @par export
- */
 #ifdef __cplusplus
 extern "C"
 {
@@ -63,18 +60,6 @@ extern "C"
 
 		tc *extra; // 自定义选项
 	} tformat_Info;
-
-#ifdef __cplusplus
-}
-#endif
-
-/*******************************************************************************
- * @par impl
- */
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
 	ti tformat_none(const tformat_Info *info, va_list ap);
 	ti tformat_e(tc *buf, const tc *format, va_list ap);

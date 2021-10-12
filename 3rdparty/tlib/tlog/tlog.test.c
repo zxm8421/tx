@@ -12,8 +12,6 @@
 #include <pthread.h>
 #include <unistd.h>
 
-#include <tlib.h>
-
 ttest(test_tlog, 0)
 {
 	ttest_check_gt(tlog(TLOG_D, ""), 0);

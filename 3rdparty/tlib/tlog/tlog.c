@@ -6,7 +6,7 @@
  */
 #include "tlog.h"
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #define __USE_MINGW_ANSI_STDIO 1
 #define _POSIX_THREAD_SAFE_FUNCTIONS
 #endif
@@ -20,7 +20,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #include <windows.h>
 #endif
 
@@ -30,14 +30,12 @@ static ti tlog_fd = -1;
 #ifndef NTEST
 static ti tlog_test_fd = -1;
 #endif
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #else
 #define __USE_GNU
 #include <pthread.h>
 static pthread_t tlog_tid = -1;
 #endif
-
-#include <tzero/tzero.h>
 
 ti tlog_debug(const tc *format, ...)
 {
@@ -255,7 +253,7 @@ ti tlog_init()
 		return 0;
 	}
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 	struct stat64 statbuf;
 	stat64(TLOG_FILE_DIR "/" TLOG_FILE_PREFIX ".0.log", &statbuf);
 	ti64 size = statbuf.st_size;

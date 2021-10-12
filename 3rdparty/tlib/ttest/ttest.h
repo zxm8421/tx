@@ -8,11 +8,8 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include <ttype/ttype.h>
+#include <tlib.h>
 
-/*******************************************************************************
- * @par export
- */
 struct ttest_Ret
 {
 	ti total;
@@ -95,17 +92,7 @@ extern "C"
 	 * @return 
 	 */
 	int ttest_main(int argc, char *argv[]);
-#ifdef __cplusplus
-}
-#endif
 
-/*******************************************************************************
- * @par impl
- */
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 	/**
 	 * @brief 请勿直接使用，请使用ttest_check_xxx
 	 * 

@@ -6,7 +6,7 @@
  */
 #pragma once
 
-#include <ttype/ttype.h>
+#include <tlib.h>
 
 #ifdef __cplusplus
 extern "C"

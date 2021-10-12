@@ -5,24 +5,22 @@
  */
 #include "tzero.h"
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #define __USE_MINGW_ANSI_STDIO 1
 #endif
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #define _POSIX_
 #endif
 #include <limits.h>
 #include <stdlib.h>
 #include <time.h>
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #include <windows.h>
 #endif
-
-#include <tlog/tlog.h>
 
 tf tlib_watch(ti64 *watch)
 {
@@ -104,7 +102,7 @@ ti tlib_system(const tc *format, ...)
 	vsnprintf(cmd, sizeof(cmd), format, ap);
 	va_end(ap);
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 	wchar_t wcmd[_POSIX_ARG_MAX] = L"";
 	MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, cmd, -1, wcmd, tx_array_size(wcmd));
 	ret = _wsystem(wcmd);

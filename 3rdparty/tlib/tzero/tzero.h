@@ -7,7 +7,7 @@
 
 #include <stdarg.h>
 
-#include <ttype/ttype.h>
+#include <tlib.h>
 
 /*******************************************************************************
  * @par export

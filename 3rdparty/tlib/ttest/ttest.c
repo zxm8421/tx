@@ -6,15 +6,12 @@
  */
 #include "ttest.h"
 
-#if defined(__MINGW64__) || defined(__MINGW32__)
+#ifdef __MINGW64__
 #define __USE_MINGW_ANSI_STDIO 1
 #endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <tlog/tlog.h>
-#include <tzero/tzero.h>
 
 static int ttest_Test_cmp(const void *a, const void *b)
 {
