@@ -4,11 +4,14 @@
 			"name": "Linux",
 			"includePath": [
 				"${workspaceFolder}/**",
-				"${HOME}/Apps/Qt/5.12.11/gcc_64/include/**"
+				"${HOME}/Apps/Qt/5.12.12/gcc_64/include/**"
 			],
-			"defines": [],
+			"defines": [
+				"TX_DEBUG",
+				"TX_TEST"
+			],
 			"compilerPath": "/usr/bin/gcc",
-			"cStandard": "gnu11",
+			"cStandard": "gnu17",
 			"cppStandard": "gnu++17",
 			"intelliSenseMode": "linux-gcc-x64"
 		},
@@ -16,13 +19,31 @@
 			"name": "Win32",
 			"includePath": [
 				"${workspaceFolder}/**",
-				"${LocalAppData}/Qt/5.12.11/mingw73_64/include/**"
+				"${UserProfile}/Apps/Qt/5.12.12/mingw73_64/include/**"
 			],
-			"defines": [],
-			"compilerPath": "${LocalAppData}/Qt/Tools/mingw730_64/bin/gcc.exe",
-			"cStandard": "gnu11",
+			"defines": [
+				"TX_DEBUG",
+				"TX_TEST"
+			],
+			"compilerPath": "${UserProfile}/Apps/Qt/Tools/mingw810_64/bin/gcc.exe",
+			"cStandard": "gnu17",
 			"cppStandard": "gnu++17",
 			"intelliSenseMode": "windows-gcc-x64"
+		},
+		{
+			"name": "Win32_x86",
+			"includePath": [
+				"${workspaceFolder}/**",
+				"${UserProfile}/Apps/Qt/5.12.12/mingw73_32/include/**"
+			],
+			"defines": [
+				"TX_DEBUG",
+				"TX_TEST"
+			],
+			"compilerPath": "${UserProfile}/Apps/Qt/Tools/mingw810_32/bin/gcc.exe",
+			"cStandard": "gnu17",
+			"cppStandard": "gnu++17",
+			"intelliSenseMode": "windows-gcc-x86"
 		}
 	],
 	"version": 4
